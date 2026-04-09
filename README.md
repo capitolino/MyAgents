@@ -38,7 +38,18 @@ npx github:capitolino/MyAgents init my-project
 cd my-project
 ```
 
-**Flags:**
+Every run **fetches the latest files directly from GitHub** — npx cache is bypassed at install time, so you always get the current version.
+
+**Source flags** — control which version to install:
+
+| Flag | Effect |
+|------|--------|
+| *(none)* | Latest from `main` branch |
+| `--branch <name>` | Any branch (e.g. `--branch dev`) |
+| `--tag <name>` | Pinned release tag (e.g. `--tag v1.0.0`) |
+| `--offline` | Use cached package — no download |
+
+**Other flags:**
 
 | Flag | Effect |
 |------|--------|
@@ -46,7 +57,21 @@ cd my-project
 | `--no-copilot` | Skip `.github/` — Claude Code only |
 | `--no-claude` | Skip `.claude/` — Copilot only |
 
-> The command always pulls the **latest version** from the GitHub repo. No npm publish step needed.
+**Examples:**
+
+```bash
+# Always latest
+npx github:capitolino/MyAgents init
+
+# Specific branch
+npx github:capitolino/MyAgents init --branch dev
+
+# Pinned release (stable)
+npx github:capitolino/MyAgents init --tag v1.0.0
+
+# New project, pinned release, Claude Code only
+npx github:capitolino/MyAgents init my-project --tag v1.0.0 --no-copilot
+```
 
 ### What gets installed
 
