@@ -5,7 +5,9 @@
       "Bash(node bin/vs-framework.js init test-project)",
       "Bash(node ../bin/vs-framework.js init)",
       "Bash(node ../bin/vs-framework.js init --force)",
-      "Bash(node /c/VS_Framework/bin/vs-framework.js --help)"
+      "Bash(node /c/VS_Framework/bin/vs-framework.js --help)",
+      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-vsf)",
+      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-vsf2 --offline)"
     ]
   }
 }
