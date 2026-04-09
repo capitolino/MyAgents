@@ -24,6 +24,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-db-design` — Database schema design and migrations
 - `/vs-api-integration` — Generate API client code from schemas
 - `/vs-perf` — Performance profiling, bottleneck analysis, load testing
+- `/vs-feature-flags` — Feature flags for gradual rollouts and safe deployments
 - `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
 
 ## Adding to a Project
@@ -130,19 +131,28 @@ Call the agent you need directly:
 ```
 /vs-john "build a login feature"
          ↓
-      John reads docs/plan.md + brief, decides the flow
+      John reads docs/plan.md + brief, analyzes feature scope
          ↓
-  Sofia? → Marcus? → Elena → vs-env-setup? → James → Priya → Alex → Elena (update) → vs-deploy? → Nina?
-         ↑___________________________|
-              John coordinates each handoff
+  Sofia? → Marcus? → Elena →
+    [design: Ravi (auth) → Luna (login UX) → vs-db-design?] →
+    James → Alex → Priya → [fixes loop] →
+    [audit: Ravi (security) → Luna (UX review)] →
+    Elena (mark done) → vs-deploy? → Nina?
 ```
+John uses **Smart Routing** — automatically inserts Luna, Ravi, vs-db-design, etc. based on what the feature touches (auth, UI, database, etc.).
 
 ### Direct (you decide)
 ```
-Sofia → Marcus → Elena → vs-env-setup → [James ↔ Priya ↔ Alex] loop → vs-deploy → Nina
-                                               ↑
-                                 /vs-db-design or /vs-api-integration
-                                 inserted here when those steps come up
+Sofia → Marcus → Elena → vs-env-setup →
+  [design: Luna / Ravi / vs-db-design / vs-api-integration as needed] →
+  [James → Alex → Priya → fixes loop] →
+  [audit: Luna review / Ravi audit / vs-perf as needed] →
+  vs-deploy → Nina
+```
+
+### Hotfix (fast path)
+```
+James (fix) → Alex (regression test) → Priya (fast review) → deploy
 ```
 
 ### When to use which

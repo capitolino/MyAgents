@@ -71,6 +71,7 @@ No persona — invoked by role when that step comes up:
 | `@vs-db-design` | Designing data models and generating migrations |
 | `@vs-api-integration` | Generating typed client code from OpenAPI / Swagger / GraphQL schemas |
 | `@vs-perf` | Performance profiling, bottleneck analysis, load testing |
+| `@vs-feature-flags` | Feature flags for gradual rollouts and safe deployments |
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
 
 ## Workflow
@@ -83,14 +84,21 @@ No persona — invoked by role when that step comes up:
 
 **Direct** — you choose the agent:
 ```
-Sofia → Marcus → Elena → vs-env-setup → [James ↔ Priya ↔ Alex] loop → vs-deploy → Nina
-                                               ↑
-                                 @vs-db-design or @vs-api-integration
-                                 inserted when those steps come up
+Sofia → Marcus → Elena → vs-env-setup →
+  [design: Luna / Ravi / @vs-db-design / @vs-api-integration as needed] →
+  [James → Alex → Priya → fixes loop] →
+  [audit: Luna review / Ravi audit / @vs-perf as needed] →
+  @vs-deploy → Nina
 ```
+
+**Hotfix**: `James (fix) → Alex (regression test) → Priya (fast review) → deploy`
 
 Use `@vs-plan next` or `@vs-elena next` to find the next step when working directly.
 
+## Development Loop (per step)
+
+1. James implements → 2. Alex tests → 3. Priya reviews both → 4. IF frontend: Luna → 5. IF auth/money: Ravi → 6. Elena marks done
+
 ## Definition of Done
 
-A step is done when: implementation complete (James) + no CRITICAL findings (Priya) + all tests pass (Alex) + plan updated (Elena).
+Implementation complete (James) + tests pass ≥80% (Alex) + no CRITICAL findings (Priya) + security audit if auth/money (Ravi) + UX review if frontend (Luna) + plan updated (Elena).

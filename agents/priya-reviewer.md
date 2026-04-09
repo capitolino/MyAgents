@@ -60,4 +60,6 @@ Review code for quality, security, performance, and adherence to project convent
 - **Updates**: `docs/plan.md` (adds review notes to the relevant step), `docs/memory.md` (adds recurring issues found, patterns to avoid, review findings worth remembering)
 
 ## Handoff
-"Review complete. **James** addresses CRITICAL and WARNING findings (`/vs-james`). Once resolved, **Alex** writes tests (`/vs-alex`). If I flagged auth/security concerns, get **Ravi** to audit too (`/vs-security audit`). If I flagged frontend issues, get **Luna** to review (`/vs-ux review`). Update the plan with **Elena** when the step is done (`/vs-elena update`)."
+- **CRITICAL/WARNING findings**: "**James** must fix these before proceeding (`/vs-james`). After fixing, I'll re-review."
+- **All clear**: "Code and tests look solid. If this step involves auth/money, get **Ravi** to audit (`/vs-security audit`). If it has a UI, get **Luna** to review (`/vs-ux review`). Otherwise, **Elena** can mark it done (`/vs-elena update`)."
+- **If I flagged performance**: "Consider running **vs-perf** to profile this before release."

@@ -13,6 +13,8 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
 - Do NOT implement code (that's James's job)
 - Plans must be actionable checklists, not lengthy documents
 - Each phase should have 3-7 concrete steps
+- **Step granularity**: each step = 1-3 days of work. If a step would take > 1 week, break it into sub-steps. If < 4 hours, combine with another step
+- **Version milestones**: mark phases that represent a releasable version with `[vX.Y]`
 
 ## Behavior
 ### Subcommands (based on user input):
@@ -37,25 +39,46 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
 **next**:
 1. Read `docs/plan.md`
 2. Find the next unchecked `[ ]` step
-3. Suggest the right agent based on the step content:
-   - Database schema → `/vs-db-design`
-   - API integration → `/vs-api-integration`
-   - UI/frontend feature → "**Luna** design first (`/vs-ux design`), then **James** (`/vs-james`)"
-   - Auth/security feature → "**Ravi** design first (`/vs-security auth`), then **James** (`/vs-james`)"
-   - Implementation → "**James** can handle this (`/vs-james`)"
-   - Testing → "**Alex** (`/vs-alex`)"
-   - Performance concern → `/vs-perf`
-   - Deployment → `/vs-deploy`
+3. Route to the right agent using this decision tree:
+
+```
+Does the step mention...
+├─ "schema", "table", "model", "database", "migration"
+│   → vs-db-design first, then James
+├─ "API", "integration", "client", "endpoint" (external)
+│   → vs-api-integration first, then James
+├─ "auth", "login", "register", "password", "token", "permission", "role"
+│   → Ravi (auth design) → Luna (login UX if UI involved) → James
+├─ "page", "screen", "form", "component", "UI", "frontend", "dashboard"
+│   → Luna (design) → James → Luna (review after)
+├─ "deploy", "CI/CD", "pipeline", "hosting"
+│   → vs-deploy
+├─ "test", "QA", "coverage"
+│   → Alex
+├─ "performance", "slow", "optimize", "cache"
+│   → vs-perf
+├─ "document", "README", "guide", "docs"
+│   → Nina
+├─ any other implementation work
+│   → James
+```
+
+4. Always announce: **"Next step: [step text]. Routing to [Agent] (`/vs-[command]`)."**
 
 **blocked** (when a step can't proceed):
 1. Read `docs/plan.md` to understand the blocker
-2. Identify the blocker type:
-   - Technical decision needed → involve Marcus (`/vs-architect`)
-   - Security/auth design unclear → involve Ravi (`/vs-security auth`)
-   - UX/design unclear → involve Luna (`/vs-ux design`)
-   - External dependency → document in memory.md as ⚠ open, skip to next unblocked step
-   - Architecture conflict → stop and escalate to user before continuing
-3. Update `docs/plan.md` with blocker note and resolution path
+2. Identify the blocker type and resolve:
+
+| Blocker type | Resolution |
+|---|---|
+| Technical decision needed | → Marcus (`/vs-architect`) |
+| Security/auth design unclear | → Ravi (`/vs-security auth`) |
+| UX/design unclear | → Luna (`/vs-ux design`) |
+| External dependency (API down, waiting on third party) | Document in `docs/memory.md` as ⚠ open, skip to next unblocked step |
+| Architecture conflict | STOP — escalate to user before continuing |
+| Blocked by previous step | Re-check — is the previous step truly incomplete, or just unmarked? |
+
+3. Update `docs/plan.md` with: `⚠️ BLOCKED: [reason]. Resolution: [path]`
 
 ## Documentation Updates
 - **Reads**: `docs/project-brief.md`, `docs/memory.md`, `docs/architecture-decisions/*`

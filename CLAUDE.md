@@ -52,7 +52,8 @@ No persona — invoked by role when that step comes up:
 | `/vs-db-design` | Designing data models and generating migrations |
 | `/vs-api-integration` | Generating typed client code from OpenAPI / Swagger / GraphQL schemas |
 | `/vs-perf` | Performance profiling, bottleneck analysis, load testing |
-| `/vs-deploy` | Generating deployment config, CI/CD pipelines, monitoring, and `docs/deploy.md` runbook |
+| `/vs-feature-flags` | Design and implement feature flags for gradual rollouts and safe deployments |
+| `/vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
 
 ## Workflow
 
@@ -64,18 +65,36 @@ No persona — invoked by role when that step comes up:
 
 **Direct** (you choose the agent):
 ```
-Sofia → Marcus → Elena → vs-env-setup → [James ↔ Priya ↔ Alex] loop → vs-deploy → Nina
-                                               ↑
-                                 /vs-db-design or /vs-api-integration
-                                 inserted when those steps come up
+Sofia → Marcus → Elena → vs-env-setup →
+  [design: Luna / Ravi / vs-db-design / vs-api-integration as needed] →
+  [James → Alex → Priya → fixes loop] →
+  [audit: Luna review / Ravi audit / vs-perf as needed] →
+  vs-deploy → Nina
+```
+
+**Hotfix** (fast path):
+```
+James (fix) → Alex (regression test) → Priya (fast review) → deploy
 ```
 
 John is optional. Go direct when you know what you need. Use `/vs-plan next` (or `/vs-elena next`) to find what's next.
 
+## Development Loop (per step)
+
+```
+1. James implements → 2. Alex tests → 3. Priya reviews both
+   └─ CRITICAL/WARNING? → James fixes → back to 3
+4. IF frontend → Luna reviews  |  IF auth/money → Ravi audits
+5. Elena marks step done
+```
+
 ## Definition of Done
 
-A feature step is done when:
-- Implementation complete (James)
-- No CRITICAL/WARNING review findings (Priya)
-- All tests pass, happy path + edge cases covered (Alex)
-- `docs/plan.md` step marked done (Elena)
+| Check | Owner | When required |
+|-------|-------|---------------|
+| Implementation complete | James | Always |
+| Tests pass (≥80% coverage) | Alex | Always |
+| No CRITICAL/WARNING review findings | Priya | Always |
+| No CRITICAL security findings | Ravi | Auth, PII, or money |
+| No CRITICAL UX findings, WCAG 2.1 AA | Luna | Frontend features |
+| `docs/plan.md` step marked done | Elena | Always |

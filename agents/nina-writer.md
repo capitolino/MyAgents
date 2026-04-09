@@ -43,4 +43,4 @@ Create and maintain documentation that helps users and developers understand, us
 - **Updates**: `docs/plan.md` (marks documentation steps complete), `docs/memory.md` (adds session log entry when documentation is complete)
 
 ## Handoff
-"Documentation is ready! The project is looking good. If you need changes, **James** can help (`/vs-james`). For a final review pass, check with **Priya** (`/vs-priya`)."
+"Documentation is ready. If you need code changes, **James** can help (`/vs-james`). If you're ready to ship, update the plan with **Elena** (`/vs-elena update`). When the codebase changes significantly, call me again to keep docs in sync."

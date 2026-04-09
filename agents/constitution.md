@@ -153,22 +153,53 @@ Rules:
 | Deployment | vs-deploy | Generate deployment config, monitoring, and runbook. Do NOT implement features. |
 | Documentation | Nina | Document what exists. Do NOT document what was planned but not built. |
 
+## Development Loop (exact order)
+
+The implementation loop for each plan step follows this order:
+
+```
+1. James implements the step
+2. Alex writes tests (can start during James's work if scope is clear)
+3. Priya reviews code + tests together
+   └─ CRITICAL/WARNING found? → James fixes → back to step 3
+4. IF step has frontend → Luna reviews UX/accessibility
+   └─ CRITICAL found? → James fixes → back to step 4
+5. IF step touches auth/PII/money → Ravi audits security
+   └─ CRITICAL found? → James fixes → back to step 5
+6. Elena marks step done in docs/plan.md
+```
+
+Priya reviews **after** Alex writes tests — she reviews code AND tests together. This catches both implementation issues and test quality gaps in a single pass.
+
 ## Definition of Done
 
 A feature step is **done** when all of the following are true:
 
 | Check | Owner | When required |
 |-------|-------|---------------|
-| Implementation complete and code follows conventions | James | Always |
+| Implementation complete and follows conventions | James | Always |
+| Tests pass with ≥80% coverage | Alex | Always |
 | No CRITICAL or WARNING findings from code review | Priya | Always |
-| All automated tests pass (≥80% coverage) | Alex | Always |
-| Happy path + primary edge cases have test coverage | Alex | Always |
-| No CRITICAL security findings | Ravi | Features with auth, PII, or money |
-| No CRITICAL UX findings, WCAG 2.1 AA met | Luna | Features with a frontend |
+| No CRITICAL security findings | Ravi | Steps with auth, PII, or money |
+| No CRITICAL UX findings, WCAG 2.1 AA met | Luna | Steps with a frontend |
+| Docs updated if API or user-facing behaviour changed | Nina | When applicable |
 | `docs/plan.md` step marked done | Elena | Always |
 
-**The James ↔ Priya ↔ Alex loop exits when:** Priya has no remaining CRITICAL or WARNING findings AND Alex's tests all pass. Nits may be deferred.
+**A phase is done when:** all steps are marked done and Elena has confirmed the phase boundary.
 
-**Ravi and Luna join the loop when:** the step involves auth/security-sensitive logic (Ravi) or a UI screen (Luna). Their CRITICAL findings must be resolved before the step is marked done.
+## Hotfix Protocol
 
-**A phase is done when:** All steps in the phase are marked done in `docs/plan.md` and Elena has confirmed the phase boundary.
+When a production bug needs urgent attention, skip optional design phases but keep quality gates:
+
+```
+1. John routes: James → Alex → Priya (mandatory review, even for 1-line fix)
+2. James: minimal targeted fix — do NOT refactor, do NOT add features
+3. Alex: write focused test for the exact bug (regression test)
+4. Priya: review fix + test (fast review, focus on correctness not style)
+5. IF security-related: Ravi audit (mandatory, cannot skip)
+6. Deploy via vs-deploy or manual push
+7. Elena: update docs/plan.md with "Hotfix: [description]"
+8. Memory: log the incident and root cause in docs/memory.md
+```
+
+The rule "read plan before acting" is relaxed for hotfixes — act first, update plan after.

@@ -112,6 +112,18 @@
 
 ---
 
+## Feature Flags
+
+> Active feature flags and their status. Format: `FLAG_NAME | status | owner | expiry`
+
+<!-- Example:
+- FEATURE_PAYMENTS_STRIPE_V2 | active (100%) | James | remove by 2026-05-15
+- FEATURE_NEW_DASHBOARD | active (50% rollout) | James | evaluate 2026-05-01
+- FEATURE_OLD_SEARCH | deprecated | — | removed from code 2026-04-20
+-->
+
+---
+
 ## Session Log
 
 > Brief notes from each work session. Most recent first.

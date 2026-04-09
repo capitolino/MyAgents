@@ -39,20 +39,78 @@ Analyze the user's request and determine the appropriate flow:
 
 | Request type | Flow |
 |---|---|
-| New project idea | Sofia → Marcus → Elena |
-| New project, start coding | Sofia → Marcus → Elena → vs-env-setup → James |
-| New feature with UI | Elena (next) → Luna (design) → James → Priya → Luna (review) → Alex → Elena (update) |
-| New feature with auth/security | Elena (next) → Ravi (auth design) → Luna (auth UX) → James → Ravi (audit) → Alex → Elena (update) |
-| New feature end-to-end | Elena (next) → James → Priya → Alex → Elena (update) |
-| Database design needed | Marcus (if needed) → vs-db-design → James |
-| API integration needed | Marcus (if needed) → vs-api-integration → James → Alex |
-| Performance problem | vs-perf (profile) → James → vs-perf (verify) |
-| Code review + fix cycle | Priya → James → Alex |
-| Security audit | Ravi (audit) → James → Alex |
-| UX review | Luna (review) → James |
-| Deploy / CI/CD setup | vs-deploy |
-| Documentation needed | Nina |
-| Just "what's next?" | Elena (status/next) |
+| **New project idea** | Sofia (ideate) → Sofia (challenge) → Marcus → Elena |
+| **Validate/challenge an idea** | Sofia (challenge) → Sofia (research if needed) |
+| **Research a topic or competitors** | Sofia (research) |
+| **New project, start coding** | Sofia (ideate) → Marcus → Elena → vs-env-setup → James |
+| **New feature (full)** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
+| **Hotfix / urgent bug** | James (fix) → Alex (regression test) → Priya (fast review) → deploy |
+| **Database design** | Marcus (if needed) → vs-db-design → James |
+| **API integration** | Marcus (if needed) → vs-api-integration → James → Alex |
+| **Performance problem** | vs-perf (profile) → James → vs-perf (verify) |
+| **Code review + fix** | Priya → James → Alex |
+| **Security audit** | Ravi (audit) → James → Alex |
+| **UX review** | Luna (review) → James |
+| **Deploy / CI/CD** | vs-deploy |
+| **Feature flags** | vs-feature-flags (design/implement/audit) |
+| **Documentation** | Nina |
+| **"What's next?"** | Elena (status/next) |
+
+### Smart Routing Rules
+
+Before routing a "new feature", John MUST check the feature scope and insert the right agents:
+
+**Design phase** (before James codes — order matters):
+
+| Feature involves... | Insert before James |
+|---|---|
+| New database tables/schema | → vs-db-design |
+| External API consumption | → vs-api-integration |
+| Auth, login, payments, PII | → Ravi (auth design) |
+| UI screens or user-facing flows | → Luna (design) |
+| Both auth AND UI | → Ravi (auth design) → Luna (auth UX design) |
+
+**Audit phase** (after Alex tests, before Elena marks done):
+
+| Feature involves... | Insert after Alex |
+|---|---|
+| Auth, login, payments, PII | → Ravi (security audit) |
+| UI screens | → Luna (UX review) |
+| Performance-sensitive paths | → vs-perf (profile) |
+
+**Example — "add payment processing":**
+```
+Elena (next step)
+  → vs-db-design (payment tables)
+  → Ravi (auth design — PCI, payment security)
+  → Luna (payment form UX)
+  → James (implement)
+  → Alex (test — happy path + edge cases + fraud scenarios)
+  → Priya (code review)
+  → Ravi (security audit)
+  → Luna (UX review)
+  → Elena (mark done)
+```
+
+**Example — "add a settings page" (no auth, just UI):**
+```
+Elena (next step)
+  → Luna (design settings UI)
+  → James (implement)
+  → Alex (test)
+  → Priya (review)
+  → Luna (UX review)
+  → Elena (mark done)
+```
+
+**Example — hotfix — "login broken on mobile":**
+```
+James (targeted fix — no design needed)
+  → Alex (regression test for the exact bug)
+  → Priya (fast review — correctness only)
+  → deploy
+  → Elena (log hotfix in plan)
+```
 
 ### Delegation Protocol
 
