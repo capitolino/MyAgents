@@ -9,9 +9,24 @@ const https         = require('https');
 const { execSync }  = require('child_process');
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const REPO        = 'capitolino/MyAgents';
-const BRANCH      = 'main';
-const TARBALL_URL = `https://github.com/${REPO}/archive/refs/heads/${BRANCH}.tar.gz`;
+const REPO         = 'capitolino/MyAgents';
+const DEFAULT_REF  = { type: 'branch', value: 'main' };
+
+function tarballUrl(ref) {
+  const repoName = REPO.split('/')[1];
+  if (ref.type === 'tag') {
+    return {
+      url:     `https://github.com/${REPO}/archive/refs/tags/${ref.value}.tar.gz`,
+      dirName: `${repoName}-${ref.value.replace(/^v/, '')}`,  // GitHub strips leading 'v'
+      label:   `tag ${ref.value}`,
+    };
+  }
+  return {
+    url:     `https://github.com/${REPO}/archive/refs/heads/${ref.value}.tar.gz`,
+    dirName: `${repoName}-${ref.value}`,
+    label:   `branch ${ref.value}`,
+  };
+}
 
 // ─── ANSI helpers ────────────────────────────────────────────────────────────
 const isTTY = process.stdout.isTTY;
@@ -40,9 +55,17 @@ function countFiles(dir) {
 function ensureDir(p)          { fs.mkdirSync(p, { recursive: true }); }
 function tick(label, detail)   { console.log(`  ${c.green('✔')} ${c.bold(label.padEnd(22))} ${c.dim(detail)}`); }
 function skip(label, detail)   { console.log(`  ${c.yellow('─')} ${label.padEnd(22)} ${c.dim(detail)}`); }
-function info(msg)             { process.stdout.write(`  ${c.cyan('↓')} ${msg}`); }
 function infoDone(msg)         { process.stdout.write(`\r  ${c.green('✔')} ${msg}\n`); }
 function die(msg)              { console.error(`\n  ${c.red('✖')} ${msg}\n`); process.exit(1); }
+
+// ─── Arg parser helper — reads value after a flag ────────────────────────────
+function flagValue(args, flag) {
+  const i = args.indexOf(flag);
+  if (i === -1) return null;
+  const val = args[i + 1];
+  if (!val || val.startsWith('--')) die(`--${flag} requires a value`);
+  return val;
+}
 
 // ─── GitHub download (always fresh — follows redirects) ──────────────────────
 function download(url, destPath, redirects = 0) {
@@ -51,12 +74,12 @@ function download(url, destPath, redirects = 0) {
     const parsedUrl = new URL(url);
     const options = {
       hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      headers: { 'User-Agent': 'vs-framework-cli' },
+      path:     parsedUrl.pathname + parsedUrl.search,
+      headers:  { 'User-Agent': 'vs-framework-cli' },
     };
     https.get(options, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302) {
-        res.resume(); // consume and discard redirect body
+        res.resume();
         return resolve(download(res.headers.location, destPath, redirects + 1));
       }
       if (res.statusCode !== 200) {
@@ -68,7 +91,7 @@ function download(url, destPath, redirects = 0) {
       res.on('data', chunk => {
         downloaded += chunk.length;
         const kb = (downloaded / 1024).toFixed(0);
-        process.stdout.write(`\r  ${c.cyan('↓')} Fetching latest from GitHub...  ${c.dim(kb + ' KB')}`);
+        process.stdout.write(`\r  ${c.cyan('↓')} Fetching from GitHub...  ${c.dim(kb + ' KB')}`);
       });
       res.pipe(file);
       file.on('finish', () => { file.close(); resolve(); });
@@ -77,26 +100,24 @@ function download(url, destPath, redirects = 0) {
   });
 }
 
-// ─── Fetch latest from GitHub, return extracted source root ──────────────────
-async function fetchLatest() {
+// ─── Fetch from GitHub, return extracted source root ─────────────────────────
+async function fetchFromGitHub(ref) {
+  const { url, dirName, label } = tarballUrl(ref);
   const tmpDir  = fs.mkdtempSync(path.join(os.tmpdir(), 'vsf-'));
   const tarPath = path.join(tmpDir, 'framework.tar.gz');
 
   try {
-    info('Fetching latest from GitHub...');
-    await download(TARBALL_URL, tarPath);
-    infoDone(`Fetched latest from GitHub          `);
+    await download(url, tarPath);
+    infoDone(`Fetched ${label} from GitHub          `);
 
-    info('Extracting...                  ');
-    execSync(`tar -xzf framework.tar.gz`, { cwd: tmpDir, stdio: 'pipe' });
+    process.stdout.write(`  ${c.cyan('↓')} Extracting...                  `);
+    execSync('tar -xzf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
     infoDone('Extracted                      ');
 
-    // GitHub extracts to REPONAME-BRANCH/
-    const repoName  = REPO.split('/')[1];
-    const srcRoot   = path.join(tmpDir, `${repoName}-${BRANCH}`);
+    const srcRoot = path.join(tmpDir, dirName);
 
     if (!fs.existsSync(srcRoot)) {
-      // Fallback: find the first directory in tmpDir
+      // Fallback: find the first extracted directory
       const dirs = fs.readdirSync(tmpDir, { withFileTypes: true })
         .filter(e => e.isDirectory())
         .map(e => path.join(tmpDir, e.name));
@@ -125,18 +146,24 @@ function printHelp() {
   ${c.dim('Commands:')}
     ${c.cyan('init')} [name]    Add VS Framework to current dir, or create <name>/ first
 
-  ${c.dim('Flags:')}
-    --force        Overwrite existing files (including CLAUDE.md)
-    --no-copilot   Skip .github/ Copilot files (Claude Code only)
-    --no-claude    Skip .claude/ skills (Copilot only)
-    --offline      Use cached package files instead of downloading from GitHub
-    --help, -h     Show this help
-    --version, -v  Show version
+  ${c.dim('Source flags (mutually exclusive):')}
+    --branch <name>  Fetch from a specific branch     (default: main)
+    --tag <name>     Fetch a specific release tag      (e.g. v1.0.0)
+    --offline        Use cached package — no download
+
+  ${c.dim('Other flags:')}
+    --force          Overwrite existing files (including CLAUDE.md)
+    --no-copilot     Skip .github/ Copilot files (Claude Code only)
+    --no-claude      Skip .claude/ skills (Copilot only)
+    --help, -h       Show this help
+    --version, -v    Show version
 
   ${c.dim('Examples:')}
     npx github:${REPO} init
     npx github:${REPO} init my-webapp
-    npx github:${REPO} init my-webapp --no-copilot
+    npx github:${REPO} init --branch dev
+    npx github:${REPO} init --tag v1.2.0
+    npx github:${REPO} init my-webapp --tag v1.0.0 --no-copilot
 `);
 }
 
@@ -145,11 +172,17 @@ function printVersion() {
 }
 
 // ─── Banner ──────────────────────────────────────────────────────────────────
-function printBanner() {
+function printBanner(ref) {
+  const source = ref.type === 'tag'
+    ? c.dim(`tag ${ref.value}`)
+    : ref.value === 'main'
+      ? c.dim('latest · main')
+      : c.dim(`branch ${ref.value}`);
+
   console.log();
   console.log(c.cyan('  ╔══════════════════════════════════════╗'));
   console.log(c.cyan('  ║') + c.bold('   VS Framework') + c.dim(`  v${pkg.version}`) + c.cyan('              ║'));
-  console.log(c.cyan('  ║') + c.dim('   AI dev framework · 8 named agents') + c.cyan('  ║'));
+  console.log(c.cyan('  ║') + `   ${source}`.padEnd(40) + c.cyan('║'));
   console.log(c.cyan('  ╚══════════════════════════════════════╝'));
   console.log();
 }
@@ -157,12 +190,10 @@ function printBanner() {
 // ─── Copy framework files from srcRoot → dest ────────────────────────────────
 function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
-  // agents/
   const agentsDest = path.join(dest, 'agents');
   fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
   tick('agents/', `${countFiles(agentsDest)} files`);
 
-  // .claude/skills/
   if (!noClaude) {
     const claudeDest = path.join(dest, '.claude');
     fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, { recursive: true });
@@ -171,7 +202,6 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('.claude/skills/', 'skipped (--no-claude)');
   }
 
-  // .github/
   if (!noCopilot) {
     ensureDir(path.join(dest, '.github'));
     const githubDest = path.join(dest, '.github', 'copilot-agents');
@@ -185,12 +215,10 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('.github/', 'skipped (--no-copilot)');
   }
 
-  // templates/
   const tmplDest = path.join(dest, 'templates');
   fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
   tick('templates/', `${countFiles(tmplDest)} files`);
 
-  // CLAUDE.md
   const claudeMdDest = path.join(dest, 'CLAUDE.md');
   if (!fs.existsSync(claudeMdDest) || force) {
     fs.copyFileSync(path.join(srcRoot, 'CLAUDE.md'), claudeMdDest);
@@ -199,7 +227,6 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('CLAUDE.md', 'already exists (use --force to overwrite)');
   }
 
-  // docs/ structure
   ensureDir(path.join(dest, 'docs', 'architecture-decisions'));
   const planPath = path.join(dest, 'docs', 'plan.md');
   if (!fs.existsSync(planPath)) {
@@ -224,7 +251,20 @@ async function runInit(args) {
   const noCopilot  = args.includes('--no-copilot');
   const noClaude   = args.includes('--no-claude');
   const offline    = args.includes('--offline');
-  const projectArg = args.find(a => !a.startsWith('--'));
+  const branch     = flagValue(args, '--branch');
+  const tag        = flagValue(args, '--tag');
+
+  if (branch && tag) die('--branch and --tag are mutually exclusive. Use one or the other.');
+
+  const ref = tag    ? { type: 'tag',    value: tag }
+            : branch ? { type: 'branch', value: branch }
+            : DEFAULT_REF;
+
+  // Project name is the first non-flag arg that isn't a flag value
+  const flagsWithValues = new Set(['--branch', '--tag']);
+  const projectArg = args.find((a, i) =>
+    !a.startsWith('--') && args[i - 1] !== '--branch' && args[i - 1] !== '--tag'
+  );
 
   const dest = projectArg
     ? path.resolve(process.cwd(), projectArg)
@@ -235,7 +275,7 @@ async function runInit(args) {
     ensureDir(dest);
   }
 
-  printBanner();
+  printBanner(ref);
   console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}`);
   console.log();
 
@@ -246,15 +286,14 @@ async function runInit(args) {
     process.exit(0);
   }
 
-  // Resolve source — always GitHub unless --offline
   let srcRoot = PKG_ROOT;
   let tmpDir  = null;
 
   if (!offline) {
     try {
-      ({ srcRoot, tmpDir } = await fetchLatest());
+      ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
     } catch (err) {
-      console.log(`  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
       console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
       srcRoot = PKG_ROOT;
     }
@@ -269,7 +308,6 @@ async function runInit(args) {
     if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 
-  // Done
   console.log();
   console.log(`  ${c.green(c.bold('Done!'))} Your VS Framework team is ready.\n`);
 
