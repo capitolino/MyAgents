@@ -13,13 +13,18 @@ A lightweight development framework with named AI agents. Works with both **Clau
 | **James** | Developer | `/vs-develop` or `/vs-james` | `@vs-develop` or `@vs-james` |
 | **Priya** | Reviewer | `/vs-review` or `/vs-priya` | `@vs-review` or `@vs-priya` |
 | **Alex** | QA Engineer | `/vs-qa` or `/vs-alex` | `@vs-qa` or `@vs-alex` |
+| **Luna** | UX Designer | `/vs-ux` or `/vs-luna` | `@vs-ux` or `@vs-luna` |
+| **Ravi** | Security Specialist | `/vs-security` or `/vs-ravi` | `@vs-security` or `@vs-ravi` |
 | **Nina** | Tech Writer | `/vs-docs` or `/vs-nina` | `@vs-docs` or `@vs-nina` |
 
 > **John is a pure orchestrator** — he never writes code, documentation, tests, or anything else. He only delegates to the right agent in the right order. He's optional: go directly to any agent when you know what you need.
 
 **Specialist skills** (invoked by role, no persona):
-- `/vs-api-integration` — Generate API client code from schemas
+- `/vs-env-setup` — Scaffold project structure, `.env.example`, `.gitignore`
 - `/vs-db-design` — Database schema design and migrations
+- `/vs-api-integration` — Generate API client code from schemas
+- `/vs-perf` — Performance profiling, bottleneck analysis, load testing
+- `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
 
 ## Adding to a Project
 
@@ -127,17 +132,17 @@ Call the agent you need directly:
          ↓
       John reads docs/plan.md + brief, decides the flow
          ↓
-  Sofia? → Marcus? → Elena → James → Priya → Alex → Elena (update) → Nina?
+  Sofia? → Marcus? → Elena → vs-env-setup? → James → Priya → Alex → Elena (update) → vs-deploy? → Nina?
          ↑___________________________|
               John coordinates each handoff
 ```
 
 ### Direct (you decide)
 ```
-Sofia → Marcus → Elena → [James ↔ Priya ↔ Alex] loop → Nina
-                              ↑
-                    /vs-db-design or /vs-api-integration
-                    inserted here when those steps come up
+Sofia → Marcus → Elena → vs-env-setup → [James ↔ Priya ↔ Alex] loop → vs-deploy → Nina
+                                               ↑
+                                 /vs-db-design or /vs-api-integration
+                                 inserted here when those steps come up
 ```
 
 ### When to use which

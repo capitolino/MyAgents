@@ -31,3 +31,19 @@
 - {How will you know this project is successful?}
 - {Measurable outcome 1}
 - {Measurable outcome 2}
+
+## Success Metrics (KPIs)
+
+> Make these measurable. Examples: "< 2s page load", "< 1% error rate", "100 active users in month 1"
+
+- **Performance**: {e.g. API p95 response < 500ms}
+- **Reliability**: {e.g. < 0.1% 5xx error rate}
+- **Usage**: {e.g. X active users / transactions per day at launch}
+- **Quality**: {e.g. zero CRITICAL security findings at release}
+
+## Security & Compliance Notes
+
+- **Handles PII**: Yes / No — {if yes, describe what data}
+- **Compliance requirements**: {GDPR / PCI-DSS / HIPAA / None}
+- **Auth required**: Yes / No — {if yes, describe roles}
+- **Public-facing**: Yes / No

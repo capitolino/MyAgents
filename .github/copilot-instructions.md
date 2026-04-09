@@ -15,6 +15,8 @@ This project has named agents you can activate with `@` in Copilot Chat. Each ha
 | James | Developer | `@vs-develop` or `@vs-james` |
 | Priya | Reviewer | `@vs-review` or `@vs-priya` |
 | Alex | QA Engineer | `@vs-qa` or `@vs-alex` |
+| Luna | UX Designer | `@vs-ux` or `@vs-luna` |
+| Ravi | Security Specialist | `@vs-security` or `@vs-ravi` |
 | Nina | Tech Writer | `@vs-docs` or `@vs-nina` |
 
 **John never writes anything.** He only delegates to the right agents in the right order. Use `@vs-john` for complex multi-step tasks; go directly to an agent for focused work.
@@ -59,6 +61,18 @@ After completing work, update `docs/plan.md` and append relevant learnings to `d
 - Database columns: `snake_case`, singular
 - Follow language-specific conventions for code (PEP 8 for Python, etc.)
 
+## Specialist Skills
+
+No persona — invoked by role when that step comes up:
+
+| Skill | When to use |
+|-------|-------------|
+| `@vs-env-setup` | First step of a new project — folder structure, `.env.example`, `.gitignore` |
+| `@vs-db-design` | Designing data models and generating migrations |
+| `@vs-api-integration` | Generating typed client code from OpenAPI / Swagger / GraphQL schemas |
+| `@vs-perf` | Performance profiling, bottleneck analysis, load testing |
+| `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
+
 ## Workflow
 
 **Orchestrated** — John coordinates everything:
@@ -69,7 +83,14 @@ After completing work, update `docs/plan.md` and append relevant learnings to `d
 
 **Direct** — you choose the agent:
 ```
-Sofia → Marcus → Elena → [James ↔ Priya ↔ Alex] loop → Nina
+Sofia → Marcus → Elena → vs-env-setup → [James ↔ Priya ↔ Alex] loop → vs-deploy → Nina
+                                               ↑
+                                 @vs-db-design or @vs-api-integration
+                                 inserted when those steps come up
 ```
 
 Use `@vs-plan next` or `@vs-elena next` to find the next step when working directly.
+
+## Definition of Done
+
+A step is done when: implementation complete (James) + no CRITICAL findings (Priya) + all tests pass (Alex) + plan updated (Elena).

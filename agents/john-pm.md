@@ -40,10 +40,17 @@ Analyze the user's request and determine the appropriate flow:
 | Request type | Flow |
 |---|---|
 | New project idea | Sofia → Marcus → Elena |
+| New project, start coding | Sofia → Marcus → Elena → vs-env-setup → James |
+| New feature with UI | Elena (next) → Luna (design) → James → Priya → Luna (review) → Alex → Elena (update) |
+| New feature with auth/security | Elena (next) → Ravi (auth design) → Luna (auth UX) → James → Ravi (audit) → Alex → Elena (update) |
 | New feature end-to-end | Elena (next) → James → Priya → Alex → Elena (update) |
 | Database design needed | Marcus (if needed) → vs-db-design → James |
 | API integration needed | Marcus (if needed) → vs-api-integration → James → Alex |
+| Performance problem | vs-perf (profile) → James → vs-perf (verify) |
 | Code review + fix cycle | Priya → James → Alex |
+| Security audit | Ravi (audit) → James → Alex |
+| UX review | Luna (review) → James |
+| Deploy / CI/CD setup | vs-deploy |
 | Documentation needed | Nina |
 | Just "what's next?" | Elena (status/next) |
 

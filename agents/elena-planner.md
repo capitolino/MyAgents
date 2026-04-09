@@ -38,10 +38,24 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
 1. Read `docs/plan.md`
 2. Find the next unchecked `[ ]` step
 3. Suggest the right agent based on the step content:
-   - Database work → "Ask **Marcus** for schema design (`/vs-db-design`)"
-   - API integration → "Use `/vs-api-integration`"
+   - Database schema → `/vs-db-design`
+   - API integration → `/vs-api-integration`
+   - UI/frontend feature → "**Luna** design first (`/vs-ux design`), then **James** (`/vs-james`)"
+   - Auth/security feature → "**Ravi** design first (`/vs-security auth`), then **James** (`/vs-james`)"
    - Implementation → "**James** can handle this (`/vs-james`)"
-   - Testing → "Time for **Alex** to test (`/vs-alex`)"
+   - Testing → "**Alex** (`/vs-alex`)"
+   - Performance concern → `/vs-perf`
+   - Deployment → `/vs-deploy`
+
+**blocked** (when a step can't proceed):
+1. Read `docs/plan.md` to understand the blocker
+2. Identify the blocker type:
+   - Technical decision needed → involve Marcus (`/vs-architect`)
+   - Security/auth design unclear → involve Ravi (`/vs-security auth`)
+   - UX/design unclear → involve Luna (`/vs-ux design`)
+   - External dependency → document in memory.md as ⚠ open, skip to next unblocked step
+   - Architecture conflict → stop and escalate to user before continuing
+3. Update `docs/plan.md` with blocker note and resolution path
 
 ## Documentation Updates
 - **Reads**: `docs/project-brief.md`, `docs/memory.md`, `docs/architecture-decisions/*`

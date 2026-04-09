@@ -73,6 +73,45 @@
 
 ---
 
+## Test Coverage
+
+> What's covered, what's not, and known gaps.
+
+<!-- Example:
+- Auth module: happy path + token expiry covered. Concurrent session edge case not yet tested.
+- Payment flow: mocked in tests — no real Stripe calls in CI
+- Framework: pytest (Python) / Jest (Node) — run with `pytest` or `npm test`
+- Overall coverage: 84% — run `pytest --cov` or `npx jest --coverage`
+-->
+
+---
+
+## Tech Debt
+
+> Known shortcuts, deferred improvements, and accumulated complexity. Format: [date] (Agent) Description — priority: HIGH/MEDIUM/LOW
+
+<!-- Example:
+- [2026-04-09] (James) Auth token validation duplicated in 3 routes — should be middleware. priority: MEDIUM
+- [2026-04-10] (Priya) N+1 query in invoices list endpoint — deferred until Phase 3. priority: HIGH
+- [2026-04-11] (Alex) Integration tests only cover happy path for payment flow. priority: HIGH ✓ resolved 2026-04-15
+-->
+
+---
+
+## Deployment
+
+> Platform, environment variables required, and how to deploy.
+
+<!-- Example:
+- Platform: Railway (prod), Docker locally
+- Required env vars: DATABASE_URL, SECRET_KEY, STRIPE_API_KEY — see .env.example
+- Deploy: push to main → GitHub Actions runs tests → auto-deploys to Railway
+- Rollback: Railway dashboard → Deployments → redeploy previous
+- Logs: `railway logs` or Railway dashboard
+-->
+
+---
+
 ## Session Log
 
 > Brief notes from each work session. Most recent first.

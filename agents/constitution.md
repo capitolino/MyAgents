@@ -48,6 +48,62 @@ Do NOT append:
 - Typed parameters where the language supports it
 - No dead code, no commented-out code, no TODO comments without a plan reference
 
+## Error Handling Doctrine
+
+All errors must be **structured, contextual, and safe**:
+
+```
+# Python pattern
+class AppError(Exception):
+    def __init__(self, message: str, code: str, status: int = 400):
+        self.message = message
+        self.code = code      # machine-readable, e.g. "USER_NOT_FOUND"
+        self.status = status
+
+# API response pattern — always consistent
+{ "data": null, "error": { "code": "USER_NOT_FOUND", "message": "User not found" } }
+```
+
+Rules:
+- **Never leak** stack traces, SQL queries, or internal paths to the user/API response
+- **Always log** the full error (with context) server-side before returning a clean response
+- **Use specific error codes** (not just HTTP status) so clients can handle programmatically
+- **Wrap external calls** — errors from third-party APIs should be caught and re-raised as AppErrors
+
+## Logging Standards
+
+- Use structured logging (JSON format in production, human-readable in dev)
+- **Levels**: DEBUG (dev only), INFO (normal operations), WARNING (unexpected but recoverable), ERROR (failure needing attention)
+- **Always log**: auth events (login, logout, failed attempts), all unhandled exceptions, external API calls with latency
+- **Never log**: passwords, tokens, PII (emails, phone numbers) in plaintext, full request bodies with sensitive fields
+- Log format: `{ "timestamp": "ISO8601", "level": "INFO", "event": "...", "user_id": "...", "duration_ms": 0 }`
+- In production, ship logs to a central store (not just console)
+
+## Testing Philosophy
+
+- **Test against requirements**, not implementation details — tests should survive refactors
+- **Pyramid**: unit (fast, many) > integration (medium) > end-to-end (slow, few)
+- **Coverage target**: 80% line coverage minimum; 100% on auth, payment, and data-mutation paths
+- **Test names** describe the scenario: `test_login_fails_with_wrong_password`, not `test_login_2`
+- **No test should depend on another** — each test sets up and tears down its own state
+- **Mock only external dependencies** (HTTP calls, email, payment APIs) — never mock the DB in integration tests
+
+## Security Posture
+
+- **Secure by default**: deny all access, then grant explicitly — never the reverse
+- **Principle of least privilege**: each component/user gets only the permissions it needs
+- **Threat model first**: when building any feature that handles auth, PII, or money, ask Ravi before James codes it
+- **Secrets stay out of code**: all secrets and credentials go in `.env` (dev) or the platform secret manager (prod) — git history too (`git log` should never reveal a secret)
+- **Dependencies are attack surface**: run `pip-audit` or `npm audit` before every release
+
+## Git Workflow
+
+- **Branches**: `main` (production-ready), `feature/<name>` (new work), `fix/<name>` (bug fixes)
+- **Commit messages**: `type(scope): description` — types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
+- **PRs/MRs**: small and focused — one feature or fix per PR; include test evidence in description
+- **Never commit to `main` directly** on team projects
+- **`.env` is always gitignored** — use `.env.example` as the committed reference
+
 ## Database Conventions
 
 - **SQLite** for local, single-user, or small-scale projects
@@ -85,7 +141,34 @@ Do NOT append:
 | Brainstorm | Sofia | Explore ideas freely. Do NOT commit to tech choices. |
 | Architecture | Marcus | Make binding tech decisions. Do NOT implement code. |
 | Planning | Elena | Define phases and steps. Do NOT make architecture decisions. |
+| Env Setup | vs-env-setup | Scaffold project structure, .env.example, .gitignore. Do NOT write feature code. |
+| UX Design | Luna | Design user flows and UI specs. Do NOT implement code. |
+| Security Design | Ravi | Design auth/authz systems. Do NOT implement code. |
 | Development | James | Implement following the plan. Do NOT redesign architecture. |
-| Review | Priya | Evaluate code. Do NOT rewrite — report findings only. |
+| Code Review | Priya | Evaluate code quality + performance. Do NOT rewrite — report findings only. |
+| Security Audit | Ravi | Audit code for vulnerabilities. Do NOT rewrite — report findings only. |
+| UX Review | Luna | Audit frontend for usability + accessibility. Do NOT rewrite — report findings only. |
 | QA | Alex | Test against requirements. Do NOT add features. |
+| Performance | vs-perf | Profile, benchmark, and optimize. Inserted when performance is a concern. |
+| Deployment | vs-deploy | Generate deployment config, monitoring, and runbook. Do NOT implement features. |
 | Documentation | Nina | Document what exists. Do NOT document what was planned but not built. |
+
+## Definition of Done
+
+A feature step is **done** when all of the following are true:
+
+| Check | Owner | When required |
+|-------|-------|---------------|
+| Implementation complete and code follows conventions | James | Always |
+| No CRITICAL or WARNING findings from code review | Priya | Always |
+| All automated tests pass (≥80% coverage) | Alex | Always |
+| Happy path + primary edge cases have test coverage | Alex | Always |
+| No CRITICAL security findings | Ravi | Features with auth, PII, or money |
+| No CRITICAL UX findings, WCAG 2.1 AA met | Luna | Features with a frontend |
+| `docs/plan.md` step marked done | Elena | Always |
+
+**The James ↔ Priya ↔ Alex loop exits when:** Priya has no remaining CRITICAL or WARNING findings AND Alex's tests all pass. Nits may be deferred.
+
+**Ravi and Luna join the loop when:** the step involves auth/security-sensitive logic (Ravi) or a UI screen (Luna). Their CRITICAL findings must be resolved before the step is marked done.
+
+**A phase is done when:** All steps in the phase are marked done in `docs/plan.md` and Elena has confirmed the phase boundary.

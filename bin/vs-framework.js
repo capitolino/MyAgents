@@ -289,6 +289,59 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
   }
 
   tick('docs/', 'plan.md + memory.md + architecture-decisions/');
+
+  const gitignorePath = path.join(dest, '.gitignore');
+  if (!fs.existsSync(gitignorePath)) {
+    fs.writeFileSync(gitignorePath, [
+      '# Dependencies',
+      'node_modules/',
+      '__pycache__/',
+      '*.pyc',
+      '*.pyo',
+      '.venv/',
+      'venv/',
+      '',
+      '# Environment variables — never commit real secrets',
+      '.env',
+      '.env.local',
+      '.env.*.local',
+      '',
+      '# Build output',
+      'dist/',
+      'build/',
+      '.next/',
+      '*.egg-info/',
+      '',
+      '# Databases (local dev)',
+      '*.db',
+      '*.sqlite',
+      '*.sqlite3',
+      '',
+      '# Logs',
+      '*.log',
+      'logs/',
+      '',
+      '# OS files',
+      '.DS_Store',
+      'Thumbs.db',
+      'desktop.ini',
+      '',
+      '# IDE',
+      '.idea/',
+      '*.suo',
+      '*.user',
+      '',
+      '# Testing',
+      '.coverage',
+      'htmlcov/',
+      '.pytest_cache/',
+      'coverage/',
+      '',
+    ].join('\n'), 'utf8');
+    tick('.gitignore', 'created');
+  } else {
+    skip('.gitignore', 'already exists');
+  }
 }
 
 // ─── init command ────────────────────────────────────────────────────────────
