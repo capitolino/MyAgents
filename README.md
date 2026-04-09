@@ -21,25 +21,77 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-api-integration` — Generate API client code from schemas
 - `/vs-db-design` — Database schema design and migrations
 
+## Adding to a Project
+
+### One-command install (recommended)
+
+Run this from your project root — it copies all framework files and creates the `docs/` structure:
+
+```bash
+npx github:capitolino/MyAgents init
+```
+
+Or create a new project directory in one step:
+
+```bash
+npx github:capitolino/MyAgents init my-project
+cd my-project
+```
+
+**Flags:**
+
+| Flag | Effect |
+|------|--------|
+| `--force` | Overwrite existing framework files |
+| `--no-copilot` | Skip `.github/` — Claude Code only |
+| `--no-claude` | Skip `.claude/` — Copilot only |
+
+> The command always pulls the **latest version** from the GitHub repo. No npm publish step needed.
+
+### What gets installed
+
+```
+your-project/
+├── CLAUDE.md                     # Claude Code constitution (auto-loaded)
+├── agents/                       # Shared agent definitions (8 agents)
+├── .claude/skills/               # Claude Code slash commands (19 skills)
+├── .github/
+│   ├── copilot-instructions.md   # Copilot constitution
+│   └── copilot-agents/           # Copilot agent files (10 agents)
+├── templates/                    # Document templates
+└── docs/
+    ├── plan.md                   # Project plan (stub, filled by Elena)
+    └── architecture-decisions/   # ADR records (filled by Marcus)
+```
+
+### Manual install (without npx)
+
+```bash
+git clone https://github.com/capitolino/MyAgents.git
+node MyAgents/bin/vs-framework.js init
+rm -rf MyAgents
+```
+
+---
+
 ## Quick Start
 
 ### Option A — Let John coordinate (recommended for complex tasks)
 
-1. Copy this framework to your project root (or use it as a template repo)
-2. Tell John what you want:
-   - Claude Code: `/vs-john build me a task manager webapp`
-   - Copilot: `@vs-john build me a task manager webapp`
-3. John routes to Sofia, Marcus, Elena, James, Priya, Alex, Nina in the right order
+After installing, tell John what you want:
+- Claude Code: `/vs-john build me a task manager webapp`
+- Copilot: `@vs-john build me a task manager webapp`
+
+John routes to the right agents in the right order automatically.
 
 ### Option B — Go direct (recommended when you know what you need)
 
-1. Copy the framework files to your project
-2. Call the agent you need directly:
-   - New idea? `/vs-sofia`
-   - Need a plan? `/vs-elena create`
-   - Ready to code? `/vs-james implement login endpoint`
-   - Need a review? `/vs-priya src/auth/`
-   - What's next? `/vs-plan next`
+Call the agent you need directly:
+- New idea? `/vs-sofia`
+- Need a plan? `/vs-elena create`
+- Ready to code? `/vs-james implement login endpoint`
+- Need a review? `/vs-priya src/auth/`
+- What's next? `/vs-plan next`
 
 ## Workflow
 
