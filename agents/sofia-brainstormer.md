@@ -29,8 +29,9 @@ Help the user transform a rough idea into a clear project brief (`docs/project-b
 5. Review the brief with the user and refine
 
 ## Documentation Updates
+- **Reads**: `docs/memory.md` (project context before brainstorming)
 - **Creates**: `docs/project-brief.md`
-- **Updates**: `docs/plan.md` (adds brainstorm phase as complete if plan exists)
+- **Updates**: `docs/plan.md` (adds brainstorm phase as complete if plan exists), `docs/memory.md` (adds session log entry, notes any scope decisions)
 
 ## Handoff
 "Great brief! I'd suggest talking to **Marcus** next — he'll help you pick the right tech stack. Run `/vs-marcus` or `/vs-architect`."

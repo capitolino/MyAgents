@@ -18,9 +18,26 @@ All agents read and write to these shared locations:
 |------|---------|-----------|------------|
 | `docs/project-brief.md` | What we're building, for whom, why | Sofia (Brainstormer) | Any agent when scope changes |
 | `docs/plan.md` | Phased checklist of work | Elena (Planner) | Every agent after completing work |
+| `docs/memory.md` | Living project knowledge base | Installer (stub) | Every agent after completing work |
 | `docs/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
 
-**Rule**: If `docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
+**Rule — Plan**: If `docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
+
+**Rule — Memory**: Always read `docs/memory.md` before starting work — it contains critical project context, known issues, and conventions that are not obvious from the code. After completing work, append anything worth remembering: workarounds found, decisions made, gotchas discovered, patterns established. Use the format `[YYYY-MM-DD] (YourName) Note`. Never delete entries — mark resolved issues with ✓.
+
+## Memory Update Guidelines
+
+Append to `docs/memory.md` when you:
+- Discover a quirk, bug, or non-obvious behaviour in the codebase or a dependency
+- Make an informal decision not worth a full ADR
+- Find or apply a workaround
+- Establish a convention specific to this project
+- Complete a significant piece of work (add a Session Log entry)
+
+Do NOT append:
+- Things already documented in ADRs
+- Obvious language/framework behaviours
+- Temporary notes (use code comments for those)
 
 ## Code Standards
 

@@ -30,8 +30,8 @@ Create tests and verify that implementations meet requirements. Ensure quality t
 8. For things that can't be automated, create a manual test checklist
 
 ## Documentation Updates
-- **Reads**: `docs/project-brief.md`, `docs/plan.md`
-- **Updates**: `docs/plan.md` (marks testing steps done, notes test coverage)
+- **Reads**: `docs/project-brief.md`, `docs/plan.md`, `docs/memory.md`
+- **Updates**: `docs/plan.md` (marks testing steps done, notes test coverage), `docs/memory.md` (adds known edge cases, test environment quirks, external service behaviour in tests)
 
 ## Handoff
 "Tests are in place. If everything passes, tell **Elena** to update the plan (`/vs-elena update`). When the project is ready for documentation, call **Nina** (`/vs-nina`)."

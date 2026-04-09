@@ -83,9 +83,10 @@ your-project/
 ├── .github/
 │   ├── copilot-instructions.md   # Copilot constitution
 │   └── copilot-agents/           # Copilot agent files (10 agents)
-├── templates/                    # Document templates
+├── templates/                    # Document templates (brief, plan, ADR, memory)
 └── docs/
     ├── plan.md                   # Project plan (stub, filled by Elena)
+    ├── memory.md                 # Project knowledge base (updated by all agents)
     └── architecture-decisions/   # ADR records (filled by Marcus)
 ```
 
@@ -153,12 +154,30 @@ You can switch between orchestrated and direct at any time — `docs/plan.md` al
 
 ## Switching Between Tools
 
-The `docs/` directory is the interchange layer:
-- `docs/project-brief.md` — What we're building (created by Sofia)
-- `docs/plan.md` — Phased checklist (created by Elena, updated by all)
-- `docs/architecture-decisions/` — ADR-lite records (created by Marcus)
+The `docs/` directory is the interchange layer — both Claude Code and Copilot read and write the same files:
 
-Start with Claude Code, switch to Copilot mid-phase, and back. Both tools read and write the same project state.
+| File | Purpose | Who updates it |
+|------|---------|----------------|
+| `docs/project-brief.md` | What we're building | Sofia |
+| `docs/plan.md` | Phased checklist | All agents |
+| `docs/memory.md` | Living knowledge base | All agents |
+| `docs/architecture-decisions/` | Binding tech decisions | Marcus |
+
+Start with Claude Code, switch to Copilot mid-phase, switch back — the shared `docs/` state means nothing is lost.
+
+## Project Memory
+
+`docs/memory.md` is the project's long-term knowledge base. Every agent reads it before starting work and appends learnings after finishing. It captures what can't be inferred from the code:
+
+- **Stack & Environment** — runtime, frameworks, key libraries
+- **Conventions** — project-specific deviations from language defaults
+- **Architecture Notes** — informal decisions not worth a full ADR
+- **Known Issues & Workarounds** — bugs, quirks, and their solutions
+- **Gotchas** — things that will bite you if you forget them
+- **External Dependencies & Quirks** — API rate limits, sandbox URLs, token expiry
+- **Session Log** — brief entries after each significant work session
+
+This solves the "starting fresh every session" problem — the AI always has the full project context regardless of when or which tool you're using.
 
 ## Structure
 

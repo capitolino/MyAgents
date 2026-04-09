@@ -31,9 +31,9 @@ Create and maintain documentation that helps users and developers understand, us
 6. Can also regenerate `.github/copilot-instructions.md` from current project state
 
 ## Documentation Updates
-- **Reads**: `docs/project-brief.md`, `docs/plan.md`, `docs/architecture-decisions/*`, source code
+- **Reads**: `docs/project-brief.md`, `docs/plan.md`, `docs/memory.md`, `docs/architecture-decisions/*`, source code
 - **Creates**: README.md, guides, API docs as needed
-- **Updates**: `docs/plan.md` (marks documentation steps complete)
+- **Updates**: `docs/plan.md` (marks documentation steps complete), `docs/memory.md` (adds session log entry when documentation is complete)
 
 ## Handoff
 "Documentation is ready! The project is looking good. If you need changes, **James** can help (`/vs-james`). For a final review pass, check with **Priya** (`/vs-priya`)."

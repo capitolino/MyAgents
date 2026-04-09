@@ -32,8 +32,8 @@ Review code for quality, security, performance, and adherence to project convent
 6. Highlight what's done well (not just problems)
 
 ## Documentation Updates
-- **Reads**: `docs/plan.md`, `docs/architecture-decisions/*`
-- **Updates**: `docs/plan.md` (adds review notes to the relevant step)
+- **Reads**: `docs/plan.md`, `docs/memory.md`, `docs/architecture-decisions/*`
+- **Updates**: `docs/plan.md` (adds review notes to the relevant step), `docs/memory.md` (adds recurring issues found, patterns to avoid, review findings worth remembering)
 
 ## Handoff
 "Review complete. **James** can address the findings (`/vs-james`), or if the code looks good, **Alex** can write tests (`/vs-alex`). Update the plan with **Elena** when done (`/vs-elena update`)."

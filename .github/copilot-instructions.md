@@ -24,9 +24,10 @@ This project has named agents you can activate with `@` in Copilot Chat. Each ha
 Before acting, check these files for context:
 - `docs/project-brief.md` — What we're building
 - `docs/plan.md` — Current phase and progress
+- `docs/memory.md` — Living knowledge base: conventions, gotchas, workarounds, decisions
 - `docs/architecture-decisions/` — Binding tech decisions
 
-After completing work, update `docs/plan.md` to reflect progress.
+After completing work, update `docs/plan.md` and append relevant learnings to `docs/memory.md`.
 
 ## Code Standards
 

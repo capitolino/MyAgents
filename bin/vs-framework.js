@@ -228,9 +228,11 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
   }
 
   ensureDir(path.join(dest, 'docs', 'architecture-decisions'));
+
+  const today = new Date().toISOString().split('T')[0];
+
   const planPath = path.join(dest, 'docs', 'plan.md');
   if (!fs.existsSync(planPath)) {
-    const today = new Date().toISOString().split('T')[0];
     fs.writeFileSync(planPath, [
       '# Project Plan',
       '',
@@ -242,7 +244,51 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
       '',
     ].join('\n'), 'utf8');
   }
-  tick('docs/', 'plan.md + architecture-decisions/');
+
+  const memoryPath = path.join(dest, 'docs', 'memory.md');
+  if (!fs.existsSync(memoryPath)) {
+    fs.writeFileSync(memoryPath, [
+      '# Project Memory',
+      '',
+      '> Living document. All agents read this before starting work and append learnings after completing work.',
+      '> Format: `[YYYY-MM-DD] (Agent) Note`',
+      '',
+      `**Initialised**: ${today}`,
+      '',
+      '---',
+      '',
+      '## Stack & Environment',
+      '',
+      '<!-- Fill in after /vs-sofia and /vs-marcus -->',
+      '',
+      '## Conventions',
+      '',
+      '<!-- Project-specific deviations from language/framework defaults -->',
+      '',
+      '## Architecture Notes',
+      '',
+      '<!-- Informal decisions not worth a full ADR -->',
+      '',
+      '## Known Issues & Workarounds',
+      '',
+      '<!-- Format: [date] (Agent) Description ✓resolved / ⚠open -->',
+      '',
+      '## Gotchas',
+      '',
+      '<!-- Things that will bite you if you forget them -->',
+      '',
+      '## External Dependencies & Quirks',
+      '',
+      '<!-- Notes on third-party APIs and libraries -->',
+      '',
+      '## Session Log',
+      '',
+      `- [${today}] Project initialised with VS Framework`,
+      '',
+    ].join('\n'), 'utf8');
+  }
+
+  tick('docs/', 'plan.md + memory.md + architecture-decisions/');
 }
 
 // ─── init command ────────────────────────────────────────────────────────────

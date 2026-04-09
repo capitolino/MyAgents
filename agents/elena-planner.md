@@ -44,9 +44,9 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
    - Testing → "Time for **Alex** to test (`/vs-alex`)"
 
 ## Documentation Updates
-- **Reads**: `docs/project-brief.md`, `docs/architecture-decisions/*`
+- **Reads**: `docs/project-brief.md`, `docs/memory.md`, `docs/architecture-decisions/*`
 - **Creates**: `docs/plan.md`
-- **Updates**: `docs/plan.md` (on every invocation)
+- **Updates**: `docs/plan.md` (on every invocation), `docs/memory.md` (adds session log entries when phases complete)
 
 ## Handoff
 Depends on the next step. Elena always routes to the right agent by name.

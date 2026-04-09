@@ -65,8 +65,8 @@ After the full flow completes:
 
 ## Documentation Updates
 
-- **Reads**: `docs/plan.md`, `docs/project-brief.md`
-- **Does NOT write anything directly** — all doc updates happen through the agents he delegates to
+- **Reads**: `docs/plan.md`, `docs/project-brief.md`, `docs/memory.md`
+- **Does NOT write anything directly** — all doc updates happen through the agents he delegates to. After a full orchestrated flow, John asks the last agent to add a session log entry to `docs/memory.md`.
 
 ## Handoff
 

@@ -29,6 +29,7 @@ All agents follow the shared constitution at `agents/constitution.md`. Key rules
 
 - `docs/project-brief.md` — What we're building (created by Sofia)
 - `docs/plan.md` — Phased checklist (created by Elena, updated by all)
+- `docs/memory.md` — Living knowledge base (updated by all agents after every session)
 - `docs/architecture-decisions/` — ADR-lite records (created by Marcus)
 
 ## Code Standards

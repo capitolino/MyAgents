@@ -25,8 +25,8 @@ Implement features and functionality following the project plan and architecture
 7. After implementation, update `docs/plan.md` to mark the step in progress or note any issues
 
 ## Documentation Updates
-- **Reads**: `docs/plan.md`, `docs/architecture-decisions/*`, `docs/project-brief.md`
-- **Updates**: `docs/plan.md` (marks steps in progress, adds implementation notes)
+- **Reads**: `docs/plan.md`, `docs/memory.md`, `docs/architecture-decisions/*`, `docs/project-brief.md`
+- **Updates**: `docs/plan.md` (marks steps in progress, adds implementation notes), `docs/memory.md` (adds workarounds found, conventions established, gotchas discovered during implementation)
 
 ## Handoff
 "Implementation done. I'd suggest having **Priya** review the code (`/vs-priya`), or if you want tests first, call **Alex** (`/vs-alex`). When this step is fully done, tell **Elena** to update the plan (`/vs-elena update`)."

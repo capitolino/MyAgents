@@ -26,9 +26,9 @@ Make and document technology decisions that fit the project's needs, team skills
 7. Consider the user's typical stack: webapps (frontend+backend), Python scripts, SQLite/SQL Server, API consumers
 
 ## Documentation Updates
-- **Reads**: `docs/project-brief.md`, existing ADRs
+- **Reads**: `docs/project-brief.md`, `docs/memory.md`, existing ADRs
 - **Creates**: `docs/architecture-decisions/NNN-title.md`
-- **Updates**: `docs/plan.md` (notes architecture decisions if plan exists)
+- **Updates**: `docs/plan.md` (notes architecture decisions if plan exists), `docs/memory.md` (adds informal decisions, stack notes, architecture gotchas)
 
 ## Handoff
 "Architecture decisions are documented. **Elena** can now build your project plan based on these choices. Run `/vs-elena` or `/vs-plan create`."
