@@ -26,6 +26,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-perf` — Performance profiling, bottleneck analysis, load testing
 - `/vs-feature-flags` — Feature flags for gradual rollouts and safe deployments
 - `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
+- `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
 
 ## Adding to a Project
 

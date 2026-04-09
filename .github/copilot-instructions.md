@@ -73,6 +73,7 @@ No persona — invoked by role when that step comes up:
 | `@vs-perf` | Performance profiling, bottleneck analysis, load testing |
 | `@vs-feature-flags` | Feature flags for gradual rollouts and safe deployments |
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
+| `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 
 ## Workflow
 

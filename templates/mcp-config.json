@@ -1,0 +1,78 @@
+{
+  "_comment": "VS Framework — Recommended MCP servers. Copy relevant sections to .claude/settings.json or .claude/settings.local.json. All are optional — only enable what you need.",
+
+  "mcpServers": {
+
+    "_docs": "─── DOCUMENTATION & RESEARCH ───",
+
+    "context7": {
+      "_description": "Fetch up-to-date documentation for libraries and frameworks. Useful for: Marcus (tech decisions), James (implementation), Nina (docs).",
+      "_install": "npx -y @upstash/context7-mcp@latest",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+
+    "_github_docs": "─── GITHUB INTEGRATION ───",
+
+    "github": {
+      "_description": "Browse repos, issues, PRs, code search. Useful for: ALL agents. Requires GITHUB_TOKEN env var.",
+      "_install": "npx -y @modelcontextprotocol/server-github",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+
+    "_devops_docs": "─── AZURE DEVOPS ───",
+
+    "azure-devops": {
+      "_description": "Browse Azure DevOps repos, work items, pipelines, PRs. Useful for: John (project tracking), Elena (plan sync), James (PRs), Priya (code review). Requires AZURE_DEVOPS_TOKEN and AZURE_DEVOPS_ORG env vars.",
+      "_install": "npx -y azure-devops-mcp@latest",
+      "command": "npx",
+      "args": ["-y", "azure-devops-mcp@latest"],
+      "env": {
+        "AZURE_DEVOPS_PAT": "${AZURE_DEVOPS_PAT}",
+        "AZURE_DEVOPS_ORG": "${AZURE_DEVOPS_ORG}",
+        "AZURE_DEVOPS_PROJECT": "${AZURE_DEVOPS_PROJECT}"
+      }
+    },
+
+    "_db_docs": "─── DATABASE ───",
+
+    "sqlite": {
+      "_description": "Query and inspect SQLite databases directly. Useful for: James (dev), Alex (test data), vs-db-design (schema inspection).",
+      "_install": "npx -y @modelcontextprotocol/server-sqlite",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "./data/app.db"]
+    },
+
+    "mssql": {
+      "_description": "Query and inspect SQL Server databases. Useful for: James (dev), Alex (test data), vs-db-design (schema inspection), vs-perf (query analysis). Requires connection string.",
+      "_install": "npx -y @nicobailey/mcp-server-mssql@latest",
+      "command": "npx",
+      "args": ["-y", "@nicobailey/mcp-server-mssql@latest"],
+      "env": {
+        "MSSQL_CONNECTION_STRING": "${MSSQL_CONNECTION_STRING}"
+      }
+    },
+
+    "_fs_docs": "─── FILESYSTEM ───",
+
+    "filesystem": {
+      "_description": "Broader filesystem access beyond the working directory. Useful if agents need to read config from other locations.",
+      "_install": "npx -y @modelcontextprotocol/server-filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
+    },
+
+    "_security_docs": "─── SECURITY ───",
+
+    "fetch": {
+      "_description": "Fetch web content and APIs. Useful for: Sofia (research), Ravi (CVE lookups), Luna (design references).",
+      "_install": "npx -y @modelcontextprotocol/server-fetch",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+    }
+  }
+}
