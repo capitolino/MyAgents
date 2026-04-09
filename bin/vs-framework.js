@@ -45,29 +45,35 @@ function infoDone(msg)         { process.stdout.write(`\r  ${c.green('✔')} ${m
 function die(msg)              { console.error(`\n  ${c.red('✖')} ${msg}\n`); process.exit(1); }
 
 // ─── GitHub download (always fresh — follows redirects) ──────────────────────
-function download(url, destPath) {
+function download(url, destPath, redirects = 0) {
   return new Promise((resolve, reject) => {
-    const attempt = (u) => {
-      https.get(u, { headers: { 'User-Agent': 'vs-framework-cli' } }, (res) => {
-        if (res.statusCode === 301 || res.statusCode === 302) {
-          return attempt(res.headers.location);
-        }
-        if (res.statusCode !== 200) {
-          return reject(new Error(`GitHub returned HTTP ${res.statusCode}`));
-        }
-        let downloaded = 0;
-        const file = fs.createWriteStream(destPath);
-        res.on('data', chunk => {
-          downloaded += chunk.length;
-          const kb = (downloaded / 1024).toFixed(0);
-          process.stdout.write(`\r  ${c.cyan('↓')} Fetching latest from GitHub...  ${c.dim(kb + ' KB')}`);
-        });
-        res.pipe(file);
-        file.on('finish', () => { file.close(); resolve(); });
-        file.on('error', reject);
-      }).on('error', reject);
+    if (redirects > 5) return reject(new Error('Too many redirects'));
+    const parsedUrl = new URL(url);
+    const options = {
+      hostname: parsedUrl.hostname,
+      path: parsedUrl.pathname + parsedUrl.search,
+      headers: { 'User-Agent': 'vs-framework-cli' },
     };
-    attempt(url);
+    https.get(options, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        res.resume(); // consume and discard redirect body
+        return resolve(download(res.headers.location, destPath, redirects + 1));
+      }
+      if (res.statusCode !== 200) {
+        res.resume();
+        return reject(new Error(`GitHub returned HTTP ${res.statusCode}`));
+      }
+      let downloaded = 0;
+      const file = fs.createWriteStream(destPath);
+      res.on('data', chunk => {
+        downloaded += chunk.length;
+        const kb = (downloaded / 1024).toFixed(0);
+        process.stdout.write(`\r  ${c.cyan('↓')} Fetching latest from GitHub...  ${c.dim(kb + ' KB')}`);
+      });
+      res.pipe(file);
+      file.on('finish', () => { file.close(); resolve(); });
+      file.on('error', reject);
+    }).on('error', reject);
   });
 }
 
@@ -82,7 +88,7 @@ async function fetchLatest() {
     infoDone(`Fetched latest from GitHub          `);
 
     info('Extracting...                  ');
-    execSync(`tar -xzf "${tarPath}" -C "${tmpDir}"`, { stdio: 'pipe' });
+    execSync(`tar -xzf framework.tar.gz`, { cwd: tmpDir, stdio: 'pipe' });
     infoDone('Extracted                      ');
 
     // GitHub extracts to REPONAME-BRANCH/
