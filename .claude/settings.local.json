@@ -7,7 +7,17 @@
       "Bash(node ../bin/vs-framework.js init --force)",
       "Bash(node /c/VS_Framework/bin/vs-framework.js --help)",
       "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-vsf)",
-      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-vsf2 --offline)"
+      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-vsf2 --offline)",
+      "Bash(git push:*)",
+      "Bash(curl -sI \"https://github.com/capitolino/MyAgents/archive/refs/heads/main.tar.gz\")",
+      "Bash(gh repo:*)",
+      "Bash(curl -s \"https://api.github.com/repos/capitolino/MyAgents\")",
+      "Bash(curl -s \"https://api.github.com/repos/capitolino/MyAgents/branches\")",
+      "Bash(curl -sI \"https://github.com/capitolino/MyAgents/archive/refs/heads/main.tar.gz\" -L)",
+      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-live)",
+      "Bash(git -C /c/VS_Framework add bin/vs-framework.js)",
+      "Bash(git -C:*)",
+      "Bash(git -C /c/VS_Framework push origin main)"
     ]
   }
 }
