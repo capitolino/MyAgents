@@ -298,8 +298,10 @@ Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-confi
 /vs-mcp-setup disable sqlite
 ```
 
-Settings that need tokens → `.claude/settings.local.json` (gitignored, never committed).
-Zero-config MCPs → `.claude/settings.json` (can be committed).
+| | Tokens / secrets | Zero-config MCPs |
+|--|-----------------|------------------|
+| **Claude Code** | `.claude/settings.local.json` (gitignored) | `.claude/settings.json` (committed) |
+| **Copilot (VS Code)** | VS Code env settings — never in files | `.vscode/mcp.json` (committed) |
 
 **GitHub + SQLite project:**
 ```
