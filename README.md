@@ -274,6 +274,42 @@ your-project/
     └── architecture-decisions/
 ```
 
+## Optional MCP Servers
+
+MCP (Model Context Protocol) servers extend agent capabilities by connecting them to external tools — GitHub, databases, documentation libraries, and more. They are **opt-in** and never required to use the framework.
+
+Run `/vs-mcp-setup` (Claude Code) or `@vs-mcp-setup` (Copilot) to see what's available and enable what you need.
+
+| MCP Server | What it enables | Setup |
+|------------|-----------------|-------|
+| **context7** | Live library docs for Marcus, James, Nina — no more outdated knowledge | Zero config |
+| **github** | Browse repos, issues, PRs; Sofia researches competitors; Ravi checks advisories | `GITHUB_TOKEN` |
+| **azure-devops** | Work items, pipelines, PRs — for teams using Azure DevOps | `AZURE_DEVOPS_PAT` + org + project |
+| **sqlite** | James and Alex query SQLite directly — inspect schema, verify migrations | `--db-path` |
+| **mssql** | James and Alex query SQL Server — inspect schema, analyze performance | connection string |
+| **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | Zero config |
+| **filesystem** | Agents access files outside the project directory | allowed paths list |
+
+### Recommended setups
+
+**GitHub + SQLite project:**
+```bash
+/vs-mcp-setup enable context7   # zero config — always useful
+/vs-mcp-setup enable github     # needs GITHUB_TOKEN in your environment
+/vs-mcp-setup enable sqlite     # needs --db-path to your .db file
+```
+
+**Azure DevOps + SQL Server (enterprise):**
+```bash
+/vs-mcp-setup enable context7       # zero config — always useful
+/vs-mcp-setup enable azure-devops   # needs AZURE_DEVOPS_PAT, org, project
+/vs-mcp-setup enable mssql          # needs MSSQL_CONNECTION_STRING
+```
+
+MCP settings that require tokens go into `.claude/settings.local.json` (gitignored). Zero-config MCPs can go into `.claude/settings.json` (committed). The config template is at `templates/mcp-config.json`.
+
+---
+
 ## Extending the Framework
 
 ### Add a Project-Specific Skill
