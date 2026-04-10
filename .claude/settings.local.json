@@ -20,7 +20,22 @@
       "Bash(git -C /c/VS_Framework push origin main)",
       "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-both --branch dev --tag v1.0.0)",
       "WebFetch(domain:api.github.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(winget install:*)",
+      "Bash(curl -sL \"https://github.com/cli/cli/releases/download/v2.89.0/gh_2.89.0_windows_amd64.zip\" -o /tmp/gh.zip)",
+      "Bash(unzip -q /tmp/gh.zip -d /tmp/gh)",
+      "Bash(mkdir -p \"$HOME/bin\")",
+      "Bash(cp /tmp/gh/gh_2.89.0_windows_amd64/bin/gh.exe \"$HOME/bin/gh.exe\")",
+      "Bash(rm -rf /tmp/gh /tmp/gh.zip)",
+      "Bash(curl -sL \"https://github.com/cli/cli/releases/download/v2.89.0/gh_2.89.0_windows_amd64.zip\" -o /tmp/gh2.zip)",
+      "Bash(unzip -o -q /tmp/gh2.zip -d /tmp/gh2)",
+      "Bash(cp /tmp/gh2/bin/gh.exe \"$HOME/bin/gh.exe\")",
+      "Bash(rm -rf /tmp/gh2 /tmp/gh2.zip)",
+      "Bash(export PATH=\"$HOME/bin:$PATH\")",
+      "Bash(gh --version)",
+      "Bash(gh auth:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr:*)"
     ]
   }
 }
