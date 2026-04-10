@@ -18,7 +18,9 @@
       "Bash(git -C /c/VS_Framework add bin/vs-framework.js)",
       "Bash(git -C:*)",
       "Bash(git -C /c/VS_Framework push origin main)",
-      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-both --branch dev --tag v1.0.0)"
+      "Bash(node /c/VS_Framework/bin/vs-framework.js init /tmp/test-both --branch dev --tag v1.0.0)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }
