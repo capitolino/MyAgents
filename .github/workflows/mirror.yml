@@ -15,8 +15,6 @@ jobs:
           fetch-depth: 0
 
       - name: Push branch to mirror repo
-        env:
-          MIRROR_PAT: ${{ secrets.MIRROR_PAT }}
         run: |
-          git remote add mirror https://x-access-token:${MIRROR_PAT}@github.com/capitolino/MyAgents.git
+          git remote add mirror https://capitolino:${{ secrets.MIRROR_PAT }}@github.com/capitolino/MyAgents.git
           git push mirror ${{ github.ref_name }} --force
