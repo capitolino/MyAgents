@@ -73,6 +73,15 @@
       "_install": "npx -y @modelcontextprotocol/server-fetch",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-fetch"]
+    },
+
+    "_testing_docs": "─── TESTING ───",
+
+    "playwright": {
+      "_description": "Browser automation for end-to-end testing and UX verification. Useful for: Alex (E2E tests, test execution), Luna (visual UX review, accessibility checks in real browser). Launches a real browser — no additional setup needed beyond having a browser installed.",
+      "_install": "npx -y @playwright/mcp@latest",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }
