@@ -1,0 +1,23 @@
+name: Mirror to capitolino/MyAgents
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push branch to mirror repo
+        env:
+          MIRROR_PAT: ${{ secrets.MIRROR_PAT }}
+        run: |
+          git remote add mirror https://x-access-token:${MIRROR_PAT}@github.com/capitolino/MyAgents.git
+          git push mirror ${{ github.ref_name }} --force
