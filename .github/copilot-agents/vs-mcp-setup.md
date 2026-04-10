@@ -41,6 +41,7 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 | **mssql** | Direct SQL Server access for James, Alex, vs-perf | Yes — connection string |
 | **fetch** | Web content for Sofia, Ravi, Luna | No |
 | **filesystem** | Broader file access | No (path only) |
+| **playwright** | Browser automation for Alex (E2E tests) and Luna (UX review in real browser) | No |
 
 ## Behavior
 
@@ -128,11 +129,13 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 1. `@vs-mcp-setup enable context7` — zero config
 2. `@vs-mcp-setup enable github` — set `GITHUB_TOKEN` in your environment
 3. `@vs-mcp-setup enable sqlite` — provide path to your `.db` file
+4. `@vs-mcp-setup enable playwright` — zero config, enables E2E testing
 
 **Azure DevOps + SQL Server (enterprise):**
 1. `@vs-mcp-setup enable context7` — zero config
 2. `@vs-mcp-setup enable azure-devops` — set `AZURE_DEVOPS_PAT`, `AZURE_DEVOPS_ORG`, `AZURE_DEVOPS_PROJECT`
 3. `@vs-mcp-setup enable mssql` — set `MSSQL_CONNECTION_STRING`
+4. `@vs-mcp-setup enable playwright` — zero config, enables E2E testing
 
 ## Rules
 - `.vscode/mcp.json` uses `"servers"` (not `"mcpServers"`)

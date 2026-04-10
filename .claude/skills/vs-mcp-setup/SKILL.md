@@ -54,6 +54,7 @@ Format:
 | mssql      | ❌ Not configured | Yes (conn string) | Direct SQL Server access |
 | fetch      | ❌ Not configured | No               | Web fetching |
 | filesystem | ❌ Not configured | No (path only)  | Broader file access |
+| playwright | ❌ Not configured | No               | Browser automation, E2E testing |
 ```
 
 ### enable mode (`/vs-mcp-setup enable <server>`)
@@ -133,6 +134,7 @@ Format:
 | **mssql** | James, Alex, vs-db-design, vs-perf | Query SQL Server directly — inspect schema, run queries, analyze performance |
 | **fetch** | Sofia, Ravi, Luna | Fetch web pages — competitive research, CVE databases, design references |
 | **filesystem** | James, vs-env-setup | Access files outside the project directory when needed |
+| **playwright** | Alex, Luna | Browser automation — run E2E tests, verify UI in a real browser, accessibility checks |
 
 ## Recommended Setup by Project Type
 
@@ -140,11 +142,13 @@ Format:
 1. `/vs-mcp-setup enable context7` — always useful, zero config
 2. `/vs-mcp-setup enable github` — needs `GITHUB_TOKEN`
 3. `/vs-mcp-setup enable sqlite` — needs path to `.db` file
+4. `/vs-mcp-setup enable playwright` — zero config, enables E2E testing
 
 **Azure DevOps + SQL Server project (enterprise):**
 1. `/vs-mcp-setup enable context7` — always useful, zero config
 2. `/vs-mcp-setup enable azure-devops` — needs `AZURE_DEVOPS_PAT`, org, project
 3. `/vs-mcp-setup enable mssql` — needs `MSSQL_CONNECTION_STRING`
+4. `/vs-mcp-setup enable playwright` — zero config, enables E2E testing
 
 ## Rules
 - **Credentials MCPs** → always write to `.claude/settings.local.json` (gitignored)

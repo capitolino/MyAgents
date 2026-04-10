@@ -287,6 +287,7 @@ MCP (Model Context Protocol) servers extend agent capabilities by connecting the
 | **mssql** | James and Alex query SQL Server — inspect schema, analyze performance | connection string |
 | **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | None |
 | **filesystem** | Agents access files outside the project directory | allowed paths list |
+| **playwright** | Alex runs E2E tests in a real browser; Luna verifies UX and accessibility live | None |
 
 ### Claude Code
 
@@ -305,9 +306,10 @@ Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-confi
 
 **GitHub + SQLite project:**
 ```
-/vs-mcp-setup enable context7   ← zero config
-/vs-mcp-setup enable github     ← needs GITHUB_TOKEN env var
-/vs-mcp-setup enable sqlite     ← needs path to your .db file
+/vs-mcp-setup enable context7    ← zero config
+/vs-mcp-setup enable github      ← needs GITHUB_TOKEN env var
+/vs-mcp-setup enable sqlite      ← needs path to your .db file
+/vs-mcp-setup enable playwright  ← zero config, E2E testing
 ```
 
 **Azure DevOps + SQL Server (enterprise):**
@@ -315,6 +317,7 @@ Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-confi
 /vs-mcp-setup enable context7       ← zero config
 /vs-mcp-setup enable azure-devops   ← needs AZURE_DEVOPS_PAT, org, project
 /vs-mcp-setup enable mssql          ← needs MSSQL_CONNECTION_STRING
+/vs-mcp-setup enable playwright     ← zero config, E2E testing
 ```
 
 ### GitHub Copilot (VS Code)
