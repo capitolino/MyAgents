@@ -74,8 +74,19 @@ No persona — invoked by role when that step comes up:
 | `@vs-feature-flags` | Feature flags for gradual rollouts and safe deployments |
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
 | `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
+| `@vs-onboard` | Brownfield onboarding: discover codebase, document architecture, plan improvements |
 
 ## Workflow
+
+**Brownfield** (existing project — run first):
+```
+@vs-brainstorm discover → @vs-architect document → @vs-plan create brownfield
+```
+
+**Greenfield** (new project):
+```
+@vs-brainstorm → @vs-architect → @vs-plan create
+```
 
 **Orchestrated** — John coordinates everything:
 ```

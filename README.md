@@ -27,22 +27,44 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-feature-flags` — Feature flags for gradual rollouts and safe deployments
 - `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
 - `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
+- `/vs-onboard` — Brownfield onboarding: discover codebase, document architecture, plan improvements
 
 ## Adding to a Project
 
-### One-command install (recommended)
-
-Run this from your project root — it copies all framework files and creates the `docs/` structure:
-
-```bash
-npx github:capitolino/MyAgents init
-```
-
-Or create a new project directory in one step:
+### New project (greenfield)
 
 ```bash
 npx github:capitolino/MyAgents init my-project
 cd my-project
+```
+
+Then start with `/vs-john` or `/vs-sofia` to brainstorm your idea.
+
+### Existing project (brownfield)
+
+```bash
+cd your-existing-project
+npx github:capitolino/MyAgents init --brownfield
+```
+
+Then run `/vs-onboard` to let the agents discover your codebase, document the architecture, and create an improvement plan. No code is changed — the agents only read and document.
+
+**Brownfield onboarding flow:**
+```
+/vs-onboard
+  → Sofia discovers codebase (stack, conventions, tech debt)
+  → Marcus documents existing architecture (creates ADRs)
+  → Elena creates improvement plan (stabilize → enhance → build new)
+```
+
+Or step by step: `/vs-sofia discover` → `/vs-marcus document` → `/vs-elena create brownfield`
+
+### Install without a project name
+
+Run from any directory — it copies framework files into the current folder:
+
+```bash
+npx github:capitolino/MyAgents init
 ```
 
 Every run **fetches the latest files directly from GitHub** — npx cache is bypassed at install time, so you always get the current version.
@@ -61,14 +83,18 @@ Every run **fetches the latest files directly from GitHub** — npx cache is byp
 | Flag | Effect |
 |------|--------|
 | `--force` | Overwrite existing framework files |
+| `--brownfield` | Install into existing project (skip scaffolding, show onboarding guide) |
 | `--no-copilot` | Skip `.github/` — Claude Code only |
 | `--no-claude` | Skip `.claude/` — Copilot only |
 
 **Examples:**
 
 ```bash
-# Always latest
-npx github:capitolino/MyAgents init
+# New project, always latest
+npx github:capitolino/MyAgents init my-project
+
+# Existing project, brownfield mode
+npx github:capitolino/MyAgents init --brownfield
 
 # Specific branch
 npx github:capitolino/MyAgents init --branch dev
@@ -128,6 +154,14 @@ Call the agent you need directly:
 
 ## Workflow
 
+### Brownfield (existing project)
+```
+/vs-onboard
+  → Sofia discovers codebase → Marcus documents architecture → Elena plans improvements
+  → Phase 0: Stabilize (tests, CI, critical fixes)
+  → Phase 1+: Normal development loop
+```
+
 ### Orchestrated (via John)
 ```
 /vs-john "build a login feature"
@@ -160,6 +194,7 @@ James (fix) → Alex (regression test) → Priya (fast review) → deploy
 
 | Situation | Use |
 |-----------|-----|
+| Existing project, first time | `/vs-onboard` |
 | New project, full flow | `/vs-john` |
 | Complex multi-agent task | `/vs-john` |
 | You know exactly what you need | Direct agent |

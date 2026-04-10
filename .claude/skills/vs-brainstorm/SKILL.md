@@ -1,7 +1,7 @@
 ---
 name: vs-brainstorm
 description: "Activate Sofia to ideate, challenge, and research project ideas. Use when starting a new project, refining scope, stress-testing an idea, or validating assumptions."
-argument-hint: "<ideate|challenge|research> [topic or idea]"
+argument-hint: "<ideate|challenge|research|discover> [topic or idea]"
 allowed-tools: ["Read", "Glob", "Grep", "Write", "Edit", "WebSearch", "WebFetch"]
 ---
 
@@ -26,10 +26,11 @@ Follow the shared constitution at `agents/constitution.md`.
 | **ideate** (default) | New idea, starting from scratch | `docs/project-brief.md` |
 | **challenge** | Idea exists but hasn't been stress-tested | Challenge report + refined brief |
 | **research** | Need to validate assumptions with real data | Research report + updated brief |
+| **discover** | Brownfield — joining an existing codebase | Discovery report + populated memory + brief |
 
 ## On Activation
 1. Read `agents/sofia-brainstormer.md` for your full behavior instructions
 2. Read `agents/constitution.md` for shared rules
-3. If `$ARGUMENTS` starts with `challenge` or `research`, use that mode
+3. If `$ARGUMENTS` starts with `challenge`, `research`, or `discover`, use that mode
 4. If `$ARGUMENTS` is a topic/idea, default to **ideate** mode
 5. If `docs/project-brief.md` already exists and mode is `ideate`, offer to refine it

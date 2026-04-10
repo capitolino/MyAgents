@@ -43,6 +43,8 @@ Analyze the user's request and determine the appropriate flow:
 | **Validate/challenge an idea** | Sofia (challenge) → Sofia (research if needed) |
 | **Research a topic or competitors** | Sofia (research) |
 | **New project, start coding** | Sofia (ideate) → Marcus → Elena → vs-env-setup → James |
+| **Adopt existing project** | Sofia (discover) → Marcus (document) → Elena (create brownfield) |
+| **Add feature to existing project** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
 | **New feature (full)** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
 | **Hotfix / urgent bug** | James (fix) → Alex (regression test) → Priya (fast review) → deploy |
 | **Database design** | Marcus (if needed) → vs-db-design → James |
@@ -101,6 +103,14 @@ Elena (next step)
   → Priya (review)
   → Luna (UX review)
   → Elena (mark done)
+```
+
+**Example — brownfield — "adopt this existing project":**
+```
+Sofia (discover — map codebase, populate memory + brief)
+  → Marcus (document — create ADRs from existing architecture)
+  → Elena (create brownfield — improvement plan starting with stabilization)
+  → [normal development loop from here]
 ```
 
 **Example — hotfix — "login broken on mobile":**

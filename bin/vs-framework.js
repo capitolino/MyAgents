@@ -153,6 +153,7 @@ function printHelp() {
 
   ${c.dim('Other flags:')}
     --force          Overwrite existing files (including CLAUDE.md)
+    --brownfield     Install into existing project (skip scaffolding, show onboarding guide)
     --no-copilot     Skip .github/ Copilot files (Claude Code only)
     --no-claude      Skip .claude/ skills (Copilot only)
     --help, -h       Show this help
@@ -164,6 +165,7 @@ function printHelp() {
     npx github:${REPO} init --branch dev
     npx github:${REPO} init --tag v1.2.0
     npx github:${REPO} init my-webapp --tag v1.0.0 --no-copilot
+    npx github:${REPO} init --brownfield
 `);
 }
 
@@ -347,6 +349,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 // ─── init command ────────────────────────────────────────────────────────────
 async function runInit(args) {
   const force      = args.includes('--force');
+  const brownfield = args.includes('--brownfield');
   const noCopilot  = args.includes('--no-copilot');
   const noClaude   = args.includes('--no-claude');
   const offline    = args.includes('--offline');
@@ -375,7 +378,8 @@ async function runInit(args) {
   }
 
   printBanner(ref);
-  console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}`);
+  const mode = brownfield ? 'brownfield' : 'greenfield';
+  console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}  ${c.dim(`(${mode})`)}`);
   console.log();
 
   const alreadyInit = fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
@@ -418,19 +422,43 @@ async function runInit(args) {
     console.log();
   };
 
-  if (!noClaude) {
-    box('Claude Code', [
-      c.cyan('/vs-john') + '  "describe your task"      ',
-      c.cyan('/vs-sofia') + ' new project idea           ',
-      c.cyan('/vs-plan') + ' next                        ',
-    ]);
-  }
-  if (!noCopilot) {
-    box('GitHub Copilot', [
-      c.cyan('@vs-john') + '  "describe your task"      ',
-      c.cyan('@vs-brainstorm') + ' new project idea      ',
-      c.cyan('@vs-plan') + ' next                        ',
-    ]);
+  if (brownfield) {
+    // Brownfield-specific post-install guidance
+    console.log(`  ${c.yellow('⚡')} ${c.bold('Brownfield mode')} — agents installed into your existing project.\n`);
+    console.log(`  ${c.dim('Your existing code was NOT modified. Next, let the agents learn your codebase:')}\n`);
+
+    if (!noClaude) {
+      box('Claude Code — Onboard', [
+        c.cyan('/vs-onboard') + '  full auto-onboarding      ',
+        c.dim('  or step by step:') + '                    ',
+        c.cyan('/vs-sofia') + ' discover                    ',
+        c.cyan('/vs-marcus') + ' document                   ',
+        c.cyan('/vs-plan') + ' create brownfield             ',
+      ]);
+    }
+    if (!noCopilot) {
+      box('GitHub Copilot — Onboard', [
+        c.cyan('@vs-brainstorm') + ' discover              ',
+        c.cyan('@vs-architect') + ' document               ',
+        c.cyan('@vs-plan') + ' create brownfield             ',
+      ]);
+    }
+  } else {
+    // Greenfield post-install guidance (original)
+    if (!noClaude) {
+      box('Claude Code', [
+        c.cyan('/vs-john') + '  "describe your task"      ',
+        c.cyan('/vs-sofia') + ' new project idea           ',
+        c.cyan('/vs-plan') + ' next                        ',
+      ]);
+    }
+    if (!noCopilot) {
+      box('GitHub Copilot', [
+        c.cyan('@vs-john') + '  "describe your task"      ',
+        c.cyan('@vs-brainstorm') + ' new project idea      ',
+        c.cyan('@vs-plan') + ' next                        ',
+      ]);
+    }
   }
   if (projectArg) console.log(`  ${c.dim('Next:')} cd ${projectArg}\n`);
 }

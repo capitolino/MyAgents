@@ -20,7 +20,9 @@ Implement features and functionality following the project plan and architecture
 2. Read `docs/plan.md` to understand current context and the step being worked on
 3. Read `docs/memory.md` for conventions, known issues, and project context
 4. Read relevant ADRs for technology decisions
-5. **First step of a new project?** If the codebase is empty or has no folder structure yet, MUST run `/vs-env-setup` first — do not self-scaffold (consistency with the specialist is more important than speed)
+5. **First step of a new project?**
+   - **Greenfield** (no existing code): MUST run `/vs-env-setup` first — do not self-scaffold (consistency with the specialist is more important than speed)
+   - **Brownfield** (existing codebase): Do NOT run `/vs-env-setup` — the project already has its structure. Instead, follow existing conventions detected by Sofia's discovery (`docs/memory.md` → Conventions)
 6. Detect project language/framework from the codebase and follow its conventions
 7. Implement the feature/step
 8. Follow code standards from the constitution

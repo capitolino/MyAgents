@@ -79,6 +79,73 @@ Help the user transform a rough idea into a validated, well-scoped project brief
    ```
 4. Update `docs/project-brief.md` with the refined scope if user agrees
 
+**discover** (brownfield — understand an existing codebase):
+1. Read `docs/memory.md` and check if it's a stub (installer default) or already populated
+2. Explore the existing codebase systematically:
+
+   **Stack detection** (fill `docs/memory.md` → Stack & Environment):
+   - Read `package.json`, `requirements.txt`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `*.csproj` etc.
+   - Identify: language, framework, database, key libraries, dev tools (linter, formatter, test runner)
+   - Check `.env.example` or `.env` for required configuration
+
+   **Convention detection** (fill `docs/memory.md` → Conventions):
+   - Scan code for patterns: naming conventions, folder structure, import style, error handling patterns
+   - Check for existing linter configs (`.eslintrc`, `.flake8`, `ruff.toml`, `.prettierrc`)
+   - Identify: indentation style, module structure, test location, API patterns
+
+   **Architecture mapping** (feed to Marcus for ADRs):
+   - Identify entry points (main files, route files, CLI entry)
+   - Map major components/modules and how they connect
+   - Identify data flow: where data enters, gets processed, gets stored
+   - Note external dependencies: APIs consumed, databases, message queues, caches
+
+   **Health assessment** (fill `docs/memory.md` → Known Issues, Tech Debt):
+   - Check test coverage: are there tests? test runner? CI?
+   - Check security: is auth implemented? how? secrets management?
+   - Check for obvious tech debt: TODOs, FIXMEs, deprecated dependencies, pinned old versions
+   - Check deployment: Dockerfile, CI config, deployment scripts?
+
+3. Output a structured discovery report:
+   ```
+   ## Discovery Report: {Project Name}
+
+   ### Stack
+   - Language: ... | Framework: ... | Database: ...
+   - Key libraries: ...
+   - Dev tools: ...
+
+   ### Architecture Overview
+   - Entry point: ...
+   - Module structure: [diagram or list]
+   - Data flow: [input → processing → storage]
+   - External dependencies: ...
+
+   ### Current State
+   - Tests: [none / partial / good] — coverage: ...
+   - Security: [no auth / basic auth / proper auth] — concerns: ...
+   - Deployment: [none / manual / CI/CD] — platform: ...
+   - Documentation: [none / partial / good]
+
+   ### Tech Debt & Known Issues
+   - [HIGH] ...
+   - [MEDIUM] ...
+   - [LOW] ...
+
+   ### Conventions Detected
+   - Naming: ...
+   - Structure: ...
+   - Error handling: ...
+   - Testing: ...
+
+   ### Recommended Next Steps
+   1. Marcus should document existing architecture decisions (run `/vs-marcus document`)
+   2. Elena should create an improvement plan (run `/vs-elena create brownfield`)
+   3. ...
+   ```
+4. Populate `docs/memory.md` with discovered stack, conventions, known issues, and gotchas
+5. Create `docs/project-brief.md` from what the codebase reveals (purpose, users, features)
+6. Log the discovery session in `docs/memory.md`
+
 **research** (validate assumptions with real data):
 1. Understand what the user wants to validate:
    - Does this solution exist already? (competitive landscape)
@@ -124,3 +191,4 @@ Help the user transform a rough idea into a validated, well-scoped project brief
 - After **ideate**: "Brief is ready! **Marcus** can pick the right tech stack (`/vs-marcus`)."
 - After **challenge**: "I've pushed back on a few things — the brief is tighter now. **Marcus** can architect this (`/vs-marcus`), or run `/vs-sofia research` to validate specific assumptions first."
 - After **research**: "Research done. The brief has been updated with my findings. **Marcus** is next for architecture (`/vs-marcus`)."
+- After **discover**: "I've mapped out the existing codebase. Memory and brief are populated. **Marcus** should document the architecture decisions already embedded in the code (`/vs-marcus document`), then **Elena** can plan improvements (`/vs-elena create brownfield`)."

@@ -26,6 +26,7 @@ All agents follow the shared constitution at `agents/constitution.md`. Key rules
 3. **Phase Boundaries** — Each agent stays in their lane
 4. **Convention First** — Follow existing project patterns
 5. **Ask, Don't Assume** — Clarify ambiguity before acting
+6. **Respect Existing Code** — In brownfield projects, understand before changing. Improve incrementally.
 
 ## Project State
 
@@ -55,8 +56,18 @@ No persona — invoked by role when that step comes up:
 | `/vs-feature-flags` | Design and implement feature flags for gradual rollouts and safe deployments |
 | `/vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
 | `/vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
+| `/vs-onboard` | Brownfield onboarding — discover existing codebase, document architecture, plan improvements |
 
 ## Workflow
+
+**Brownfield** (adopt existing project):
+```
+/vs-onboard
+  → Sofia discovers codebase → Marcus documents architecture → Elena plans improvements
+  → Normal development loop from here
+```
+
+**Greenfield** (new project):
 
 **Orchestrated** (John coordinates everything):
 ```
@@ -64,7 +75,7 @@ No persona — invoked by role when that step comes up:
   → John routes to the right agents in sequence automatically
 ```
 
-**Direct** (you choose the agent):
+**Direct** (you choose the agents):
 ```
 Sofia → Marcus → Elena → vs-env-setup →
   [design: Luna / Ravi / vs-db-design / vs-api-integration as needed] →

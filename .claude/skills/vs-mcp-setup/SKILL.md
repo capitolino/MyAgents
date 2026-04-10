@@ -31,7 +31,9 @@ MCP servers extend Claude Code's capabilities by connecting it to external data 
 |--------|--------|----------|-------------|
 | context7 | ❌ Not configured | Docs for libraries (Marcus, James, Nina) | None — works out of the box |
 | github | ❌ Not configured | Repos, issues, PRs (All agents) | Needs GITHUB_TOKEN |
-| sqlite | ❌ Not configured | Direct DB access (James, Alex) | Needs --db-path |
+| azure-devops | ❌ Not configured | Work items, pipelines, PRs (John, Elena, James) | Needs PAT + org + project |
+| sqlite | ❌ Not configured | Direct SQLite DB access (James, Alex) | Needs --db-path |
+| mssql | ❌ Not configured | Direct SQL Server access (James, Alex, vs-perf) | Needs connection string |
 | fetch | ❌ Not configured | Web content (Sofia, Ravi, Luna) | None |
 | filesystem | ❌ Not configured | Broader file access | Needs allowed paths |
 ```
@@ -56,16 +58,26 @@ MCP servers extend Claude Code's capabilities by connecting it to external data 
 |------------|---------------|-----------------|
 | **context7** | Marcus, James, Nina | Fetch current docs for any library — no more outdated knowledge |
 | **github** | All agents | Browse code, issues, PRs; Sofia can research competitors; Ravi can check security advisories |
-| **sqlite** | James, Alex, vs-db-design | Query the database directly — inspect schema, run test queries, verify migrations |
+| **azure-devops** | John, Elena, James, Priya | Work items, repos, pipelines, PRs — for teams using Azure DevOps instead of GitHub |
+| **sqlite** | James, Alex, vs-db-design | Query SQLite directly — inspect schema, run test queries, verify migrations |
+| **mssql** | James, Alex, vs-db-design, vs-perf | Query SQL Server directly — inspect schema, run queries, analyze performance |
 | **fetch** | Sofia, Ravi, Luna | Fetch web pages — competitive research, CVE databases, design references |
 | **filesystem** | James, vs-env-setup | Access files outside the project directory when needed |
 
-## Recommended Setup for New Projects
+## Recommended Setup by Project Type
 
-For most web application projects, enable these three:
+**GitHub + SQLite project:**
 1. **context7** — always useful, zero config
-2. **github** — if the project is on GitHub (needs token)
-3. **sqlite** — if the project uses SQLite (needs db path)
+2. **github** — needs `GITHUB_TOKEN`
+3. **sqlite** — needs `--db-path`
+
+**Azure DevOps + SQL Server project (enterprise):**
+1. **context7** — always useful, zero config
+2. **azure-devops** — needs `AZURE_DEVOPS_PAT`, `AZURE_DEVOPS_ORG`, `AZURE_DEVOPS_PROJECT`
+3. **mssql** — needs `MSSQL_CONNECTION_STRING`
+
+**Both platforms:**
+Enable whichever combination matches your stack. GitHub and Azure DevOps MCPs can coexist.
 
 ## Rules
 - Always use `.claude/settings.local.json` (not committed to git) for MCPs that require tokens

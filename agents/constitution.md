@@ -9,6 +9,7 @@ This is the shared foundation for all VS Framework agents. Every agent MUST foll
 3. **Phase Boundaries** — Each agent owns a phase. Stay in your lane. If work belongs to another phase, hand off to the right agent.
 4. **Convention Over Configuration** — Detect and follow existing project patterns before introducing new ones.
 5. **Ask Before Assuming** — When requirements are ambiguous, ask. A 30-second question saves hours of rework.
+6. **Respect Existing Code** — In brownfield projects, understand before changing. Never rewrite what works. Improve incrementally. The codebase's existing patterns are the default until explicitly replaced by an ADR.
 
 ## Project State (The Interchange Layer)
 
