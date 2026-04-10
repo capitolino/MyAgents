@@ -9,7 +9,7 @@ const https         = require('https');
 const { execSync }  = require('child_process');
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const REPO         = 'Unit4-Engineering-Labs/IO_Agents';
+const REPO         = 'capitolino/MyAgents';
 const DEFAULT_REF  = { type: 'branch', value: 'main' };
 
 function tarballUrl(ref) {

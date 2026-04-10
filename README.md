@@ -34,7 +34,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 ### New project (greenfield)
 
 ```bash
-npx github:Unit4-Engineering-Labs/IO_Agents init my-project
+npx github:capitolino/MyAgents init my-project
 cd my-project
 ```
 
@@ -44,7 +44,7 @@ Then start with `/vs-john` or `/vs-sofia` to brainstorm your idea.
 
 ```bash
 cd your-existing-project
-npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
+npx github:capitolino/MyAgents init --brownfield
 ```
 
 Then run `/vs-onboard` to let the agents discover your codebase, document the architecture, and create an improvement plan. No code is changed — the agents only read and document.
@@ -64,7 +64,7 @@ Or step by step: `/vs-sofia discover` → `/vs-marcus document` → `/vs-elena c
 Run from any directory — it copies framework files into the current folder:
 
 ```bash
-npx github:Unit4-Engineering-Labs/IO_Agents init
+npx github:capitolino/MyAgents init
 ```
 
 Every run **fetches the latest files directly from GitHub** — npx cache is bypassed at install time, so you always get the current version.
@@ -91,19 +91,19 @@ Every run **fetches the latest files directly from GitHub** — npx cache is byp
 
 ```bash
 # New project, always latest
-npx github:Unit4-Engineering-Labs/IO_Agents init my-project
+npx github:capitolino/MyAgents init my-project
 
 # Existing project, brownfield mode
-npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
+npx github:capitolino/MyAgents init --brownfield
 
 # Specific branch
-npx github:Unit4-Engineering-Labs/IO_Agents init --branch dev
+npx github:capitolino/MyAgents init --branch dev
 
 # Pinned release (stable)
-npx github:Unit4-Engineering-Labs/IO_Agents init --tag v1.0.0
+npx github:capitolino/MyAgents init --tag v1.0.0
 
 # New project, pinned release, Claude Code only
-npx github:Unit4-Engineering-Labs/IO_Agents init my-project --tag v1.0.0 --no-copilot
+npx github:capitolino/MyAgents init my-project --tag v1.0.0 --no-copilot
 ```
 
 ### What gets installed
@@ -126,7 +126,7 @@ your-project/
 ### Manual install (without npx)
 
 ```bash
-git clone https://github.com/Unit4-Engineering-Labs/IO_Agents.git
+git clone https://github.com/capitolino/MyAgents.git
 node MyAgents/bin/vs-framework.js init
 rm -rf MyAgents
 ```
@@ -138,7 +138,7 @@ rm -rf MyAgents
 ### Starting a new project (greenfield)
 
 ```bash
-npx github:Unit4-Engineering-Labs/IO_Agents init my-project
+npx github:capitolino/MyAgents init my-project
 cd my-project
 ```
 
@@ -154,7 +154,7 @@ Then let John coordinate, or go direct:
 
 ```bash
 cd your-existing-project
-npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
+npx github:capitolino/MyAgents init --brownfield
 ```
 
 Then run the onboarding skill — it maps your codebase, documents the architecture, and creates an improvement plan. **No code is changed.**

@@ -19,6 +19,6 @@ Follow the shared constitution at `agents/constitution.md`.
 
 ## When to Use
 
-- After running `npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield` in an existing project
+- After running `npx github:capitolino/MyAgents init --brownfield` in an existing project
 - When joining a project someone else built
 - When adopting VS Framework for an existing codebase

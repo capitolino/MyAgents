@@ -11,7 +11,7 @@ This skill orchestrates the full onboarding flow for adopting VS Framework in an
 
 ## When to Use
 
-- You just ran `npx github:Unit4-Engineering-Labs/IO_Agents init` inside an existing project
+- You just ran `npx github:capitolino/MyAgents init` inside an existing project
 - You want the VS Framework agents to understand your codebase before starting work
 - You're joining a project someone else built and need to ramp up
 
