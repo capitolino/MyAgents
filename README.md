@@ -135,22 +135,37 @@ rm -rf MyAgents
 
 ## Quick Start
 
-### Option A — Let John coordinate (recommended for complex tasks)
+### Starting a new project (greenfield)
 
-After installing, tell John what you want:
-- Claude Code: `/vs-john build me a task manager webapp`
-- Copilot: `@vs-john build me a task manager webapp`
+```bash
+npx github:capitolino/MyAgents init my-project
+cd my-project
+```
 
-John routes to the right agents in the right order automatically.
+Then let John coordinate, or go direct:
 
-### Option B — Go direct (recommended when you know what you need)
+| | Claude Code | GitHub Copilot |
+|--|-------------|----------------|
+| John coordinates | `/vs-john build me a task manager` | `@vs-john build me a task manager` |
+| Brainstorm first | `/vs-sofia` | `@vs-brainstorm` |
+| What's next? | `/vs-plan next` | `@vs-plan next` |
 
-Call the agent you need directly:
-- New idea? `/vs-sofia`
-- Need a plan? `/vs-elena create`
-- Ready to code? `/vs-james implement login endpoint`
-- Need a review? `/vs-priya src/auth/`
-- What's next? `/vs-plan next`
+### Adopting an existing project (brownfield)
+
+```bash
+cd your-existing-project
+npx github:capitolino/MyAgents init --brownfield
+```
+
+Then run the onboarding skill — it maps your codebase, documents the architecture, and creates an improvement plan. **No code is changed.**
+
+| | Claude Code | GitHub Copilot |
+|--|-------------|----------------|
+| Full auto-onboard | `/vs-onboard` | `@vs-onboard` |
+| Step 1 — discover | `/vs-sofia discover` | `@vs-brainstorm discover` |
+| Step 2 — document | `/vs-marcus document` | `@vs-architect document` |
+| Step 3 — plan | `/vs-elena create brownfield` | `@vs-plan create brownfield` |
+| Then continue | `/vs-plan next` | `@vs-plan next` |
 
 ## Workflow
 
