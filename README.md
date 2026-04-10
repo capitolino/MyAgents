@@ -278,35 +278,70 @@ your-project/
 
 MCP (Model Context Protocol) servers extend agent capabilities by connecting them to external tools — GitHub, databases, documentation libraries, and more. They are **opt-in** and never required to use the framework.
 
-Run `/vs-mcp-setup` (Claude Code) or `@vs-mcp-setup` (Copilot) to see what's available and enable what you need.
-
-| MCP Server | What it enables | Setup |
-|------------|-----------------|-------|
-| **context7** | Live library docs for Marcus, James, Nina — no more outdated knowledge | Zero config |
+| MCP Server | What it enables | Setup needed |
+|------------|-----------------|--------------|
+| **context7** | Live library docs for Marcus, James, Nina — no more outdated knowledge | None |
 | **github** | Browse repos, issues, PRs; Sofia researches competitors; Ravi checks advisories | `GITHUB_TOKEN` |
-| **azure-devops** | Work items, pipelines, PRs — for teams using Azure DevOps | `AZURE_DEVOPS_PAT` + org + project |
+| **azure-devops** | Work items, pipelines, PRs — for teams on Azure DevOps | `AZURE_DEVOPS_PAT` + org + project |
 | **sqlite** | James and Alex query SQLite directly — inspect schema, verify migrations | `--db-path` |
 | **mssql** | James and Alex query SQL Server — inspect schema, analyze performance | connection string |
-| **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | Zero config |
+| **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | None |
 | **filesystem** | Agents access files outside the project directory | allowed paths list |
 
-### Recommended setups
+### Claude Code
+
+Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-config.json` and writes to your local settings:
+
+```
+/vs-mcp-setup              # list all available MCPs and their status
+/vs-mcp-setup enable github
+/vs-mcp-setup disable sqlite
+```
+
+Settings that need tokens → `.claude/settings.local.json` (gitignored, never committed).
+Zero-config MCPs → `.claude/settings.json` (can be committed).
 
 **GitHub + SQLite project:**
-```bash
-/vs-mcp-setup enable context7   # zero config — always useful
-/vs-mcp-setup enable github     # needs GITHUB_TOKEN in your environment
-/vs-mcp-setup enable sqlite     # needs --db-path to your .db file
+```
+/vs-mcp-setup enable context7   ← zero config
+/vs-mcp-setup enable github     ← needs GITHUB_TOKEN env var
+/vs-mcp-setup enable sqlite     ← needs path to your .db file
 ```
 
 **Azure DevOps + SQL Server (enterprise):**
-```bash
-/vs-mcp-setup enable context7       # zero config — always useful
-/vs-mcp-setup enable azure-devops   # needs AZURE_DEVOPS_PAT, org, project
-/vs-mcp-setup enable mssql          # needs MSSQL_CONNECTION_STRING
+```
+/vs-mcp-setup enable context7       ← zero config
+/vs-mcp-setup enable azure-devops   ← needs AZURE_DEVOPS_PAT, org, project
+/vs-mcp-setup enable mssql          ← needs MSSQL_CONNECTION_STRING
 ```
 
-MCP settings that require tokens go into `.claude/settings.local.json` (gitignored). Zero-config MCPs can go into `.claude/settings.json` (committed). The config template is at `templates/mcp-config.json`.
+### GitHub Copilot (VS Code)
+
+Copilot reads MCPs from **`.vscode/mcp.json`** in your project root. Use the agent to configure it:
+
+```
+@vs-mcp-setup              # list available MCPs and their status
+@vs-mcp-setup enable github
+@vs-mcp-setup disable sqlite
+```
+
+The agent will create or update `.vscode/mcp.json`. Sensitive tokens go in VS Code User Settings (`settings.json`) as environment variable references — never hardcoded in `.vscode/mcp.json` (which is committed).
+
+**GitHub + SQLite project:**
+```
+@vs-mcp-setup enable context7   ← zero config
+@vs-mcp-setup enable github     ← set GITHUB_TOKEN in VS Code env settings
+@vs-mcp-setup enable sqlite     ← set path to your .db file
+```
+
+**Azure DevOps + SQL Server (enterprise):**
+```
+@vs-mcp-setup enable context7       ← zero config
+@vs-mcp-setup enable azure-devops   ← set AZURE_DEVOPS_PAT, org, project in VS Code env
+@vs-mcp-setup enable mssql          ← set MSSQL_CONNECTION_STRING in VS Code env
+```
+
+The full config template for both platforms is at `templates/mcp-config.json`.
 
 ---
 

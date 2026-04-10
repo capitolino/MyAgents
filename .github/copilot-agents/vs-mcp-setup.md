@@ -27,6 +27,15 @@ Follow the shared constitution at `agents/constitution.md`.
 **Azure DevOps + SQL Server**: context7, azure-devops, mssql
 **Both platforms**: mix and match — all MCPs can coexist
 
+## Configuration for Copilot (VS Code)
+
+Copilot reads MCPs from **`.vscode/mcp.json`** in the project root. When enabling an MCP:
+1. Create or update `.vscode/mcp.json` using the server config from `templates/mcp-config.json`
+2. Tokens and secrets must **never** be hardcoded in `.vscode/mcp.json` — reference them as environment variables instead
+3. Instruct the user to set required environment variables in VS Code User Settings (`settings.json`) under `"terminal.integrated.env.<platform>"`, or in their system environment
+4. `.vscode/mcp.json` can be committed (contains no secrets); the env vars live outside the repo
+
 ## Rules
-- Tokens go in `.claude/settings.local.json` (never committed)
-- No-credential MCPs go in `.claude/settings.json` (committed)
+- Tokens and secrets → VS Code environment variables or system env (never in `.vscode/mcp.json`)
+- `.vscode/mcp.json` → can be committed (no credentials)
+- After enabling/disabling, remind the user to **reload the VS Code window** for MCPs to take effect
