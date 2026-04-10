@@ -3,7 +3,6 @@ name: Mirror to capitolino/MyAgents
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:
