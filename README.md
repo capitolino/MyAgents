@@ -8,6 +8,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 |------|------|-------------|----------------|
 | **John** | **Project Manager** *(orchestrator)* | `/vs-pm` or `/vs-john` | `@vs-pm` or `@vs-john` |
 | **Sofia** | Brainstormer | `/vs-brainstorm` or `/vs-sofia` | `@vs-brainstorm` or `@vs-sofia` |
+| **Diego** | Debugger | `/vs-debug` or `/vs-diego` | `@vs-debug` or `@vs-diego` |
 | **Marcus** | Architect | `/vs-architect` or `/vs-marcus` | `@vs-architect` or `@vs-marcus` |
 | **Elena** | Planner | `/vs-plan` or `/vs-elena` | `@vs-plan` or `@vs-elena` |
 | **James** | Developer | `/vs-develop` or `/vs-james` | `@vs-develop` or `@vs-james` |
@@ -209,6 +210,7 @@ James (fix) → Alex (regression test) → Priya (fast review) → deploy
 
 | Situation | Use |
 |-----------|-----|
+| Something is broken | `/vs-debug` |
 | Existing project, first time | `/vs-onboard` |
 | New project, full flow | `/vs-john` |
 | Complex multi-agent task | `/vs-john` |

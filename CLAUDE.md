@@ -8,6 +8,7 @@ This project uses the VS Framework — a lightweight development methodology wit
 |------|------|---------|
 | **John** | **Project Manager** *(optional orchestrator)* | `/vs-pm` or `/vs-john` |
 | Sofia | Brainstormer | `/vs-brainstorm` or `/vs-sofia` |
+| Diego | Debugger | `/vs-debug` or `/vs-diego` |
 | Marcus | Architect | `/vs-architect` or `/vs-marcus` |
 | Elena | Planner | `/vs-plan` or `/vs-elena` |
 | James | Developer | `/vs-develop` or `/vs-james` |
