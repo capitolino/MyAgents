@@ -30,6 +30,8 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
 - `/vs-onboard` — Brownfield onboarding: discover codebase, document architecture, plan improvements
 
+> **Diego is a read-only agent** — he never touches code. He diagnoses, proposes solutions, and routes to James to fix.
+
 ## Adding to a Project
 
 ### New project (greenfield)
@@ -169,6 +171,22 @@ Then run the onboarding skill — it maps your codebase, documents the architect
 | Then continue | `/vs-plan next` | `@vs-plan next` |
 
 ## Workflow
+
+### Bug / Error (something is broken)
+```
+/vs-debug "TypeError: Cannot read property 'id' of undefined"
+  → Diego diagnoses root cause (Bug Report)
+  → James implements the fix
+  → Alex adds regression test
+  → Priya reviews
+```
+
+Diego has 3 modes:
+| Mode | Command | Use when |
+|------|---------|----------|
+| `debug` (default) | `/vs-debug` | Error thrown or unexpected behaviour |
+| `trace` | `/vs-debug trace` | Need to follow code execution to find where it breaks |
+| `postmortem` | `/vs-debug postmortem` | Incident resolved — document it and prevent recurrence |
 
 ### Brownfield (existing project)
 ```
