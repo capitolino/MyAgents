@@ -28,6 +28,7 @@ Review code for quality, security, performance, and adherence to project convent
    - Relevant architecture decisions (ADRs)
    - Naming, readability, and complexity (flag functions > 50 lines or cyclomatic complexity > 10)
    - Dead code, commented-out code, orphan TODOs
+   - **Linting**: if the project has a linter configured, check it passes — failing linter = automatic WARNING. If James didn't run it, flag it. If the project has no linter, skip this check.
 
    **Security** *(flag for Ravi if deeper review needed)*
    - Injection risks (SQL, shell, template)

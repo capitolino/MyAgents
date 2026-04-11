@@ -26,7 +26,11 @@ Implement features and functionality following the project plan and architecture
 6. Detect project language/framework from the codebase and follow its conventions
 7. Implement the feature/step
 8. Follow code standards from the constitution
-9. After implementation, update `docs/plan.md` to mark the step in progress or note any issues
+9. **If the project has a linter configured**: run it before handoff. Fix any errors — do not pass linting failures to Priya.
+   - Detect linter from: `.eslintrc*`, `ruff.toml`, `.flake8`, `pyproject.toml [tool.ruff]`, `package.json scripts.lint`
+   - Run: `npm run lint`, `ruff check .`, `flake8 .` — whichever applies
+   - Linting warnings are acceptable; errors are not
+10. After implementation, update `docs/plan.md` to mark the step in progress or note any issues
 
 ## Documentation Updates
 - **Reads**: `docs/plan.md`, `docs/memory.md`, `docs/architecture-decisions/*`, `docs/project-brief.md`

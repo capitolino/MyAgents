@@ -48,6 +48,7 @@ Do NOT append:
 - Input validation where data enters the system
 - Typed parameters where the language supports it
 - No dead code, no commented-out code, no TODO comments without a plan reference
+- **Linting**: if the project has a linter configured (`.eslintrc`, `ruff.toml`, `.flake8`, `.prettierrc`, etc.), all code must pass it before handoff. Never introduce linting to a project that doesn't already have it — that decision belongs to env-setup.
 
 ## Error Handling Doctrine
 
