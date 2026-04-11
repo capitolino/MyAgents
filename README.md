@@ -8,6 +8,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 |------|------|-------------|----------------|
 | **John** | **Project Manager** *(orchestrator)* | `/vs-pm` or `/vs-john` | `@vs-pm` or `@vs-john` |
 | **Sofia** | Brainstormer | `/vs-brainstorm` or `/vs-sofia` | `@vs-brainstorm` or `@vs-sofia` |
+| **Diego** | Debugger | `/vs-debug` or `/vs-diego` | `@vs-debug` or `@vs-diego` |
 | **Marcus** | Architect | `/vs-architect` or `/vs-marcus` | `@vs-architect` or `@vs-marcus` |
 | **Elena** | Planner | `/vs-plan` or `/vs-elena` | `@vs-plan` or `@vs-elena` |
 | **James** | Developer | `/vs-develop` or `/vs-james` | `@vs-develop` or `@vs-james` |
@@ -29,12 +30,14 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
 - `/vs-onboard` — Brownfield onboarding: discover codebase, document architecture, plan improvements
 
+> **Diego is a read-only agent** — he never touches code. He diagnoses, proposes solutions, and routes to James to fix.
+
 ## Adding to a Project
 
 ### New project (greenfield)
 
 ```bash
-npx github:capitolino/MyAgents init my-project
+npx github:Unit4-Engineering-Labs/IO_Agents init my-project
 cd my-project
 ```
 
@@ -44,7 +47,7 @@ Then start with `/vs-john` or `/vs-sofia` to brainstorm your idea.
 
 ```bash
 cd your-existing-project
-npx github:capitolino/MyAgents init --brownfield
+npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
 ```
 
 Then run `/vs-onboard` to let the agents discover your codebase, document the architecture, and create an improvement plan. No code is changed — the agents only read and document.
@@ -64,7 +67,7 @@ Or step by step: `/vs-sofia discover` → `/vs-marcus document` → `/vs-elena c
 Run from any directory — it copies framework files into the current folder:
 
 ```bash
-npx github:capitolino/MyAgents init
+npx github:Unit4-Engineering-Labs/IO_Agents init
 ```
 
 Every run **fetches the latest files directly from GitHub** — npx cache is bypassed at install time, so you always get the current version.
@@ -91,19 +94,19 @@ Every run **fetches the latest files directly from GitHub** — npx cache is byp
 
 ```bash
 # New project, always latest
-npx github:capitolino/MyAgents init my-project
+npx github:Unit4-Engineering-Labs/IO_Agents init my-project
 
 # Existing project, brownfield mode
-npx github:capitolino/MyAgents init --brownfield
+npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
 
 # Specific branch
-npx github:capitolino/MyAgents init --branch dev
+npx github:Unit4-Engineering-Labs/IO_Agents init --branch dev
 
 # Pinned release (stable)
-npx github:capitolino/MyAgents init --tag v1.0.0
+npx github:Unit4-Engineering-Labs/IO_Agents init --tag v1.0.0
 
 # New project, pinned release, Claude Code only
-npx github:capitolino/MyAgents init my-project --tag v1.0.0 --no-copilot
+npx github:Unit4-Engineering-Labs/IO_Agents init my-project --tag v1.0.0 --no-copilot
 ```
 
 ### What gets installed
@@ -126,7 +129,7 @@ your-project/
 ### Manual install (without npx)
 
 ```bash
-git clone https://github.com/capitolino/MyAgents.git
+git clone https://github.com/Unit4-Engineering-Labs/IO_Agents.git
 node MyAgents/bin/vs-framework.js init
 rm -rf MyAgents
 ```
@@ -138,7 +141,7 @@ rm -rf MyAgents
 ### Starting a new project (greenfield)
 
 ```bash
-npx github:capitolino/MyAgents init my-project
+npx github:Unit4-Engineering-Labs/IO_Agents init my-project
 cd my-project
 ```
 
@@ -154,7 +157,7 @@ Then let John coordinate, or go direct:
 
 ```bash
 cd your-existing-project
-npx github:capitolino/MyAgents init --brownfield
+npx github:Unit4-Engineering-Labs/IO_Agents init --brownfield
 ```
 
 Then run the onboarding skill — it maps your codebase, documents the architecture, and creates an improvement plan. **No code is changed.**
@@ -168,6 +171,22 @@ Then run the onboarding skill — it maps your codebase, documents the architect
 | Then continue | `/vs-plan next` | `@vs-plan next` |
 
 ## Workflow
+
+### Bug / Error (something is broken)
+```
+/vs-debug "TypeError: Cannot read property 'id' of undefined"
+  → Diego diagnoses root cause (Bug Report)
+  → James implements the fix
+  → Alex adds regression test
+  → Priya reviews
+```
+
+Diego has 3 modes:
+| Mode | Command | Use when |
+|------|---------|----------|
+| `debug` (default) | `/vs-debug` | Error thrown or unexpected behaviour |
+| `trace` | `/vs-debug trace` | Need to follow code execution to find where it breaks |
+| `postmortem` | `/vs-debug postmortem` | Incident resolved — document it and prevent recurrence |
 
 ### Brownfield (existing project)
 ```
@@ -209,6 +228,7 @@ James (fix) → Alex (regression test) → Priya (fast review) → deploy
 
 | Situation | Use |
 |-----------|-----|
+| Something is broken | `/vs-debug` |
 | Existing project, first time | `/vs-onboard` |
 | New project, full flow | `/vs-john` |
 | Complex multi-agent task | `/vs-john` |
@@ -278,35 +298,75 @@ your-project/
 
 MCP (Model Context Protocol) servers extend agent capabilities by connecting them to external tools — GitHub, databases, documentation libraries, and more. They are **opt-in** and never required to use the framework.
 
-Run `/vs-mcp-setup` (Claude Code) or `@vs-mcp-setup` (Copilot) to see what's available and enable what you need.
-
-| MCP Server | What it enables | Setup |
-|------------|-----------------|-------|
-| **context7** | Live library docs for Marcus, James, Nina — no more outdated knowledge | Zero config |
+| MCP Server | What it enables | Setup needed |
+|------------|-----------------|--------------|
+| **context7** | Live library docs for Marcus, James, Nina — no more outdated knowledge | None |
 | **github** | Browse repos, issues, PRs; Sofia researches competitors; Ravi checks advisories | `GITHUB_TOKEN` |
-| **azure-devops** | Work items, pipelines, PRs — for teams using Azure DevOps | `AZURE_DEVOPS_PAT` + org + project |
+| **azure-devops** | Work items, pipelines, PRs — for teams on Azure DevOps | `AZURE_DEVOPS_PAT` + org + project |
 | **sqlite** | James and Alex query SQLite directly — inspect schema, verify migrations | `--db-path` |
 | **mssql** | James and Alex query SQL Server — inspect schema, analyze performance | connection string |
-| **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | Zero config |
+| **fetch** | Sofia fetches competitor pages; Ravi checks CVE databases | None |
 | **filesystem** | Agents access files outside the project directory | allowed paths list |
+| **playwright** | Alex runs E2E tests in a real browser; Luna verifies UX and accessibility live | None |
 
-### Recommended setups
+### Claude Code
+
+Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-config.json` and writes to your local settings:
+
+```
+/vs-mcp-setup              # list all available MCPs and their status
+/vs-mcp-setup enable github
+/vs-mcp-setup disable sqlite
+```
+
+| | Tokens / secrets | Zero-config MCPs |
+|--|-----------------|------------------|
+| **Claude Code** | `.claude/settings.local.json` (gitignored) | `.claude/settings.json` (committed) |
+| **Copilot (VS Code)** | VS Code env settings — never in files | `.vscode/mcp.json` (committed) |
 
 **GitHub + SQLite project:**
-```bash
-/vs-mcp-setup enable context7   # zero config — always useful
-/vs-mcp-setup enable github     # needs GITHUB_TOKEN in your environment
-/vs-mcp-setup enable sqlite     # needs --db-path to your .db file
+```
+/vs-mcp-setup enable context7    ← zero config
+/vs-mcp-setup enable github      ← needs GITHUB_TOKEN env var
+/vs-mcp-setup enable sqlite      ← needs path to your .db file
+/vs-mcp-setup enable playwright  ← zero config, E2E testing
 ```
 
 **Azure DevOps + SQL Server (enterprise):**
-```bash
-/vs-mcp-setup enable context7       # zero config — always useful
-/vs-mcp-setup enable azure-devops   # needs AZURE_DEVOPS_PAT, org, project
-/vs-mcp-setup enable mssql          # needs MSSQL_CONNECTION_STRING
+```
+/vs-mcp-setup enable context7       ← zero config
+/vs-mcp-setup enable azure-devops   ← needs AZURE_DEVOPS_PAT, org, project
+/vs-mcp-setup enable mssql          ← needs MSSQL_CONNECTION_STRING
+/vs-mcp-setup enable playwright     ← zero config, E2E testing
 ```
 
-MCP settings that require tokens go into `.claude/settings.local.json` (gitignored). Zero-config MCPs can go into `.claude/settings.json` (committed). The config template is at `templates/mcp-config.json`.
+### GitHub Copilot (VS Code)
+
+Copilot reads MCPs from **`.vscode/mcp.json`** in your project root. Use the agent to configure it:
+
+```
+@vs-mcp-setup              # list available MCPs and their status
+@vs-mcp-setup enable github
+@vs-mcp-setup disable sqlite
+```
+
+The agent will create or update `.vscode/mcp.json`. Sensitive tokens go in VS Code User Settings (`settings.json`) as environment variable references — never hardcoded in `.vscode/mcp.json` (which is committed).
+
+**GitHub + SQLite project:**
+```
+@vs-mcp-setup enable context7   ← zero config
+@vs-mcp-setup enable github     ← set GITHUB_TOKEN in VS Code env settings
+@vs-mcp-setup enable sqlite     ← set path to your .db file
+```
+
+**Azure DevOps + SQL Server (enterprise):**
+```
+@vs-mcp-setup enable context7       ← zero config
+@vs-mcp-setup enable azure-devops   ← set AZURE_DEVOPS_PAT, org, project in VS Code env
+@vs-mcp-setup enable mssql          ← set MSSQL_CONNECTION_STRING in VS Code env
+```
+
+The full config template for both platforms is at `templates/mcp-config.json`.
 
 ---
 

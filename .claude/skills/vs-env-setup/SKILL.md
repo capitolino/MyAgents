@@ -46,6 +46,26 @@ Scaffold the project's development environment: folder structure, dependency fil
 - `.env.example` always — one variable per line, empty values, descriptive comments
 - Never create `.env` — that stays local and untracked
 
+### Linting (opt-in — ask before adding)
+Linting makes sense for most projects but should not be forced. After scaffolding, ask:
+*"Do you want to add a linter? It helps catch errors early and enforces consistent style."*
+
+If yes, configure for the detected stack:
+
+| Stack | Linter | Config file | Install |
+|-------|--------|-------------|---------|
+| Python | `ruff` (preferred) or `flake8` | `ruff.toml` or `.flake8` | `pip install ruff` |
+| Node.js / Express | ESLint | `.eslintrc.json` | `npm install -D eslint` |
+| TypeScript | ESLint + TypeScript plugin | `.eslintrc.json` | `npm install -D eslint @typescript-eslint/parser` |
+| React / Next.js | ESLint (usually pre-configured) | `.eslintrc.json` | included in `create-next-app` |
+| Vue / Svelte | ESLint + framework plugin | `.eslintrc.json` | `npm install -D eslint eslint-plugin-vue` |
+
+Also ask: *"Do you want a code formatter (Prettier for JS/TS, `black` for Python)?"*
+- If yes: add `.prettierrc` or `pyproject.toml` with `[tool.black]` config
+- Add a `lint` script to `package.json` or `Makefile` so linting is one command
+
+Log the linting decision in `docs/memory.md` → Conventions.
+
 ## .env.example Format
 ```
 # Database

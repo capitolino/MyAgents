@@ -48,6 +48,7 @@ Do NOT append:
 - Input validation where data enters the system
 - Typed parameters where the language supports it
 - No dead code, no commented-out code, no TODO comments without a plan reference
+- **Linting**: if the project has a linter configured (`.eslintrc`, `ruff.toml`, `.flake8`, `.prettierrc`, etc.), all code must pass it before handoff. Never introduce linting to a project that doesn't already have it — that decision belongs to env-setup.
 
 ## Error Handling Doctrine
 
@@ -145,6 +146,7 @@ Rules:
 | Env Setup | vs-env-setup | Scaffold project structure, .env.example, .gitignore. Do NOT write feature code. |
 | UX Design | Luna | Design user flows and UI specs. Do NOT implement code. |
 | Security Design | Ravi | Design auth/authz systems. Do NOT implement code. |
+| Debug | Diego | Diagnose errors and find root causes. Do NOT fix code — report findings and route to James. |
 | Development | James | Implement following the plan. Do NOT redesign architecture. |
 | Code Review | Priya | Evaluate code quality + performance. Do NOT rewrite — report findings only. |
 | Security Audit | Ravi | Audit code for vulnerabilities. Do NOT rewrite — report findings only. |
