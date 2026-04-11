@@ -141,19 +141,23 @@ function printHelp() {
 
   ${c.dim('Usage:')}
     npx github:${REPO} ${c.cyan('init')} [project-name] [flags]
-    node bin/vs-framework.js  ${c.cyan('init')} [project-name] [flags]
+    npx github:${REPO} ${c.cyan('update')} [flags]
+    node bin/vs-framework.js  ${c.cyan('<command>')} [flags]
 
   ${c.dim('Commands:')}
     ${c.cyan('init')} [name]    Add VS Framework to current dir, or create <name>/ first
+    ${c.cyan('update')}         Update framework files (agents, skills, templates) — preserves your docs/
 
   ${c.dim('Source flags (mutually exclusive):')}
     --branch <name>  Fetch from a specific branch     (default: main)
     --tag <name>     Fetch a specific release tag      (e.g. v1.0.0)
     --offline        Use cached package — no download
 
-  ${c.dim('Other flags:')}
+  ${c.dim('Other flags (init only):')}
     --force          Overwrite existing files (including CLAUDE.md)
     --brownfield     Install into existing project (skip scaffolding, show onboarding guide)
+
+  ${c.dim('Other flags (init + update):')}
     --no-copilot     Skip .github/ Copilot files (Claude Code only)
     --no-claude      Skip .claude/ skills (Copilot only)
     --help, -h       Show this help
@@ -166,6 +170,8 @@ function printHelp() {
     npx github:${REPO} init --tag v1.2.0
     npx github:${REPO} init my-webapp --tag v1.0.0 --no-copilot
     npx github:${REPO} init --brownfield
+    npx github:${REPO} update
+    npx github:${REPO} update --branch dev
 `);
 }
 
@@ -463,6 +469,96 @@ async function runInit(args) {
   if (projectArg) console.log(`  ${c.dim('Next:')} cd ${projectArg}\n`);
 }
 
+// ─── update command ──────────────────────────────────────────────────────────
+async function runUpdate(args) {
+  const noCopilot = args.includes('--no-copilot');
+  const noClaude  = args.includes('--no-claude');
+  const offline   = args.includes('--offline');
+  const branch    = flagValue(args, '--branch');
+  const tag       = flagValue(args, '--tag');
+
+  if (branch && tag) die('--branch and --tag are mutually exclusive. Use one or the other.');
+
+  const ref = tag    ? { type: 'tag',    value: tag }
+            : branch ? { type: 'branch', value: branch }
+            : DEFAULT_REF;
+
+  const dest = process.cwd();
+
+  // Must already be a VS Framework project
+  if (!fs.existsSync(path.join(dest, 'agents', 'constitution.md'))) {
+    die('No VS Framework found in this directory.\n     Run init first: npx github:' + REPO + ' init');
+  }
+
+  printBanner(ref);
+  console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
+  console.log(`  ${c.dim('Updates: agents/, .claude/, .github/copilot-agents/, templates/')}`);
+  console.log(`  ${c.dim('Preserved: docs/, CLAUDE.md, .gitignore, .env*')}`);
+  console.log();
+
+  let srcRoot = PKG_ROOT;
+  let tmpDir  = null;
+
+  if (!offline) {
+    try {
+      ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
+    } catch (err) {
+      console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
+      srcRoot = PKG_ROOT;
+    }
+  } else {
+    console.log(`  ${c.dim('(--offline: using cached package files)')}\n`);
+  }
+
+  console.log();
+  try {
+    // agents/ — always update
+    const agentsDest = path.join(dest, 'agents');
+    fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
+    tick('agents/', `${countFiles(agentsDest)} files`);
+
+    // .claude/ — update unless --no-claude
+    if (!noClaude) {
+      const claudeDest = path.join(dest, '.claude');
+      fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, { recursive: true });
+      tick('.claude/skills/', `${countFiles(claudeDest)} files`);
+    } else {
+      skip('.claude/skills/', 'skipped (--no-claude)');
+    }
+
+    // .github/copilot-agents/ — update unless --no-copilot
+    if (!noCopilot) {
+      const githubSrc  = path.join(srcRoot, '.github', 'copilot-agents');
+      const githubDest = path.join(dest, '.github', 'copilot-agents');
+      ensureDir(path.join(dest, '.github'));
+      fs.cpSync(githubSrc, githubDest, { recursive: true });
+      fs.copyFileSync(
+        path.join(srcRoot, '.github', 'copilot-instructions.md'),
+        path.join(dest, '.github', 'copilot-instructions.md')
+      );
+      tick('.github/', `${countFiles(githubDest) + 1} files`);
+    } else {
+      skip('.github/', 'skipped (--no-copilot)');
+    }
+
+    // templates/ — always update
+    const tmplDest = path.join(dest, 'templates');
+    fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
+    tick('templates/', `${countFiles(tmplDest)} files`);
+
+    // Skipped items (user-owned)
+    skip('CLAUDE.md', 'preserved (yours)');
+    skip('docs/', 'preserved (yours)');
+    skip('.gitignore', 'preserved (yours)');
+  } finally {
+    if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+
+  console.log();
+  console.log(`  ${c.green(c.bold('Done!'))} Framework files updated to latest.\n`);
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 const [,, command, ...rest] = process.argv;
 
@@ -472,6 +568,8 @@ if (!command || command === '--help' || command === '-h') {
   printVersion();
 } else if (command === 'init') {
   runInit(rest).catch(err => die(err.message));
+} else if (command === 'update') {
+  runUpdate(rest).catch(err => die(err.message));
 } else {
   console.error(`\n  Unknown command: ${command}\n  Run with --help for usage.\n`);
   process.exit(1);
