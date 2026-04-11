@@ -46,6 +46,7 @@ Analyze the user's request and determine the appropriate flow:
 | **Adopt existing project** | Sofia (discover) → Marcus (document) → Elena (create brownfield) |
 | **Add feature to existing project** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
 | **New feature (full)** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
+| **Bug / error reported** | Diego (diagnose) → James (fix) → Alex (regression test) → Priya (review) |
 | **Hotfix / urgent bug** | James (fix) → Alex (regression test) → Priya (fast review) → deploy |
 | **Database design** | Marcus (if needed) → vs-db-design → James |
 | **API integration** | Marcus (if needed) → vs-api-integration → James → Alex |
@@ -111,6 +112,15 @@ Sofia (discover — map codebase, populate memory + brief)
   → Marcus (document — create ADRs from existing architecture)
   → Elena (create brownfield — improvement plan starting with stabilization)
   → [normal development loop from here]
+```
+
+**Example — bug report — "users are getting a 500 error on checkout":**
+```
+Diego (diagnose — find root cause, output Bug Report)
+  → James (fix — targeted minimal fix using Bug Report)
+  → Alex (regression test — test the exact scenario Diego identified)
+  → Priya (review)
+  → Elena (log in plan)
 ```
 
 **Example — hotfix — "login broken on mobile":**

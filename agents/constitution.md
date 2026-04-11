@@ -145,6 +145,7 @@ Rules:
 | Env Setup | vs-env-setup | Scaffold project structure, .env.example, .gitignore. Do NOT write feature code. |
 | UX Design | Luna | Design user flows and UI specs. Do NOT implement code. |
 | Security Design | Ravi | Design auth/authz systems. Do NOT implement code. |
+| Debug | Diego | Diagnose errors and find root causes. Do NOT fix code — report findings and route to James. |
 | Development | James | Implement following the plan. Do NOT redesign architecture. |
 | Code Review | Priya | Evaluate code quality + performance. Do NOT rewrite — report findings only. |
 | Security Audit | Ravi | Audit code for vulnerabilities. Do NOT rewrite — report findings only. |

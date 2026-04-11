@@ -8,6 +8,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 |------|------|-------------|----------------|
 | **John** | **Project Manager** *(orchestrator)* | `/vs-pm` or `/vs-john` | `@vs-pm` or `@vs-john` |
 | **Sofia** | Brainstormer | `/vs-brainstorm` or `/vs-sofia` | `@vs-brainstorm` or `@vs-sofia` |
+| **Diego** | Debugger | `/vs-debug` or `/vs-diego` | `@vs-debug` or `@vs-diego` |
 | **Marcus** | Architect | `/vs-architect` or `/vs-marcus` | `@vs-architect` or `@vs-marcus` |
 | **Elena** | Planner | `/vs-plan` or `/vs-elena` | `@vs-plan` or `@vs-elena` |
 | **James** | Developer | `/vs-develop` or `/vs-james` | `@vs-develop` or `@vs-james` |
@@ -28,6 +29,8 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
 - `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
 - `/vs-onboard` — Brownfield onboarding: discover codebase, document architecture, plan improvements
+
+> **Diego is a read-only agent** — he never touches code. He diagnoses, proposes solutions, and routes to James to fix.
 
 ## Adding to a Project
 
@@ -169,6 +172,22 @@ Then run the onboarding skill — it maps your codebase, documents the architect
 
 ## Workflow
 
+### Bug / Error (something is broken)
+```
+/vs-debug "TypeError: Cannot read property 'id' of undefined"
+  → Diego diagnoses root cause (Bug Report)
+  → James implements the fix
+  → Alex adds regression test
+  → Priya reviews
+```
+
+Diego has 3 modes:
+| Mode | Command | Use when |
+|------|---------|----------|
+| `debug` (default) | `/vs-debug` | Error thrown or unexpected behaviour |
+| `trace` | `/vs-debug trace` | Need to follow code execution to find where it breaks |
+| `postmortem` | `/vs-debug postmortem` | Incident resolved — document it and prevent recurrence |
+
 ### Brownfield (existing project)
 ```
 /vs-onboard
@@ -209,6 +228,7 @@ James (fix) → Alex (regression test) → Priya (fast review) → deploy
 
 | Situation | Use |
 |-----------|-----|
+| Something is broken | `/vs-debug` |
 | Existing project, first time | `/vs-onboard` |
 | New project, full flow | `/vs-john` |
 | Complex multi-agent task | `/vs-john` |
