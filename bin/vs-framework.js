@@ -43,6 +43,13 @@ const c = {
 const PKG_ROOT = path.resolve(__dirname, '..');
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
+function prompt(question) {
+  return new Promise(resolve => {
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(question, answer => { rl.close(); resolve(answer); });
+  });
+}
+
 function countFiles(dir) {
   if (!fs.existsSync(dir)) return 0;
   let count = 0;
@@ -391,8 +398,14 @@ async function runInit(args) {
   const alreadyInit = fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
   if (alreadyInit && !force) {
     console.log(`  ${c.yellow('⚠')}  VS Framework already found in this directory.`);
-    console.log(`     Run with ${c.bold('--force')} to overwrite existing files.\n`);
-    process.exit(0);
+    console.log();
+    const answer = await prompt(`  Update framework files? ${c.dim('(agents, skills, templates — your docs are safe)')} [Y/n] `);
+    if (answer.trim().toLowerCase() === 'n') {
+      console.log(`\n  ${c.dim('Cancelled. Use --force to overwrite everything including CLAUDE.md.')}\n`);
+      process.exit(0);
+    }
+    console.log();
+    return runUpdate(args);
   }
 
   let srcRoot = PKG_ROOT;
