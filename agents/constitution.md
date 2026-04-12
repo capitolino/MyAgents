@@ -105,6 +105,7 @@ Rules:
 - **PRs/MRs**: small and focused — one feature or fix per PR; include test evidence in description
 - **Never commit to `main` directly** on team projects
 - **`.env` is always gitignored** — use `.env.example` as the committed reference
+- **Parallel branches**: `docs/*.md` uses `merge=union` strategy — add to `.gitattributes` so parallel branch merges don't conflict on append-only files. Each parallel James branch merges to `dev` independently; Alex runs integration tests after all branches land.
 
 ## Database Conventions
 

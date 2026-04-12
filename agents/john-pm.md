@@ -53,6 +53,7 @@ Analyze the user's request and determine the appropriate flow:
 | **Adopt existing project** | Sofia (discover) → Marcus (document) → Elena (create brownfield) |
 | **Add feature to existing project** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
 | **New feature (full)** | Elena (next) → [design phase*] → James → Alex → Priya → [audit phase*] → Elena (update) |
+| **Parallel steps available** | Elena (next) → James × N in parallel (each on own branch) → Priya reviews each → merge → Elena (update) |
 | **Bug / error reported** | Diego (diagnose) → James (fix) → Alex (regression test) → Priya (review) |
 | **Hotfix / urgent bug** | James (fix) → Alex (regression test) → Priya (fast review) → deploy |
 | **Database design** | Marcus (if needed) → vs-db-design → James |
@@ -138,6 +139,28 @@ James (targeted fix — no design needed)
   → deploy
   → Elena (log hotfix in plan)
 ```
+
+### Parallel James Protocol
+
+When Elena's `next` surfaces multiple `[parallel]` steps, John coordinates like this:
+
+1. **Announce the parallel plan** — list each James instance, its assigned step, and its branch name:
+   ```
+   Running 3 James instances in parallel:
+     James-1 → feature/auth-api       → "Implement auth API endpoints"
+     James-2 → feature/dashboard-ui   → "Implement dashboard UI components"
+     James-3 → feature/email-service  → "Set up email service"
+   ```
+2. **Scope rules** — each James MUST stay within his assigned step:
+   - Only modify files within his domain (e.g. James-2 never touches auth files)
+   - Only mark HIS plan step as in-progress — never touch another step's status
+   - Work on a dedicated branch: `feature/<step-name>`
+   - If his step requires a shared file → STOP, flag to John — don't assume it's safe to edit
+3. **Convergence** — after all parallel James instances finish:
+   - Priya reviews each branch independently
+   - Branches merge to `dev` one at a time (resolve any docs/ conflicts with `union` merge)
+   - Alex writes integration tests after all branches are merged
+   - Elena marks all parallel steps done together
 
 ### Delegation Protocol
 
