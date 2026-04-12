@@ -45,6 +45,10 @@ Scaffold the project's development environment: folder structure, dependency fil
 - `.gitignore` always (OS files: `.DS_Store`, `Thumbs.db`, `desktop.ini`)
 - `.env.example` always — one variable per line, empty values, descriptive comments
 - Never create `.env` — that stays local and untracked
+- `.gitattributes` always — ensures `docs/*.md` uses union merge strategy so parallel James branches don't conflict on shared docs:
+  ```
+  docs/*.md merge=union
+  ```
 
 ### Linting (opt-in — ask before adding)
 Linting makes sense for most projects but should not be forced. After scaffolding, ask:

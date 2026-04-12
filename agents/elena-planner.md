@@ -68,8 +68,19 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
      - Mark pre-existing code that needs refactoring as tech debt, not blockers
 
 5. Each phase gets 3-7 concrete checkbox steps
-6. Write `docs/plan.md` using the format from `templates/phase-plan.md`
-7. Review with user
+6. **Tag parallelizable steps** — when two or more steps in the same phase are fully independent (different files, different domains, no shared state), mark them with `[parallel]`:
+   ```markdown
+   - [ ] Implement auth API endpoints          [parallel] | agent: James
+   - [ ] Implement dashboard UI components     [parallel] | agent: James
+   - [ ] Set up email service                  [parallel] | agent: James
+   ```
+   Rules for tagging `[parallel]`:
+   - Steps must touch **different files/modules** — no shared source files
+   - Steps must **not depend on each other's output** — neither is a prerequisite of the other
+   - Each step must be completable on its own git branch without needing the other's changes
+   - If in doubt, do NOT tag parallel — sequential is always safe
+7. Write `docs/plan.md` using the format from `templates/phase-plan.md`
+8. Review with user
 
 **update**:
 1. Read current `docs/plan.md`
@@ -82,7 +93,9 @@ Create and maintain a lightweight phased project plan (`docs/plan.md`) that guid
 
 **next**:
 1. Read `docs/plan.md`
-2. Find the next unchecked `[ ]` step
+2. Find the next unchecked `[ ]` step(s):
+   - If the next step(s) are tagged `[parallel]`, collect **all consecutive parallel steps** in the current phase and surface them together
+   - If the next step is sequential (no `[parallel]` tag), surface only that one step
 3. Route to the right agent using this decision tree:
 
 ```
@@ -107,7 +120,16 @@ Does the step mention...
 │   → James
 ```
 
-4. Always announce: **"Next step: [step text]. Routing to [Agent] (`/vs-[command]`)."**
+4. Announce routing:
+   - **Single step**: *"Next step: [step text]. Routing to [Agent] (`/vs-[command]`)."*
+   - **Parallel steps**: *"Next: [N] parallel steps ready. Run these simultaneously, each on its own branch:"*
+     ```
+     James-1 → feature/[step-1-name]: [step 1 description]
+     James-2 → feature/[step-2-name]: [step 2 description]
+     ...
+     Activate each with: /vs-james [step description]
+     When all are done → Priya reviews each branch → merge to dev → Elena marks all done
+     ```
 
 **blocked** (when a step can't proceed):
 1. Read `docs/plan.md` to understand the blocker
