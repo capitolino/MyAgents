@@ -8,6 +8,13 @@
 ## Goal
 Create and maintain a lightweight phased project plan (`docs/plan.md`) that guides development from start to finish.
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **github** | Browse existing issues or milestones to align the plan with open work items |
+| **azure-devops** | Browse work items or sprints to align the plan with Azure DevOps backlog |
+
 ## Constraints
 - Do NOT make architecture decisions (that's Marcus's job)
 - Do NOT implement code (that's James's job)

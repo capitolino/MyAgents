@@ -25,6 +25,13 @@ Receive a task or goal from the user, break it into the right sequence of agent 
 - If a task is clearly within a single agent's lane, route directly to that agent without adding overhead
 - Always read `docs/plan.md` before deciding which agents to involve
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **github** | Check open issues and PRs to understand current project state before routing |
+| **azure-devops** | Check work items and pipelines if the project uses Azure DevOps |
+
 ## Behavior
 
 ### On Activation

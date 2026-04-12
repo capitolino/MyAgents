@@ -19,7 +19,7 @@ All agents read and write to these shared locations:
 |------|---------|-----------|------------|
 | `docs/project-brief.md` | What we're building, for whom, why | Sofia (Brainstormer) | Any agent when scope changes |
 | `docs/plan.md` | Phased checklist of work | Elena (Planner) | Every agent after completing work |
-| `docs/memory.md` | Living project knowledge base | Installer (stub) | Every agent after completing work |
+| `docs/memory.md` | Living project knowledge base | CLI installer (stub) or Sofia (discover) | Every agent after completing work |
 | `docs/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
 
 **Rule — Plan**: If `docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
@@ -85,7 +85,7 @@ Rules:
 
 - **Test against requirements**, not implementation details — tests should survive refactors
 - **Pyramid**: unit (fast, many) > integration (medium) > end-to-end (slow, few)
-- **Coverage target**: 80% line coverage minimum; 100% on auth, payment, and data-mutation paths
+- **Coverage target**: 80% line coverage minimum; **100% on auth, payment, and data-mutation paths** — no exceptions
 - **Test names** describe the scenario: `test_login_fails_with_wrong_password`, not `test_login_2`
 - **No test should depend on another** — each test sets up and tears down its own state
 - **Mock only external dependencies** (HTTP calls, email, payment APIs) — never mock the DB in integration tests
@@ -120,6 +120,39 @@ Rules:
 - Wrap external APIs in a service layer
 - Handle pagination, rate limiting, retries, and errors at the service layer
 - Never expose raw API responses to the UI layer
+
+## MCP Awareness
+
+If an MCP server is configured, agents **must use it** when it applies to their current task — don't default to guessing or web-searching when a direct tool is available.
+
+| MCP | Use when | Primary agents |
+|-----|----------|---------------|
+| **context7** | Writing or reviewing code that uses a versioned library/framework | James, Alex, vs-db-design, vs-api-integration |
+| **github** | Browsing issues, PRs, or code in a GitHub repo | John, Elena, James, Diego, Priya |
+| **azure-devops** | Browsing work items, repos, or pipelines in Azure DevOps | John, Elena, James, Priya |
+| **sqlite** | Querying or inspecting a local SQLite database | James, Alex, Diego, vs-db-design, vs-perf |
+| **mssql** | Querying or inspecting a SQL Server database | James, Alex, Diego, vs-db-design, vs-perf |
+| **fetch** | Fetching live web content, CVE databases, or external API docs | Sofia, Ravi, Luna |
+| **playwright** | Running E2E tests or inspecting a real browser | Alex, Luna |
+
+Each agent's file specifies exactly how and when to invoke its relevant MCPs.
+
+## Severity Taxonomy
+
+All agents that produce review reports (Priya, Ravi, Luna, Diego) use this unified scale:
+
+| Level | Meaning | Blocks DoD? |
+|-------|---------|-------------|
+| **CRITICAL** | Must fix before merge — actively broken, exploitable, or blocks users | ✅ Always |
+| **WARNING** | Should fix before merge — significant risk or quality issue; if accepted, log as known debt | ✅ Always |
+| **SUGGESTION** | Good practice — recommended but doesn't block | ❌ No |
+| **NIT** | Style preference — minor polish, no functional impact | ❌ No |
+
+**Sofia's pre-development severity** (HIGH/MEDIUM/LOW) applies to *scope and business risk* only — it is not the same scale and does not map to code-phase findings.
+
+**When multiple agents flag CRITICAL**: Security CRITICAL (Ravi) takes priority — it must be resolved first. All other CRITICAL findings are resolved in parallel before DoD. If two CRITICALs conflict in resolution approach, escalate to the user — never resolve a security CRITICAL by suppressing it.
+
+**Linter failures**: James must run the linter before handoff. If he didn't, Priya flags it as WARNING. James re-runs, fixes errors, and resubmits — Priya does not re-review the full diff, only confirms lint passes.
 
 ## Communication Style
 
@@ -165,14 +198,16 @@ The implementation loop for each plan step follows this order:
 2. Alex writes tests (can start during James's work if scope is clear)
 3. Priya reviews code + tests together
    └─ CRITICAL/WARNING found? → James fixes → back to step 3
-4. IF step has frontend → Luna reviews UX/accessibility
-   └─ CRITICAL found? → James fixes → back to step 4
-5. IF step touches auth/PII/money → Ravi audits security
-   └─ CRITICAL found? → James fixes → back to step 5
+4. IF step has any frontend output → Luna reviews UX/accessibility  ← MANDATORY, not optional
+   └─ CRITICAL/WARNING found? → James fixes → back to step 4
+5. IF step touches auth/PII/money → Ravi audits security  ← MANDATORY, not optional
+   └─ CRITICAL/WARNING found? → James fixes → back to step 5
 6. Elena marks step done in docs/plan.md
 ```
 
 Priya reviews **after** Alex writes tests — she reviews code AND tests together. This catches both implementation issues and test quality gaps in a single pass.
+
+Steps 4 and 5 are **mandatory gates**, not suggestions. A step with frontend output cannot reach DoD without Luna's sign-off. A step touching auth/PII/money cannot reach DoD without Ravi's sign-off.
 
 ## Definition of Done
 
@@ -181,10 +216,10 @@ A feature step is **done** when all of the following are true:
 | Check | Owner | When required |
 |-------|-------|---------------|
 | Implementation complete and follows conventions | James | Always |
-| Tests pass with ≥80% coverage | Alex | Always |
+| Tests pass with ≥80% coverage overall; 100% on auth/payment/mutation paths | Alex | Always |
 | No CRITICAL or WARNING findings from code review | Priya | Always |
-| No CRITICAL security findings | Ravi | Steps with auth, PII, or money |
-| No CRITICAL UX findings, WCAG 2.1 AA met | Luna | Steps with a frontend |
+| No CRITICAL or WARNING security findings | Ravi | Steps with auth, PII, or money |
+| No CRITICAL or WARNING UX findings; WCAG 2.1 AA met | Luna | Steps with any frontend output |
 | Docs updated if API or user-facing behaviour changed | Nina | When applicable |
 | `docs/plan.md` step marked done | Elena | Always |
 
