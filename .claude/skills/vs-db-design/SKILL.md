@@ -15,6 +15,13 @@ Reference patterns at `.claude/skills/vs-db-design/references/db-patterns.md`.
 ## Your Job
 Design normalized database schemas and generate migrations for the project's database engine.
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **context7** | Before generating migrations — fetch current syntax for the migration framework in use |
+| **sqlite** / **mssql** | Inspect the existing schema directly before designing changes; verify migrations applied correctly |
+
 ## Context7 (if available)
 
 If the **Context7 MCP** is configured, fetch current migration framework docs before generating migrations — `upgrade`/`downgrade` syntax, column types, and index APIs vary across versions:

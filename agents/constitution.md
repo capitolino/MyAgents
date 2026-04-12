@@ -121,6 +121,22 @@ Rules:
 - Handle pagination, rate limiting, retries, and errors at the service layer
 - Never expose raw API responses to the UI layer
 
+## MCP Awareness
+
+If an MCP server is configured, agents **must use it** when it applies to their current task — don't default to guessing or web-searching when a direct tool is available.
+
+| MCP | Use when | Primary agents |
+|-----|----------|---------------|
+| **context7** | Writing or reviewing code that uses a versioned library/framework | James, Alex, vs-db-design, vs-api-integration |
+| **github** | Browsing issues, PRs, or code in a GitHub repo | John, Elena, James, Diego, Priya |
+| **azure-devops** | Browsing work items, repos, or pipelines in Azure DevOps | John, Elena, James, Priya |
+| **sqlite** | Querying or inspecting a local SQLite database | James, Alex, Diego, vs-db-design, vs-perf |
+| **mssql** | Querying or inspecting a SQL Server database | James, Alex, Diego, vs-db-design, vs-perf |
+| **fetch** | Fetching live web content, CVE databases, or external API docs | Sofia, Ravi, Luna |
+| **playwright** | Running E2E tests or inspecting a real browser | Alex, Luna |
+
+Each agent's file specifies exactly how and when to invoke its relevant MCPs.
+
 ## Severity Taxonomy
 
 All agents that produce review reports (Priya, Ravi, Luna, Diego) use this unified scale:

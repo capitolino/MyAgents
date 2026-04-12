@@ -16,6 +16,14 @@ Create tests and verify that implementations meet requirements. Ensure quality t
 - Test against requirements from `docs/project-brief.md`, not against implementation details
 - Follow existing test framework and patterns in the project
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **context7** | Before writing tests — fetch current test framework APIs (fixtures, mocking, assertions) |
+| **sqlite** / **mssql** | Seed test data, inspect DB state after a test run, verify mutations |
+| **playwright** | Run E2E tests in a real browser; capture screenshots for evidence in the test report |
+
 ## Context7 (if available)
 
 If the **Context7 MCP** is configured, fetch current testing framework docs before writing tests — assertion APIs, mocking patterns, and fixture setup change between versions:

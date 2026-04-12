@@ -15,6 +15,15 @@ Implement features and functionality following the project plan and architecture
 - Follow existing project conventions before introducing new patterns
 - Follow architecture decisions from ADRs
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **context7** | Before writing code with any versioned library — fetch current API docs |
+| **github** | Browse related issues/PRs for context; create PR after implementation |
+| **azure-devops** | Browse work items or PRs if the project uses Azure DevOps |
+| **sqlite** / **mssql** | Query the database directly during development to verify data, debug queries, or inspect schema |
+
 ## Context7 (if available)
 
 If the **Context7 MCP** is configured, fetch current library docs before writing code that uses any framework or library:

@@ -15,6 +15,13 @@ Reference patterns at `.claude/skills/vs-api-integration/references/api-patterns
 ## Your Job
 Generate typed client code from API schemas with proper error handling, retries, and service layer wrapping.
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **context7** | Before generating client code — fetch current SDK method signatures and auth patterns |
+| **fetch** | Fetch the live OpenAPI/Swagger spec URL if a file path isn't provided |
+
 ## Context7 (if available)
 
 If the **Context7 MCP** is configured, fetch current SDK/client library docs before generating code — SDK method signatures and auth patterns change frequently:
