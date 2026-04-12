@@ -15,6 +15,15 @@ Reference patterns at `.claude/skills/vs-api-integration/references/api-patterns
 ## Your Job
 Generate typed client code from API schemas with proper error handling, retries, and service layer wrapping.
 
+## Context7 (if available)
+
+If the **Context7 MCP** is configured, fetch current SDK/client library docs before generating code — SDK method signatures and auth patterns change frequently:
+```
+1. mcp__context7__resolve-library-id  →  get the library ID for the HTTP client or SDK in use
+2. mcp__context7__get-library-docs    →  fetch the relevant section (e.g. "authentication", "error handling", "retries")
+```
+If Context7 is not configured, use built-in knowledge.
+
 ## Behavior
 1. Accept an API schema file path or URL from `$ARGUMENTS`
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL

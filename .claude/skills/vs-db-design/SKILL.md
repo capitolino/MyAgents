@@ -15,6 +15,15 @@ Reference patterns at `.claude/skills/vs-db-design/references/db-patterns.md`.
 ## Your Job
 Design normalized database schemas and generate migrations for the project's database engine.
 
+## Context7 (if available)
+
+If the **Context7 MCP** is configured, fetch current migration framework docs before generating migrations — `upgrade`/`downgrade` syntax, column types, and index APIs vary across versions:
+```
+1. mcp__context7__resolve-library-id  →  get the library ID (e.g. "alembic", "knex", "prisma")
+2. mcp__context7__get-library-docs    →  fetch the relevant section (e.g. "migrations", "schema", "indexes")
+```
+If Context7 is not configured, use built-in knowledge.
+
 ## Behavior
 1. Read `docs/project-brief.md` for domain understanding
 2. Read `docs/architecture-decisions/` for DB engine choice (SQLite vs SQL Server)
