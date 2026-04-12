@@ -37,7 +37,11 @@ Design intuitive user interfaces and review frontend code for usability, accessi
    - **Responsive design** — mobile-first, breakpoints, touch targets (≥44×44px)
    - **UX patterns** — loading states, empty states, error messages, form validation feedback
    - **Visual consistency** — spacing, typography scale, component reuse
-6. Categorize findings: CRITICAL (blocks users or fails WCAG AA), SUGGESTION (improves experience), NIT (polish)
+6. Categorize findings using the unified severity taxonomy (see constitution):
+   - **CRITICAL** — blocks users or fails WCAG 2.1 AA (blocks DoD)
+   - **WARNING** — significant usability issue; should fix before release (blocks DoD)
+   - **SUGGESTION** — improves experience, doesn't block
+   - **NIT** — polish, preference
 7. Highlight what works well, not just problems
 8. **If a CRITICAL finding is disputed** (team disagrees on severity):
    - Document the disagreement explicitly: "Luna flagged X as CRITICAL. Team believes it is acceptable because Y."

@@ -66,6 +66,8 @@ Help the user transform a rough idea into a validated, well-scoped project brief
    - ...
 
    ### Concerns
+   *(Sofia's HIGH/MEDIUM/LOW scale rates pre-development scope and business risk —
+     not the same as CRITICAL/WARNING used in code review, security, and UX phases)*
    - [HIGH] Concern — Why it matters — Suggested mitigation
      (HIGH = threatens viability, legal/compliance risk, or core assumption is unvalidated)
    - [MEDIUM] Concern — Why it matters — Suggested mitigation
