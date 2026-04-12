@@ -27,7 +27,10 @@ Create tests and verify that implementations meet requirements. Ensure quality t
    - Identify critical paths (happy path scenarios)
    - Identify edge cases and error scenarios
    - Identify security-relevant test cases (auth boundaries, input validation)
-8. Create test files following project conventions
+8. Create test files following project conventions, with test names that describe the scenario and outcome:
+   - Format: `test_<action>_<condition>_<expected_result>` (Python) or `it('<action> when <condition>')` (JS)
+   - ✓ `test_login_fails_with_expired_token` — `it('returns 401 when token is expired')`
+   - ✗ `test_login_2` — `it('works correctly')`
 9. Run tests and report results with pass/fail counts
 10. For things that can't be automated, create a manual test checklist in the PR or plan
 

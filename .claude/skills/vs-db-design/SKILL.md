@@ -26,6 +26,9 @@ Design normalized database schemas and generate migrations for the project's dat
    - Include audit columns where appropriate (created_at, updated_at)
    - Handle soft deletes if the domain requires it
 5. Generate migration files in the project's migration framework (Alembic, Knex, EF, etc.)
+   - Each migration must be **reversible**: include both `up` and `down` (or `upgrade`/`downgrade`) functions
+   - **Data safety rules**: migrations that drop columns or tables must first confirm (in a comment) that no live data depends on them. If uncertain, rename/soft-delete first — never hard-drop in the first migration.
+   - Test the rollback: `down` must restore the schema exactly. If it can't (e.g. data was transformed), document why and mark the migration as irreversible with a warning comment.
 6. Create an ADR in `docs/architecture-decisions/` for significant schema decisions
 7. Update `docs/plan.md` with schema design status
 

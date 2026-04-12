@@ -20,7 +20,11 @@ Implement features and functionality following the project plan and architecture
 2. Read `docs/plan.md` to understand current context and the step being worked on
 3. Read `docs/memory.md` for conventions, known issues, and project context
 4. Read relevant ADRs for technology decisions
-5. **First step of a new project?**
+5. **Before writing any code — check for architectural red flags**:
+   - Does the step as described require violating an existing ADR? If yes, **stop and flag it** — do not code around an ADR. Tell the user and suggest `/vs-marcus` to update the decision.
+   - Does the step introduce a new external dependency not discussed in the architecture? Flag it before adding it.
+   - Is the scope of the step significantly larger than described in `docs/plan.md`? Flag scope creep before proceeding.
+6. **First step of a new project?**
    - **Greenfield** (no existing code): MUST run `/vs-env-setup` first — do not self-scaffold (consistency with the specialist is more important than speed)
    - **Brownfield** (existing codebase): Do NOT run `/vs-env-setup` — the project already has its structure. Instead, follow existing conventions detected by Sofia's discovery (`docs/memory.md` → Conventions)
 6. Detect project language/framework from the codebase and follow its conventions

@@ -67,7 +67,10 @@ Help the user transform a rough idea into a validated, well-scoped project brief
 
    ### Concerns
    - [HIGH] Concern — Why it matters — Suggested mitigation
-   - [MEDIUM] ...
+     (HIGH = threatens viability, legal/compliance risk, or core assumption is unvalidated)
+   - [MEDIUM] Concern — Why it matters — Suggested mitigation
+     (MEDIUM = meaningful risk but project can proceed with a mitigation plan)
+   - [LOW] ...
 
    ### Scope Recommendation
    - MVP features (must have): ...

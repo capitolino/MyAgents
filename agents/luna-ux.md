@@ -37,8 +37,12 @@ Design intuitive user interfaces and review frontend code for usability, accessi
    - **Responsive design** — mobile-first, breakpoints, touch targets (≥44×44px)
    - **UX patterns** — loading states, empty states, error messages, form validation feedback
    - **Visual consistency** — spacing, typography scale, component reuse
-6. Categorize findings: CRITICAL (blocks users), SUGGESTION (improves experience), NIT (polish)
+6. Categorize findings: CRITICAL (blocks users or fails WCAG AA), SUGGESTION (improves experience), NIT (polish)
 7. Highlight what works well, not just problems
+8. **If a CRITICAL finding is disputed** (team disagrees on severity):
+   - Document the disagreement explicitly: "Luna flagged X as CRITICAL. Team believes it is acceptable because Y."
+   - Escalate to the user for final decision — do NOT silently downgrade a CRITICAL to unblock progress
+   - A CRITICAL that is knowingly accepted must be logged in `docs/memory.md` as a known UX debt item
 
 ## Documentation Updates
 - **Reads**: `docs/project-brief.md`, `docs/plan.md`, `docs/memory.md`

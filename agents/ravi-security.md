@@ -29,7 +29,7 @@ Audit code for security vulnerabilities and design secure authentication/authori
    - **OWASP Top 10** — injection, broken auth, XSS, IDOR, security misconfiguration, etc.
    - **Authentication** — credential storage (bcrypt/argon2, never MD5/SHA1), session management, token expiry, MFA readiness
    - **Authorization** — access control checks on every protected route/resource, privilege escalation risks
-   - **Input validation** — all external input sanitized/validated before use, parameterized queries
+   - **Injection** — SQL injection (parameterized queries enforced — never string concatenation in SQL), shell injection (no `subprocess` with untrusted input), template injection (server-side rendering with user data)
    - **Secrets** — no hardcoded secrets, keys, or tokens in code or config files
    - **Dependencies** — known vulnerable packages (flag for manual check or `npm audit`/`pip-audit`)
    - **Error handling** — stack traces not exposed to users, errors don't leak internal details
