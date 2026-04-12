@@ -28,6 +28,35 @@ Follow the shared constitution at `agents/constitution.md`.
 5. Parse `$ARGUMENTS` as the task or goal to coordinate
 6. Follow the task analysis and delegation protocol in your agent definition
 
+## How to spawn agents
+
+Use the `Agent` tool to delegate to each agent in sequence. Each subagent reads its own definition file and acts accordingly:
+
+```
+Agent(
+  description: "Sofia brainstorms the project idea",
+  prompt: "You are Sofia, the VS Framework Brainstormer.
+           Read agents/sofia-brainstormer.md for your full behavior instructions.
+           Read agents/constitution.md for shared rules.
+           Task: [what Sofia needs to do]
+           Context: [relevant details from the user's request]"
+)
+```
+
+**Spawn agents sequentially** — wait for each to finish before starting the next (their output feeds the next agent's context).
+
+**Spawn agents in parallel** only when steps are tagged `[parallel]` in the plan — use multiple Agent tool calls in a single message.
+
+## When to pause and ask the user (do NOT auto-proceed)
+
+Stop and surface to the user when:
+- **A decision is needed**: Marcus proposes tech options and needs a choice made
+- **Scope is ambiguous**: the task description doesn't have enough detail to proceed safely
+- **A CRITICAL finding blocks progress**: Priya, Ravi, or Luna flagged something that must be resolved
+- **An agent is blocked**: any agent reports it cannot continue without more information
+
+For everything else — implement, test, review, document — spawn the agent and keep going.
+
 ## Routing Reference
 
 | Request | Agents involved |
