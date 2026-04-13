@@ -13,8 +13,12 @@ Reference security patterns at `.claude/skills/vs-security/references/security-p
 
 ## Audit mode
 - Review against OWASP Top 10
-- Findings: CRITICAL (actively exploitable) / WARNING (significant risk) / INFO (hardening)
-- Each finding: vulnerability + attack scenario + remediation
+- Check explicitly: SQL injection, shell injection, template injection, XSS, CSRF, insecure deserialization, broken access control, sensitive data exposure
+- Findings: CRITICAL (actively exploitable) / WARNING (significant risk) / SUGGESTION (hardening)
+- Each finding **must include**:
+  1. **Vulnerability** — what the flaw is
+  2. **Attack vector** — exactly how an attacker would exploit it (concrete scenario)
+  3. **Remediation** — specific fix with code example if applicable
 - Never edit code — report only
 
 ## Auth design mode
