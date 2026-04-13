@@ -11,24 +11,38 @@ Configure MCP servers so VS Framework agents have access to external tools — G
 
 VS Code / Copilot reads MCPs from **`.vscode/mcp.json`** in the project root.
 
-⚠️ **Key difference from Claude Code**: VS Code uses `"servers"` (not `"mcpServers"`).
+⚠️ **Key differences from Claude Code**:
+- Uses `"servers"` (not `"mcpServers"`)
+- Every server needs `"type": "stdio"` (or `"sse"` for HTTP servers)
+- Credentials use `"${input:id}"` with an `inputs` array — VS Code **prompts the user** on first connect, no manual env var setup needed
 
 Format:
 ```json
 {
+  "inputs": [
+    {
+      "id": "github-token",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (needs repo scope)",
+      "password": true
+    }
+  ],
   "servers": {
     "server-name": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "package-name"],
       "env": {
-        "TOKEN": "${env:VARIABLE_NAME}"
+        "TOKEN": "${input:github-token}"
       }
     }
   }
 }
 ```
 
-Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes these at runtime from the system environment or VS Code's own env settings. **Never hardcode actual token values in this file.**
+- `"type": "promptString"` with `"password": true` — VS Code prompts once and stores securely
+- `"${input:id}"` — references an input defined in the `inputs` array
+- **Never hardcode actual token values** — the `inputs` mechanism keeps them out of the file
 
 ## Available MCPs
 
@@ -53,38 +67,77 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 ### enable mode (`@vs-mcp-setup enable <server>`)
 
 1. Read the server config from `templates/mcp-config.json`
-2. Strip all metadata keys before writing (remove any key starting with `_`: `_comment`, `_description`, `_install`, `_docs`, etc.)
+2. Strip all metadata keys before writing (remove any key starting with `_`)
 3. **Convert to VS Code format**:
-   - Rename the top-level key from `mcpServers` → `servers`
-   - Replace any env var values like `"${GITHUB_TOKEN}"` → `"${env:GITHUB_TOKEN}"`
-4. Read `.vscode/mcp.json` (create with `{ "servers": {} }` if it doesn't exist)
+   - Use `"servers"` as the top-level key (not `"mcpServers"`)
+   - Add `"type": "stdio"` to every server entry
+   - For servers needing credentials: add an entry to the `"inputs"` array and reference it with `"${input:id}"`
+4. Read `.vscode/mcp.json` (create with `{ "inputs": [], "servers": {} }` if it doesn't exist)
 5. For servers needing credentials:
-   - Ask the user for the env var names they've set (do NOT ask for actual values)
-   - Confirm the `${env:VAR_NAME}` references are correct
-   - Instruct the user to set the variable in their **system environment** or in VS Code settings:
-     ```json
-     // .vscode/settings.json or VS Code User Settings
-     "terminal.integrated.env.windows": { "GITHUB_TOKEN": "ghp_..." },
-     "terminal.integrated.env.linux":   { "GITHUB_TOKEN": "ghp_..." },
-     "terminal.integrated.env.osx":     { "GITHUB_TOKEN": "ghp_..." }
-     ```
+   - Add an input definition to the `"inputs"` array (VS Code will prompt the user on first connect)
+   - Reference it in the server's `env` using `"${input:input-id}"`
+   - Do NOT ask the user for actual values — the `inputs` mechanism handles that securely
 6. For servers needing a path (sqlite, filesystem):
-   - Ask the user for the path
-   - Substitute the placeholder in `args` with the real path
-7. Merge the server entry into the `servers` object (do not overwrite unrelated servers)
+   - Ask the user for the path and substitute the placeholder in `args`
+7. Merge the server into `"servers"` and any new inputs into `"inputs"` — do not overwrite unrelated entries
 8. Write `.vscode/mcp.json`
-9. Confirm: "✔ Enabled `<server>` in `.vscode/mcp.json`. **Reload the VS Code window** (`Ctrl+Shift+P` → Reload Window) for it to take effect."
+9. Confirm: "✔ Enabled `<server>` in `.vscode/mcp.json`. **Reload the VS Code window** (`Ctrl+Shift+P` → Reload Window) for it to take effect. VS Code will prompt for credentials on first use."
 
 #### Example — enabling github:
 ```json
 // .vscode/mcp.json
 {
+  "inputs": [
+    {
+      "id": "github-token",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (needs repo scope)",
+      "password": true
+    }
+  ],
   "servers": {
     "github": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_TOKEN": "${env:GITHUB_TOKEN}"
+        "GITHUB_TOKEN": "${input:github-token}"
+      }
+    }
+  }
+}
+```
+
+#### Example — enabling azure-devops:
+```json
+{
+  "inputs": [
+    {
+      "id": "ado-pat",
+      "type": "promptString",
+      "description": "Azure DevOps Personal Access Token",
+      "password": true
+    },
+    {
+      "id": "ado-org",
+      "type": "promptString",
+      "description": "Azure DevOps organization name (e.g. my-company)"
+    },
+    {
+      "id": "ado-project",
+      "type": "promptString",
+      "description": "Azure DevOps project name"
+    }
+  ],
+  "servers": {
+    "azure-devops": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "azure-devops-mcp@latest"],
+      "env": {
+        "AZURE_DEVOPS_PAT": "${input:ado-pat}",
+        "AZURE_DEVOPS_ORG": "${input:ado-org}",
+        "AZURE_DEVOPS_PROJECT": "${input:ado-project}"
       }
     }
   }
@@ -95,8 +148,10 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 ```json
 // .vscode/mcp.json
 {
+  "inputs": [],
   "servers": {
     "context7": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"]
     }
@@ -108,8 +163,10 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 ```json
 // .vscode/mcp.json
 {
+  "inputs": [],
   "servers": {
     "sqlite": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "./data/app.db"]
     }
@@ -139,9 +196,10 @@ Environment variable syntax: `"${env:VARIABLE_NAME}"` — VS Code substitutes th
 
 ## Rules
 - `.vscode/mcp.json` uses `"servers"` (not `"mcpServers"`)
-- Env vars use `"${env:VAR_NAME}"` syntax — never hardcode actual values
-- `.vscode/mcp.json` can be committed to git (no secrets inside)
-- Actual secret values go in system environment or VS Code env settings (outside the repo)
+- Every server entry needs `"type": "stdio"` (or `"sse"` for HTTP-based servers)
+- Credentials use `"${input:id}"` with an `inputs` entry — VS Code prompts the user securely on first connect
+- `.vscode/mcp.json` can be committed to git — no secrets are stored in it
+- Never use `"${env:VAR}"` for credentials — it requires manual env var setup and is error-prone
 - Always reload the VS Code window after changes — not just restart the terminal
 
 ## Handoff
