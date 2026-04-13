@@ -51,6 +51,12 @@ git checkout -b fix/your-fix-name   # or feat/your-feature-name
 - **Commit messages**: `type(scope): description` — types: `feat`, `fix`, `docs`, `chore`, `refactor`
 - **Severity levels**: use `CRITICAL / WARNING / SUGGESTION / NIT` (not HIGH/MEDIUM/LOW for code findings)
 
+## Getting access (new org members)
+
+This is a private repo. If you've joined the organization and can't see it yet, ask a maintainer to add you to the **`io-agents-contributors`** team — that gives you write access to this repo without changing any org-level settings.
+
+Maintainers: [Unit4-Engineering-Labs/io-agents-maintainers](https://github.com/orgs/Unit4-Engineering-Labs/teams/io-agents-maintainers)
+
 ## Getting help
 
 Open an issue or ping `@JoaoCapitolino_unit4` on the PR.
