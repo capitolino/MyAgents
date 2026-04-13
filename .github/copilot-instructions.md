@@ -110,8 +110,27 @@ Use `@vs-plan next` or `@vs-elena next` to find the next step when working direc
 
 ## Development Loop (per step)
 
-1. James implements → 2. Alex tests → 3. Priya reviews both → 4. IF frontend: Luna → 5. IF auth/money: Ravi → 6. Elena marks done
+```
+1. James implements
+2. Alex writes tests (≥80% coverage on critical paths, 100% on critical-path logic)
+3. Priya reviews both implementation and tests
+   └─ CRITICAL or WARNING finding? → James fixes → back to step 3
+4. IF frontend feature → Luna reviews (UX, responsive, WCAG 2.1 AA)
+   └─ CRITICAL UX finding? → James fixes → Luna re-reviews
+5. IF auth / money / PII → Ravi audits
+   └─ CRITICAL security finding? → James fixes → Ravi re-audits
+6. Elena marks step done in docs/plan.md
+```
+
+Steps 4 and 5 are **mandatory gates** — never skip them for the relevant feature types.
 
 ## Definition of Done
 
-Implementation complete (James) + tests pass ≥80% (Alex) + no CRITICAL findings (Priya) + security audit if auth/money (Ravi) + UX review if frontend (Luna) + plan updated (Elena).
+| Check | Owner | Required when |
+|-------|-------|---------------|
+| Implementation complete | James | Always |
+| Tests pass (≥80% coverage) | Alex | Always |
+| No CRITICAL or WARNING review findings | Priya | Always |
+| No CRITICAL security findings | Ravi | Auth, PII, or money features |
+| No CRITICAL UX findings, WCAG 2.1 AA | Luna | Any frontend feature |
+| `docs/plan.md` step marked done | Elena | Always |

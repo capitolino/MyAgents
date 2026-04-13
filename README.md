@@ -126,6 +126,32 @@ your-project/
     └── architecture-decisions/   # ADR records (filled by Marcus)
 ```
 
+### Updating an existing installation
+
+If the framework is already installed in your project, run `update` to pull the latest agents, skills, and templates — **your project files are never touched**:
+
+```bash
+npx github:Unit4-Engineering-Labs/IO_Agents update
+```
+
+| What gets updated | What is preserved |
+|---|---|
+| `agents/` | `docs/` (your plan, memory, ADRs) |
+| `.claude/skills/` | `CLAUDE.md` |
+| `.github/copilot-agents/` | `.gitignore` |
+| `templates/` | `.env`, `.env.example` |
+
+**Source flags** — same as `init`:
+
+```bash
+npx github:Unit4-Engineering-Labs/IO_Agents update                  # latest main
+npx github:Unit4-Engineering-Labs/IO_Agents update --branch dev     # from dev branch
+npx github:Unit4-Engineering-Labs/IO_Agents update --tag v1.2.0    # pinned release
+npx github:Unit4-Engineering-Labs/IO_Agents update --no-copilot    # skip Copilot files
+```
+
+> **Tip:** Running `init` in a project that already has the framework will also prompt you to update instead of blocking.
+
 ### Manual install (without npx)
 
 ```bash
@@ -350,7 +376,7 @@ Copilot reads MCPs from **`.vscode/mcp.json`** in your project root. Use the age
 @vs-mcp-setup disable sqlite
 ```
 
-The agent will create or update `.vscode/mcp.json`. Sensitive tokens go in VS Code User Settings (`settings.json`) as environment variable references — never hardcoded in `.vscode/mcp.json` (which is committed).
+The agent will create or update `.vscode/mcp.json`. Credentials use VS Code's `${input:id}` mechanism — VS Code **prompts you securely on first connect** and stores the value. No manual env var setup needed, and `.vscode/mcp.json` is safe to commit (no secrets inside).
 
 **GitHub + SQLite project:**
 ```
