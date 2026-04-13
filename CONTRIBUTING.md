@@ -5,7 +5,7 @@ Thanks for contributing. This document covers everything you need to know.
 ## Branching strategy
 
 ```
-main   ← production-ready releases only (requires JoaoCapitolino_unit4 approval)
+main   ← production-ready releases only (requires @JoaoCapitolino_unit4 approval)
   └── dev  ← integration branch (requires 1 review from any maintainer)
         └── your-branch  ← your work
 ```
