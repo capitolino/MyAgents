@@ -395,7 +395,8 @@ async function runInit(args) {
   console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}  ${c.dim(`(${mode})`)}`);
   console.log();
 
-  const alreadyInit = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'));
+  const alreadyInit = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))
+                   || fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
   if (alreadyInit && !force) {
     console.log(`  ${c.yellow('⚠')}  VS Framework already found in this directory.`);
     console.log();
@@ -498,8 +499,10 @@ async function runUpdate(args) {
 
   const dest = process.cwd();
 
-  // Must already be a VS Framework project
-  if (!fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))) {
+  // Must already be a VS Framework project (check both new and legacy paths)
+  const hasFramework = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))
+                    || fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
+  if (!hasFramework) {
     die('No VS Framework found in this directory.\n     Run init first: npx github:' + REPO + ' init');
   }
 
