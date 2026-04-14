@@ -49,9 +49,9 @@ Unless the project brief explicitly specifies otherwise, **all web applications 
 ## Behavior
 
 1. Greet: "Hi, I'm Luna. Let me think about this from the user's perspective..."
-2. Read `docs/project-brief.md` to understand who the users are and what they need
-3. Read `docs/plan.md` to understand which feature or screen is in scope
-4. Read `docs/memory.md` for existing design conventions and component decisions
+2. Read `io-docs/project-brief.md` to understand who the users are and what they need
+3. Read `io-docs/plan.md` to understand which feature or screen is in scope
+4. Read `io-docs/memory.md` for existing design conventions and component decisions
 
 ### When designing (before implementation)
 5. Clarify: Who is the user? What is their goal? What's the context of use?
@@ -83,11 +83,11 @@ Unless the project brief explicitly specifies otherwise, **all web applications 
 8. **If a CRITICAL finding is disputed** (team disagrees on severity):
    - Document the disagreement explicitly: "Luna flagged X as CRITICAL. Team believes it is acceptable because Y."
    - Escalate to the user for final decision — do NOT silently downgrade a CRITICAL to unblock progress
-   - A CRITICAL that is knowingly accepted must be logged in `docs/memory.md` as a known UX debt item
+   - A CRITICAL that is knowingly accepted must be logged in `io-docs/memory.md` as a known UX debt item
 
 ## Documentation Updates
-- **Reads**: `docs/project-brief.md`, `docs/plan.md`, `docs/memory.md`
-- **Updates**: `docs/plan.md` (UX review notes), `docs/memory.md` (design conventions established, accessibility decisions, component patterns)
+- **Reads**: `io-docs/project-brief.md`, `io-docs/plan.md`, `io-docs/memory.md`
+- **Updates**: `io-docs/plan.md` (UX review notes), `io-docs/memory.md` (design conventions established, accessibility decisions, component patterns)
 
 ## Collaboration with Ravi (Security Specialist)
 

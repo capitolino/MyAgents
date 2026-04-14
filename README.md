@@ -114,13 +114,13 @@ npx github:Unit4-Engineering-Labs/IO_Agents init my-project --tag v1.0.0 --no-co
 ```
 your-project/
 ├── CLAUDE.md                     # Claude Code constitution (auto-loaded)
-├── agents/                       # Shared agent definitions (8 agents)
+├── io-agents/                    # Shared agent definitions (8 agents)
 ├── .claude/skills/               # Claude Code slash commands (19 skills)
 ├── .github/
 │   ├── copilot-instructions.md   # Copilot constitution
 │   └── copilot-agents/           # Copilot agent files (10 agents)
-├── templates/                    # Document templates (brief, plan, ADR, memory)
-└── docs/
+├── io-templates/                 # Document templates (brief, plan, ADR, memory)
+└── io-docs/
     ├── plan.md                   # Project plan (stub, filled by Elena)
     ├── memory.md                 # Project knowledge base (updated by all agents)
     └── architecture-decisions/   # ADR records (filled by Marcus)
@@ -136,10 +136,10 @@ npx github:Unit4-Engineering-Labs/IO_Agents update
 
 | What gets updated | What is preserved |
 |---|---|
-| `agents/` | `docs/` (your plan, memory, ADRs) |
+| `io-agents/` | `io-docs/` (your plan, memory, ADRs) |
 | `.claude/skills/` | `CLAUDE.md` |
 | `.github/copilot-agents/` | `.gitignore` |
-| `templates/` | `.env`, `.env.example` |
+| `io-templates/` | `.env`, `.env.example` |
 
 **Source flags** — same as `init`:
 
@@ -151,6 +151,32 @@ npx github:Unit4-Engineering-Labs/IO_Agents update --no-copilot    # skip Copilo
 ```
 
 > **Tip:** Running `init` in a project that already has the framework will also prompt you to update instead of blocking.
+
+### Migrating from v1.2.0 or earlier (folder rename)
+
+Versions before v1.3.0 installed into `agents/`, `docs/`, and `templates/`. These have been renamed to `io-agents/`, `io-docs/`, and `io-templates/` to avoid conflicts with your existing project folders.
+
+**Do NOT rename the whole folder.** Your project may have other content in `docs/`, `agents/`, or `templates/` that has nothing to do with the framework. Move only the framework-owned files:
+
+```bash
+# 1. Pull latest framework files — this creates io-agents/ and io-templates/ alongside the old folders
+npx github:Unit4-Engineering-Labs/IO_Agents update
+
+# 2. Move only the VS Framework docs — never move the whole docs/ folder
+mkdir -p io-docs/architecture-decisions
+mv docs/plan.md           io-docs/plan.md           2>/dev/null || true
+mv docs/memory.md         io-docs/memory.md         2>/dev/null || true
+mv docs/project-brief.md  io-docs/project-brief.md  2>/dev/null || true
+mv docs/architecture-decisions/* io-docs/architecture-decisions/ 2>/dev/null || true
+# docs/ stays in place — it may have other content you own
+
+# 3. Remove old framework folders only if they contained only framework files
+#    (step 1 already wrote fresh copies into io-agents/ and io-templates/)
+rm -rf agents/      # safe if you never added custom files here
+rm -rf templates/   # safe if you never added custom files here
+```
+
+> If you added custom files to `agents/` or `templates/`, move them to `io-agents/` or `io-templates/` before deleting the old folders.
 
 ### Manual install (without npx)
 
@@ -226,7 +252,7 @@ Diego has 3 modes:
 ```
 /vs-john "build a login feature"
          ↓
-      John reads docs/plan.md + brief, analyzes feature scope
+      John reads io-docs/plan.md + brief, analyzes feature scope
          ↓
   Sofia? → Marcus? → Elena →
     [design: Ravi (auth) → Luna (login UX) → vs-db-design?] →
@@ -262,24 +288,24 @@ James (fix) → Alex (regression test) → Priya (fast review) → deploy
 | Quick fix or single task | Direct agent |
 | "What should I do next?" | `/vs-plan next` |
 
-You can switch between orchestrated and direct at any time — `docs/plan.md` always carries the shared state.
+You can switch between orchestrated and direct at any time — `io-docs/plan.md` always carries the shared state.
 
 ## Switching Between Tools
 
-The `docs/` directory is the interchange layer — both Claude Code and Copilot read and write the same files:
+The `io-docs/` directory is the interchange layer — both Claude Code and Copilot read and write the same files:
 
 | File | Purpose | Who updates it |
 |------|---------|----------------|
-| `docs/project-brief.md` | What we're building | Sofia |
-| `docs/plan.md` | Phased checklist | All agents |
-| `docs/memory.md` | Living knowledge base | All agents |
-| `docs/architecture-decisions/` | Binding tech decisions | Marcus |
+| `io-docs/project-brief.md` | What we're building | Sofia |
+| `io-docs/plan.md` | Phased checklist | All agents |
+| `io-docs/memory.md` | Living knowledge base | All agents |
+| `io-docs/architecture-decisions/` | Binding tech decisions | Marcus |
 
-Start with Claude Code, switch to Copilot mid-phase, switch back — the shared `docs/` state means nothing is lost.
+Start with Claude Code, switch to Copilot mid-phase, switch back — the shared `io-docs/` state means nothing is lost.
 
 ## Project Memory
 
-`docs/memory.md` is the project's long-term knowledge base. Every agent reads it before starting work and appends learnings after finishing. It captures what can't be inferred from the code:
+`io-docs/memory.md` is the project's long-term knowledge base. Every agent reads it before starting work and appends learnings after finishing. It captures what can't be inferred from the code:
 
 - **Stack & Environment** — runtime, frameworks, key libraries
 - **Conventions** — project-specific deviations from language defaults
@@ -300,7 +326,7 @@ your-project/
 ├── .github/
 │   ├── copilot-instructions.md  # Copilot constitution
 │   └── copilot-agents/          # Copilot agent definitions
-├── agents/                      # Shared agent definitions (both tools)
+├── io-agents/                   # Shared agent definitions (both tools)
 │   ├── constitution.md          # Shared rules
 │   ├── john-pm.md               # John — Orchestrator (optional)
 │   ├── sofia-brainstormer.md
@@ -310,11 +336,11 @@ your-project/
 │   ├── priya-reviewer.md
 │   ├── alex-qa.md
 │   └── nina-writer.md
-├── templates/                   # Document templates
+├── io-templates/                # Document templates
 │   ├── project-brief.md
 │   ├── architecture-decision.md
 │   └── phase-plan.md
-└── docs/                        # Living project documentation
+└── io-docs/                     # Living project documentation
     ├── project-brief.md
     ├── plan.md
     └── architecture-decisions/
@@ -337,7 +363,7 @@ MCP (Model Context Protocol) servers extend agent capabilities by connecting the
 
 ### Claude Code
 
-Use the skill to list, enable, or disable MCPs — it reads `templates/mcp-config.json` and writes to your local settings:
+Use the skill to list, enable, or disable MCPs — it reads `io-templates/mcp-config.json` and writes to your local settings:
 
 ```
 /vs-mcp-setup              # list all available MCPs and their status
@@ -392,7 +418,7 @@ The agent will create or update `.vscode/mcp.json`. Credentials use VS Code's `$
 @vs-mcp-setup enable mssql          ← set MSSQL_CONNECTION_STRING in VS Code env
 ```
 
-The full config template for both platforms is at `templates/mcp-config.json`.
+The full config template for both platforms is at `io-templates/mcp-config.json`.
 
 ---
 
