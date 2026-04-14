@@ -91,44 +91,52 @@ function isValidSrcRoot(srcRoot) {
       || fs.existsSync(path.join(srcRoot, 'agents',    'constitution.md'));
 }
 
-// ─── Download via curl (preferred — handles GitHub redirects reliably) ────────
-function downloadWithCurl(url, destPath) {
-  return new Promise((resolve, reject) => {
-    try {
-      execSync(`curl -fsSL -o "${destPath}" "${url}"`, { stdio: 'pipe' });
-      resolve();
-    } catch (err) {
-      reject(new Error('curl failed: ' + err.message));
-    }
-  });
+// ─── Fetch via git clone (most reliable: uses git config, proxies, credentials)
+function fetchWithGit(ref, tmpDir) {
+  const repoUrl  = `https://github.com/${REPO}.git`;
+  const cloneDir = path.join(tmpDir, 'repo');
+  const refValue = ref.value;
+  try {
+    process.stdout.write(`  ${c.cyan('↓')} Cloning from GitHub...         `);
+    execSync(
+      `git clone --depth 1 --branch "${refValue}" "${repoUrl}" "${cloneDir}"`,
+      { stdio: 'pipe' }
+    );
+    return cloneDir;
+  } catch (err) {
+    throw new Error('git clone failed: ' + err.stderr?.toString().trim() || err.message);
+  }
 }
 
-// ─── GitHub download fallback (Node https — follows redirects manually) ───────
+// ─── Download via curl (fallback 1) ──────────────────────────────────────────
+function downloadWithCurl(url, destPath) {
+  execSync(`curl -fsSL -o "${destPath}" "${url}"`, { stdio: 'pipe' });
+}
+
+// ─── Download via Node https (fallback 2) ────────────────────────────────────
 function downloadWithNode(url, destPath, redirects = 0) {
   return new Promise((resolve, reject) => {
     if (redirects > 5) return reject(new Error('Too many redirects'));
     const parsedUrl = new URL(url);
     const proto     = parsedUrl.protocol === 'http:' ? require('http') : https;
-    const options = {
+    proto.get({
       hostname: parsedUrl.hostname,
       path:     parsedUrl.pathname + parsedUrl.search,
       headers:  { 'User-Agent': 'vs-framework-cli' },
-    };
-    proto.get(options, (res) => {
+    }, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) {
         res.resume();
         return resolve(downloadWithNode(res.headers.location, destPath, redirects + 1));
       }
       if (res.statusCode !== 200) {
         res.resume();
-        return reject(new Error(`GitHub returned HTTP ${res.statusCode}`));
+        return reject(new Error(`HTTP ${res.statusCode}`));
       }
-      let downloaded = 0;
+      let bytes = 0;
       const file = fs.createWriteStream(destPath);
       res.on('data', chunk => {
-        downloaded += chunk.length;
-        const kb = (downloaded / 1024).toFixed(0);
-        process.stdout.write(`\r  ${c.cyan('↓')} Fetching from GitHub...  ${c.dim(kb + ' KB')}`);
+        bytes += chunk.length;
+        process.stdout.write(`\r  ${c.cyan('↓')} Fetching from GitHub...  ${c.dim((bytes / 1024).toFixed(0) + ' KB')}`);
       });
       res.pipe(file);
       file.on('finish', () => { file.close(); resolve(); });
@@ -137,43 +145,54 @@ function downloadWithNode(url, destPath, redirects = 0) {
   });
 }
 
-// ─── Fetch from GitHub, return extracted source root ─────────────────────────
+// ─── Fetch from GitHub — tries git clone → curl → Node https ─────────────────
 async function fetchFromGitHub(ref) {
-  const { url, dirName, label } = tarballUrl(ref);
-  const tmpDir  = fs.mkdtempSync(path.join(os.tmpdir(), 'vsf-'));
-  const tarPath = path.join(tmpDir, 'framework.tar.gz');
+  const { label } = tarballUrl(ref);
+  const tmpDir    = fs.mkdtempSync(path.join(os.tmpdir(), 'vsf-'));
 
   try {
-    // Try curl first (more reliable on Windows), fall back to Node https
-    let usedCurl = false;
+    // Strategy 1: git clone --depth 1
+    // Most reliable in corporate environments — uses git credentials, proxy config
+    try {
+      const srcRoot = fetchWithGit(ref, tmpDir);
+      infoDone(`Fetched ${label} from GitHub (git)    `);
+      return { srcRoot, tmpDir };
+    } catch (gitErr) {
+      // git not available or failed — try tarball approaches
+    }
+
+    // Strategy 2 & 3: tarball download (curl → Node https)
+    const { url, dirName } = tarballUrl(ref);
+    const tarPath = path.join(tmpDir, 'framework.tar.gz');
+
     try {
       execSync('curl --version', { stdio: 'pipe' });
-      await downloadWithCurl(url, tarPath);
-      usedCurl = true;
+      downloadWithCurl(url, tarPath);
     } catch {
       await downloadWithNode(url, tarPath);
     }
 
     infoDone(`Fetched ${label} from GitHub          `);
 
-    // Validate it's actually a gzip before trying to extract
     if (!isValidGzip(tarPath)) {
-      throw new Error('Downloaded file is not a valid archive — GitHub may have returned an error page. Check your connection and try again.');
+      throw new Error(
+        'Downloaded file is not a valid archive.\n' +
+        '     This usually means a proxy or firewall is intercepting the request.\n' +
+        '     Try: ensure git is installed and in PATH — the CLI will use git clone instead.'
+      );
     }
 
     process.stdout.write(`  ${c.cyan('↓')} Extracting...                  `);
     execSync('tar -xf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
     infoDone('Extracted                      ');
 
-    const srcRoot = path.join(tmpDir, dirName);
-
+    let srcRoot = path.join(tmpDir, dirName);
     if (!fs.existsSync(srcRoot)) {
-      // Fallback: find the first extracted directory
       const dirs = fs.readdirSync(tmpDir, { withFileTypes: true })
         .filter(e => e.isDirectory())
         .map(e => path.join(tmpDir, e.name));
       if (!dirs.length) throw new Error('Could not locate extracted directory');
-      return { srcRoot: dirs[0], tmpDir };
+      srcRoot = dirs[0];
     }
 
     return { srcRoot, tmpDir };
