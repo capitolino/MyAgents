@@ -74,20 +74,50 @@ function flagValue(args, flag) {
   return val;
 }
 
-// ─── GitHub download (always fresh — follows redirects) ──────────────────────
-function download(url, destPath, redirects = 0) {
+// ─── Validate downloaded file is a real gzip ─────────────────────────────────
+function isValidGzip(filePath) {
+  try {
+    const buf = Buffer.alloc(2);
+    const fd  = fs.openSync(filePath, 'r');
+    fs.readSync(fd, buf, 0, 2, 0);
+    fs.closeSync(fd);
+    return buf[0] === 0x1f && buf[1] === 0x8b;
+  } catch { return false; }
+}
+
+// ─── Check that a source root has the expected framework structure ────────────
+function isValidSrcRoot(srcRoot) {
+  return fs.existsSync(path.join(srcRoot, 'io-agents', 'constitution.md'))
+      || fs.existsSync(path.join(srcRoot, 'agents',    'constitution.md'));
+}
+
+// ─── Download via curl (preferred — handles GitHub redirects reliably) ────────
+function downloadWithCurl(url, destPath) {
+  return new Promise((resolve, reject) => {
+    try {
+      execSync(`curl -fsSL -o "${destPath}" "${url}"`, { stdio: 'pipe' });
+      resolve();
+    } catch (err) {
+      reject(new Error('curl failed: ' + err.message));
+    }
+  });
+}
+
+// ─── GitHub download fallback (Node https — follows redirects manually) ───────
+function downloadWithNode(url, destPath, redirects = 0) {
   return new Promise((resolve, reject) => {
     if (redirects > 5) return reject(new Error('Too many redirects'));
     const parsedUrl = new URL(url);
+    const proto     = parsedUrl.protocol === 'http:' ? require('http') : https;
     const options = {
       hostname: parsedUrl.hostname,
       path:     parsedUrl.pathname + parsedUrl.search,
       headers:  { 'User-Agent': 'vs-framework-cli' },
     };
-    https.get(options, (res) => {
-      if (res.statusCode === 301 || res.statusCode === 302) {
+    proto.get(options, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) {
         res.resume();
-        return resolve(download(res.headers.location, destPath, redirects + 1));
+        return resolve(downloadWithNode(res.headers.location, destPath, redirects + 1));
       }
       if (res.statusCode !== 200) {
         res.resume();
@@ -114,11 +144,25 @@ async function fetchFromGitHub(ref) {
   const tarPath = path.join(tmpDir, 'framework.tar.gz');
 
   try {
-    await download(url, tarPath);
+    // Try curl first (more reliable on Windows), fall back to Node https
+    let usedCurl = false;
+    try {
+      execSync('curl --version', { stdio: 'pipe' });
+      await downloadWithCurl(url, tarPath);
+      usedCurl = true;
+    } catch {
+      await downloadWithNode(url, tarPath);
+    }
+
     infoDone(`Fetched ${label} from GitHub          `);
 
+    // Validate it's actually a gzip before trying to extract
+    if (!isValidGzip(tarPath)) {
+      throw new Error('Downloaded file is not a valid archive — GitHub may have returned an error page. Check your connection and try again.');
+    }
+
     process.stdout.write(`  ${c.cyan('↓')} Extracting...                  `);
-    execSync('tar -xzf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
+    execSync('tar -xf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
     infoDone('Extracted                      ');
 
     const srcRoot = path.join(tmpDir, dirName);
@@ -417,10 +461,16 @@ async function runInit(args) {
       ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      if (!isValidSrcRoot(PKG_ROOT)) {
+        die('Cached package is outdated (missing io-agents/). Connect to the internet and try again, or upgrade npx cache:\n     npx --yes github:' + REPO + ' init');
+      }
       console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
       srcRoot = PKG_ROOT;
     }
   } else {
+    if (!isValidSrcRoot(PKG_ROOT)) {
+      die('Cached package is outdated (missing io-agents/). Remove --offline to fetch the latest version.');
+    }
     console.log(`  ${c.dim('(--offline: using cached package files)')}\n`);
   }
 
@@ -520,10 +570,16 @@ async function runUpdate(args) {
       ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      if (!isValidSrcRoot(PKG_ROOT)) {
+        die('Cached package is outdated (missing io-agents/). Connect to the internet and try again, or clear the npx cache and re-run.');
+      }
       console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
       srcRoot = PKG_ROOT;
     }
   } else {
+    if (!isValidSrcRoot(PKG_ROOT)) {
+      die('Cached package is outdated (missing io-agents/). Remove --offline to fetch the latest version.');
+    }
     console.log(`  ${c.dim('(--offline: using cached package files)')}\n`);
   }
 
