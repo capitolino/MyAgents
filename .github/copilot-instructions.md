@@ -25,12 +25,12 @@ This project has named agents you can activate with `@` in Copilot Chat. Each ha
 ## Project State
 
 Before acting, check these files for context:
-- `docs/project-brief.md` — What we're building
-- `docs/plan.md` — Current phase and progress
-- `docs/memory.md` — Living knowledge base: conventions, gotchas, workarounds, decisions
-- `docs/architecture-decisions/` — Binding tech decisions
+- `io-docs/project-brief.md` — What we're building
+- `io-docs/plan.md` — Current phase and progress
+- `io-docs/memory.md` — Living knowledge base: conventions, gotchas, workarounds, decisions
+- `io-docs/architecture-decisions/` — Binding tech decisions
 
-After completing work, update `docs/plan.md` and append relevant learnings to `docs/memory.md`.
+After completing work, update `io-docs/plan.md` and append relevant learnings to `io-docs/memory.md`.
 
 ## Code Standards
 
@@ -47,7 +47,7 @@ After completing work, update `docs/plan.md` and append relevant learnings to `d
 - Always use migrations, never manual schema changes
 - Parameterized queries only (never string concatenation for SQL)
 - Include audit columns (created_at, updated_at) on all tables
-- See `agents/constitution.md` for full database rules
+- See `io-agents/constitution.md` for full database rules
 
 ## API Conventions
 
@@ -73,7 +73,7 @@ No persona — invoked by role when that step comes up:
 | `@vs-api-integration` | Generating typed client code from OpenAPI / Swagger / GraphQL schemas |
 | `@vs-perf` | Performance profiling, bottleneck analysis, load testing |
 | `@vs-feature-flags` | Feature flags for gradual rollouts and safe deployments |
-| `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
+| `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `@vs-onboard` | Brownfield onboarding: discover codebase, document architecture, plan improvements |
 
@@ -119,7 +119,7 @@ Use `@vs-plan next` or `@vs-elena next` to find the next step when working direc
    └─ CRITICAL UX finding? → James fixes → Luna re-reviews
 5. IF auth / money / PII → Ravi audits
    └─ CRITICAL security finding? → James fixes → Ravi re-audits
-6. Elena marks step done in docs/plan.md
+6. Elena marks step done in io-docs/plan.md
 ```
 
 Steps 4 and 5 are **mandatory gates** — never skip them for the relevant feature types.
@@ -133,4 +133,4 @@ Steps 4 and 5 are **mandatory gates** — never skip them for the relevant featu
 | No CRITICAL or WARNING review findings | Priya | Always |
 | No CRITICAL security findings | Ravi | Auth, PII, or money features |
 | No CRITICAL UX findings, WCAG 2.1 AA | Luna | Any frontend feature |
-| `docs/plan.md` step marked done | Elena | Always |
+| `io-docs/plan.md` step marked done | Elena | Always |

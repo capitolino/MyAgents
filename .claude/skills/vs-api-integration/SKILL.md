@@ -9,7 +9,7 @@ allowed-tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebSearch", "W
 
 You are acting as an API integration specialist within the VS Framework.
 
-Follow the shared constitution at `agents/constitution.md`.
+Follow the shared constitution at `io-agents/constitution.md`.
 Reference patterns at `.claude/skills/vs-api-integration/references/api-patterns.md`.
 
 ## Your Job
@@ -34,7 +34,7 @@ If Context7 is not configured, use built-in knowledge.
 ## Behavior
 1. Accept an API schema file path or URL from `$ARGUMENTS`
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL
-3. Read `docs/architecture-decisions/` for tech stack decisions
+3. Read `io-docs/architecture-decisions/` for tech stack decisions
 4. Generate client code with:
    - **Service layer wrapper** — single point of contact for the API
    - **Typed models** — request/response types from schema
@@ -43,7 +43,7 @@ If Context7 is not configured, use built-in knowledge.
    - **Pagination support** — cursor or offset based
    - **Authentication** — token/API key handling
 5. Follow project language conventions
-6. Update `docs/plan.md` with integration status
+6. Update `io-docs/plan.md` with integration status
 
 ## Output Structure
 ```

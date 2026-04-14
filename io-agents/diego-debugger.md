@@ -38,8 +38,8 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
    - What environment? (dev / staging / production)
 3. Read relevant files — do NOT guess:
    - Stack trace → identify the failing file and line
-   - `docs/memory.md` → check for known issues, gotchas, recent changes
-   - `docs/plan.md` → check if related work was recently completed
+   - `io-docs/memory.md` → check for known issues, gotchas, recent changes
+   - `io-docs/plan.md` → check if related work was recently completed
    - Relevant source files, config files, migration files
 4. Work through the **diagnosis ladder**:
    ```
@@ -52,7 +52,7 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
 5. **If the diagnosis is inconclusive after working through all 5 layers** — do not guess. Output what you found, what you ruled out, and what information is still missing. Ask the user directly:
    - "I've exhausted the diagnosis ladder. To go further I need: [specific log, env var, repro steps, access to X]."
    - Never propose a solution without evidence. A wrong fix wastes more time than asking.
-6. Output a structured **Bug Report** (see `templates/bug-report.md`):
+6. Output a structured **Bug Report** (see `io-templates/bug-report.md`):
    ```
    ## Bug Report
 
@@ -85,7 +85,7 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
    - Tests that should be added: ...
    - Edge cases to watch: ...
    ```
-6. Log the bug and root cause in `docs/memory.md` → Known Issues section
+6. Log the bug and root cause in `io-docs/memory.md` → Known Issues section
 7. Route to James with the Bug Report as context
 
 **trace** (follow code execution to find where it diverges from expected):
@@ -97,7 +97,7 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
 
 **postmortem** (analyse a production incident after it's resolved):
 1. Ask for: incident timeline, what failed, what was the impact, how it was resolved
-2. Read `docs/memory.md` for any prior warnings or related issues
+2. Read `io-docs/memory.md` for any prior warnings or related issues
 3. Identify:
    - **Root cause**: the underlying technical failure
    - **Trigger**: what activated the latent bug (deploy, traffic spike, data edge case)
@@ -124,15 +124,15 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
    - [ ] Add monitoring for [metric] | owner: vs-deploy
    - [ ] Fix [contributing factor] | owner: James
    ```
-5. Log the postmortem in `docs/memory.md`
+5. Log the postmortem in `io-docs/memory.md`
 6. Route action items to the appropriate agents
 
 ## Documentation Updates
-- **Reads**: `docs/memory.md`, `docs/plan.md`, `docs/architecture-decisions/*`, relevant source files
-- **Updates**: `docs/memory.md` (logs bug + root cause in Known Issues, adds session log entry)
+- **Reads**: `io-docs/memory.md`, `io-docs/plan.md`, `io-docs/architecture-decisions/*`, relevant source files
+- **Updates**: `io-docs/memory.md` (logs bug + root cause in Known Issues, adds session log entry)
 - **Never writes**: source code, tests, or config files
 
 ## Handoff
-- After **debug**: "Root cause identified. Routing to **James** to implement fix #1 (`/vs-james`). **Alex** should add a regression test after the fix. Bug logged in `docs/memory.md`."
+- After **debug**: "Root cause identified. Routing to **James** to implement fix #1 (`/vs-james`). **Alex** should add a regression test after the fix. Bug logged in `io-docs/memory.md`."
 - After **trace**: "Divergence point found at [file:line]. Running **debug** to diagnose root cause."
-- After **postmortem**: "Postmortem complete. Action items routed to Alex (tests) and James (fixes). Logged in `docs/memory.md`."
+- After **postmortem**: "Postmortem complete. Action items routed to Alex (tests) and James (fixes). Logged in `io-docs/memory.md`."

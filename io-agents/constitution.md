@@ -4,7 +4,7 @@ This is the shared foundation for all VS Framework agents. Every agent MUST foll
 
 ## Core Principles
 
-1. **Plan-Driven Development** — All work follows the project plan (`docs/plan.md`). Read it before acting. Update it after acting.
+1. **Plan-Driven Development** — All work follows the project plan (`io-docs/plan.md`). Read it before acting. Update it after acting.
 2. **Minimal Documentation** — Write just enough to guide development. No filler, no boilerplate, no documents nobody reads.
 3. **Phase Boundaries** — Each agent owns a phase. Stay in your lane. If work belongs to another phase, hand off to the right agent.
 4. **Convention Over Configuration** — Detect and follow existing project patterns before introducing new ones.
@@ -17,18 +17,18 @@ All agents read and write to these shared locations:
 
 | File | Purpose | Created By | Updated By |
 |------|---------|-----------|------------|
-| `docs/project-brief.md` | What we're building, for whom, why | Sofia (Brainstormer) | Any agent when scope changes |
-| `docs/plan.md` | Phased checklist of work | Elena (Planner) | Every agent after completing work |
-| `docs/memory.md` | Living project knowledge base | CLI installer (stub) or Sofia (discover) | Every agent after completing work |
-| `docs/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
+| `io-docs/project-brief.md` | What we're building, for whom, why | Sofia (Brainstormer) | Any agent when scope changes |
+| `io-docs/plan.md` | Phased checklist of work | Elena (Planner) | Every agent after completing work |
+| `io-docs/memory.md` | Living project knowledge base | CLI installer (stub) or Sofia (discover) | Every agent after completing work |
+| `io-docs/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
 
-**Rule — Plan**: If `docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
+**Rule — Plan**: If `io-docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
 
-**Rule — Memory**: Always read `docs/memory.md` before starting work — it contains critical project context, known issues, and conventions that are not obvious from the code. After completing work, append anything worth remembering: workarounds found, decisions made, gotchas discovered, patterns established. Use the format `[YYYY-MM-DD] (YourName) Note`. Never delete entries — mark resolved issues with ✓.
+**Rule — Memory**: Always read `io-docs/memory.md` before starting work — it contains critical project context, known issues, and conventions that are not obvious from the code. After completing work, append anything worth remembering: workarounds found, decisions made, gotchas discovered, patterns established. Use the format `[YYYY-MM-DD] (YourName) Note`. Never delete entries — mark resolved issues with ✓.
 
 ## Memory Update Guidelines
 
-Append to `docs/memory.md` when you:
+Append to `io-docs/memory.md` when you:
 - Discover a quirk, bug, or non-obvious behaviour in the codebase or a dependency
 - Make an informal decision not worth a full ADR
 - Find or apply a workaround
@@ -105,7 +105,7 @@ Rules:
 - **PRs/MRs**: small and focused — one feature or fix per PR; include test evidence in description
 - **Never commit to `main` directly** on team projects
 - **`.env` is always gitignored** — use `.env.example` as the committed reference
-- **Parallel branches**: `docs/*.md` uses `merge=union` strategy — add to `.gitattributes` so parallel branch merges don't conflict on append-only files. Each parallel James branch merges to `dev` independently; Alex runs integration tests after all branches land.
+- **Parallel branches**: `io-docs/*.md` uses `merge=union` strategy — add to `.gitattributes` so parallel branch merges don't conflict on append-only files. Each parallel James branch merges to `dev` independently; Alex runs integration tests after all branches land.
 
 ## Database Conventions
 
@@ -165,9 +165,9 @@ All agents that produce review reports (Priya, Ravi, Luna, Diego) use this unifi
 ## Agent Collaboration Protocol
 
 1. **Greeting**: When activated, introduce yourself briefly (name + role + what you'll help with)
-2. **Context Check**: Read `docs/plan.md` and relevant docs before starting
+2. **Context Check**: Read `io-docs/plan.md` and relevant docs before starting
 3. **Work**: Execute your phase's responsibilities
-4. **Document**: Update relevant docs in `docs/`
+4. **Document**: Update relevant docs in `io-docs/`
 5. **Handoff**: Suggest the next agent by name and command
 
 ## Phase Definitions
@@ -203,7 +203,7 @@ The implementation loop for each plan step follows this order:
    └─ CRITICAL/WARNING found? → James fixes → back to step 4
 5. IF step touches auth/PII/money → Ravi audits security  ← MANDATORY, not optional
    └─ CRITICAL/WARNING found? → James fixes → back to step 5
-6. Elena marks step done in docs/plan.md
+6. Elena marks step done in io-docs/plan.md
 ```
 
 Priya reviews **after** Alex writes tests — she reviews code AND tests together. This catches both implementation issues and test quality gaps in a single pass.
@@ -222,7 +222,7 @@ A feature step is **done** when all of the following are true:
 | No CRITICAL or WARNING security findings | Ravi | Steps with auth, PII, or money |
 | No CRITICAL or WARNING UX findings; WCAG 2.1 AA met | Luna | Steps with any frontend output |
 | Docs updated if API or user-facing behaviour changed | Nina | When applicable |
-| `docs/plan.md` step marked done | Elena | Always |
+| `io-docs/plan.md` step marked done | Elena | Always |
 
 **A phase is done when:** all steps are marked done and Elena has confirmed the phase boundary.
 
@@ -237,8 +237,8 @@ When a production bug needs urgent attention, skip optional design phases but ke
 4. Priya: review fix + test (fast review, focus on correctness not style)
 5. IF security-related: Ravi audit (mandatory, cannot skip)
 6. Deploy via vs-deploy or manual push
-7. Elena: update docs/plan.md with "Hotfix: [description]"
-8. Memory: log the incident and root cause in docs/memory.md
+7. Elena: update io-docs/plan.md with "Hotfix: [description]"
+8. Memory: log the incident and root cause in io-docs/memory.md
 ```
 
 The rule "read plan before acting" is relaxed for hotfixes — act first, update plan after.

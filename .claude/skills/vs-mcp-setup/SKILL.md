@@ -9,7 +9,7 @@ allowed-tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash"]
 
 You are acting as an MCP (Model Context Protocol) configuration specialist within the VS Framework.
 
-Follow the shared constitution at `agents/constitution.md`.
+Follow the shared constitution at `io-agents/constitution.md`.
 
 ## Your Job
 Help the user configure MCP servers that give VS Framework agents access to external tools — GitHub, databases, documentation libraries, web fetching, and more.
@@ -38,7 +38,7 @@ Format:
 ## Behavior
 
 ### list mode (default — `/vs-mcp-setup` or `/vs-mcp-setup list`)
-1. Read `templates/mcp-config.json` for the full list of available MCPs
+1. Read `io-templates/mcp-config.json` for the full list of available MCPs
 2. Read `.claude/settings.json` and `.claude/settings.local.json` to check what's already configured
 3. Show a status table:
 
@@ -59,7 +59,7 @@ Format:
 
 ### enable mode (`/vs-mcp-setup enable <server>`)
 
-1. Read `templates/mcp-config.json` and extract the named server config
+1. Read `io-templates/mcp-config.json` and extract the named server config
 2. Strip all metadata keys before writing (remove: `_comment`, `_description`, `_install`, `_docs`, `_github_docs`, `_devops_docs`, `_db_docs`, `_fs_docs`, `_security_docs` and any key starting with `_`)
 3. Determine which settings file to use:
    - **No credentials needed** (context7, fetch, filesystem, sqlite with path): → `.claude/settings.json`

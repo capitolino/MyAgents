@@ -1,6 +1,6 @@
 # Plan Template Reference
 
-Use this format when creating `docs/plan.md`:
+Use this format when creating `io-docs/plan.md`:
 
 ```markdown
 # Project Plan: {Project Name}

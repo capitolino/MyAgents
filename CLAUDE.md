@@ -20,9 +20,9 @@ This project uses the VS Framework — a lightweight development methodology wit
 
 ## Constitution
 
-All agents follow the shared constitution at `agents/constitution.md`. Key rules:
+All agents follow the shared constitution at `io-agents/constitution.md`. Key rules:
 
-1. **Plan-Driven** — Read `docs/plan.md` before acting, update it after
+1. **Plan-Driven** — Read `io-docs/plan.md` before acting, update it after
 2. **Minimal Docs** — Just enough to guide development, no filler
 3. **Phase Boundaries** — Each agent stays in their lane
 4. **Convention First** — Follow existing project patterns
@@ -31,10 +31,10 @@ All agents follow the shared constitution at `agents/constitution.md`. Key rules
 
 ## Project State
 
-- `docs/project-brief.md` — What we're building (created by Sofia)
-- `docs/plan.md` — Phased checklist (created by Elena, updated by all)
-- `docs/memory.md` — Living knowledge base (updated by all agents after every session)
-- `docs/architecture-decisions/` — ADR-lite records (created by Marcus)
+- `io-docs/project-brief.md` — What we're building (created by Sofia)
+- `io-docs/plan.md` — Phased checklist (created by Elena, updated by all)
+- `io-docs/memory.md` — Living knowledge base (updated by all agents after every session)
+- `io-docs/architecture-decisions/` — ADR-lite records (created by Marcus)
 
 ## Code Standards
 
@@ -55,7 +55,7 @@ No persona — invoked by role when that step comes up:
 | `/vs-api-integration` | Generating typed client code from OpenAPI / Swagger / GraphQL schemas |
 | `/vs-perf` | Performance profiling, bottleneck analysis, load testing |
 | `/vs-feature-flags` | Design and implement feature flags for gradual rollouts and safe deployments |
-| `/vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `docs/deploy.md` runbook |
+| `/vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `/vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `/vs-onboard` | Brownfield onboarding — discover existing codebase, document architecture, plan improvements |
 
@@ -110,4 +110,4 @@ John is optional. Go direct when you know what you need. Use `/vs-plan next` (or
 | No CRITICAL/WARNING review findings | Priya | Always |
 | No CRITICAL security findings | Ravi | Auth, PII, or money |
 | No CRITICAL UX findings, WCAG 2.1 AA | Luna | Frontend features |
-| `docs/plan.md` step marked done | Elena | Always |
+| `io-docs/plan.md` step marked done | Elena | Always |

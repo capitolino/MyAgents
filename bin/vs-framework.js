@@ -153,7 +153,7 @@ function printHelp() {
 
   ${c.dim('Commands:')}
     ${c.cyan('init')} [name]    Add VS Framework to current dir, or create <name>/ first
-    ${c.cyan('update')}         Update framework files (agents, skills, templates) — preserves your docs/
+    ${c.cyan('update')}         Update framework files (io-agents, skills, io-templates) — preserves your io-docs/
 
   ${c.dim('Source flags (mutually exclusive):')}
     --branch <name>  Fetch from a specific branch     (default: main)
@@ -205,9 +205,9 @@ function printBanner(ref) {
 // ─── Copy framework files from srcRoot → dest ────────────────────────────────
 function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
-  const agentsDest = path.join(dest, 'agents');
-  fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
-  tick('agents/', `${countFiles(agentsDest)} files`);
+  const agentsDest = path.join(dest, 'io-agents');
+  fs.cpSync(path.join(srcRoot, 'io-agents'), agentsDest, { recursive: true });
+  tick('io-agents/', `${countFiles(agentsDest)} files`);
 
   if (!noClaude) {
     const claudeDest = path.join(dest, '.claude');
@@ -230,9 +230,9 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('.github/', 'skipped (--no-copilot)');
   }
 
-  const tmplDest = path.join(dest, 'templates');
-  fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
-  tick('templates/', `${countFiles(tmplDest)} files`);
+  const tmplDest = path.join(dest, 'io-templates');
+  fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
+  tick('io-templates/', `${countFiles(tmplDest)} files`);
 
   const claudeMdDest = path.join(dest, 'CLAUDE.md');
   if (!fs.existsSync(claudeMdDest) || force) {
@@ -242,11 +242,11 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('CLAUDE.md', 'already exists (use --force to overwrite)');
   }
 
-  ensureDir(path.join(dest, 'docs', 'architecture-decisions'));
+  ensureDir(path.join(dest, 'io-docs', 'architecture-decisions'));
 
   const today = new Date().toISOString().split('T')[0];
 
-  const planPath = path.join(dest, 'docs', 'plan.md');
+  const planPath = path.join(dest, 'io-docs', 'plan.md');
   if (!fs.existsSync(planPath)) {
     fs.writeFileSync(planPath, [
       '# Project Plan',
@@ -260,7 +260,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     ].join('\n'), 'utf8');
   }
 
-  const memoryPath = path.join(dest, 'docs', 'memory.md');
+  const memoryPath = path.join(dest, 'io-docs', 'memory.md');
   if (!fs.existsSync(memoryPath)) {
     fs.writeFileSync(memoryPath, [
       '# Project Memory',
@@ -303,7 +303,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     ].join('\n'), 'utf8');
   }
 
-  tick('docs/', 'plan.md + memory.md + architecture-decisions/');
+  tick('io-docs/', 'plan.md + memory.md + architecture-decisions/');
 
   const gitignorePath = path.join(dest, '.gitignore');
   if (!fs.existsSync(gitignorePath)) {
@@ -395,11 +395,11 @@ async function runInit(args) {
   console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}  ${c.dim(`(${mode})`)}`);
   console.log();
 
-  const alreadyInit = fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
+  const alreadyInit = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'));
   if (alreadyInit && !force) {
     console.log(`  ${c.yellow('⚠')}  VS Framework already found in this directory.`);
     console.log();
-    const answer = await prompt(`  Update framework files? ${c.dim('(agents, skills, templates — your docs are safe)')} [Y/n] `);
+    const answer = await prompt(`  Update framework files? ${c.dim('(io-agents, skills, io-templates — your io-docs are safe)')} [Y/n] `);
     if (answer.trim().toLowerCase() === 'n') {
       console.log(`\n  ${c.dim('Cancelled. Use --force to overwrite everything including CLAUDE.md.')}\n`);
       process.exit(0);
@@ -499,14 +499,14 @@ async function runUpdate(args) {
   const dest = process.cwd();
 
   // Must already be a VS Framework project
-  if (!fs.existsSync(path.join(dest, 'agents', 'constitution.md'))) {
+  if (!fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))) {
     die('No VS Framework found in this directory.\n     Run init first: npx github:' + REPO + ' init');
   }
 
   printBanner(ref);
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
-  console.log(`  ${c.dim('Updates: agents/, .claude/, .github/copilot-agents/, templates/')}`);
-  console.log(`  ${c.dim('Preserved: docs/, CLAUDE.md, .gitignore, .env*')}`);
+  console.log(`  ${c.dim('Updates: io-agents/, .claude/, .github/copilot-agents/, io-templates/')}`);
+  console.log(`  ${c.dim('Preserved: io-docs/, CLAUDE.md, .gitignore, .env*')}`);
   console.log();
 
   let srcRoot = PKG_ROOT;
@@ -526,10 +526,10 @@ async function runUpdate(args) {
 
   console.log();
   try {
-    // agents/ — always update
-    const agentsDest = path.join(dest, 'agents');
-    fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
-    tick('agents/', `${countFiles(agentsDest)} files`);
+    // io-agents/ — always update
+    const agentsDest = path.join(dest, 'io-agents');
+    fs.cpSync(path.join(srcRoot, 'io-agents'), agentsDest, { recursive: true });
+    tick('io-agents/', `${countFiles(agentsDest)} files`);
 
     // .claude/ — update unless --no-claude
     if (!noClaude) {
@@ -555,14 +555,14 @@ async function runUpdate(args) {
       skip('.github/', 'skipped (--no-copilot)');
     }
 
-    // templates/ — always update
-    const tmplDest = path.join(dest, 'templates');
-    fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
-    tick('templates/', `${countFiles(tmplDest)} files`);
+    // io-templates/ — always update
+    const tmplDest = path.join(dest, 'io-templates');
+    fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
+    tick('io-templates/', `${countFiles(tmplDest)} files`);
 
     // Skipped items (user-owned)
     skip('CLAUDE.md', 'preserved (yours)');
-    skip('docs/', 'preserved (yours)');
+    skip('io-docs/', 'preserved (yours)');
     skip('.gitignore', 'preserved (yours)');
   } finally {
     if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
