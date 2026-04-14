@@ -577,7 +577,17 @@ async function runUpdate(args) {
 
   printBanner(ref);
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
-  console.log(`  ${c.dim('Updates: io-agents/, .claude/, .github/copilot-agents/, io-templates/')}`);
+  // Auto-detect what was originally installed
+  const hasClaudeInstalled   = fs.existsSync(path.join(dest, '.claude', 'skills'));
+  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'));
+
+  // --no-claude / --no-copilot override auto-detection (explicit skip)
+  const updateClaude  = !noClaude  && hasClaudeInstalled;
+  const updateCopilot = !noCopilot && hasCopilotInstalled;
+
+  const willUpdate = ['io-agents/', 'io-templates/', updateClaude ? '.claude/' : null, updateCopilot ? '.github/' : null]
+    .filter(Boolean).join(', ');
+  console.log(`  ${c.dim('Updates:')} ${willUpdate}`);
   console.log(`  ${c.dim('Preserved: io-docs/, CLAUDE.md, .gitignore, .env*')}`);
   console.log();
 
@@ -609,17 +619,19 @@ async function runUpdate(args) {
     fs.cpSync(path.join(srcRoot, 'io-agents'), agentsDest, { recursive: true });
     tick('io-agents/', `${countFiles(agentsDest)} files`);
 
-    // .claude/ — update unless --no-claude
-    if (!noClaude) {
+    // .claude/ — update only if installed; skip if --no-claude or never installed
+    if (updateClaude) {
       const claudeDest = path.join(dest, '.claude');
       fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, { recursive: true });
       tick('.claude/skills/', `${countFiles(claudeDest)} files`);
-    } else {
+    } else if (noClaude) {
       skip('.claude/skills/', 'skipped (--no-claude)');
+    } else {
+      skip('.claude/skills/', 'not installed — run init --no-copilot to add Claude files');
     }
 
-    // .github/copilot-agents/ — update unless --no-copilot
-    if (!noCopilot) {
+    // .github/ — update only if installed; skip if --no-copilot or never installed
+    if (updateCopilot) {
       const githubSrc  = path.join(srcRoot, '.github', 'copilot-agents');
       const githubDest = path.join(dest, '.github', 'copilot-agents');
       ensureDir(path.join(dest, '.github'));
@@ -629,8 +641,10 @@ async function runUpdate(args) {
         path.join(dest, '.github', 'copilot-instructions.md')
       );
       tick('.github/', `${countFiles(githubDest) + 1} files`);
-    } else {
+    } else if (noCopilot) {
       skip('.github/', 'skipped (--no-copilot)');
+    } else {
+      skip('.github/', 'not installed — run init --no-claude to add Copilot files');
     }
 
     // io-templates/ — always update
