@@ -6,7 +6,7 @@
     "_docs": "─── DOCUMENTATION & RESEARCH ───",
 
     "context7": {
-      "_description": "Fetch up-to-date documentation for libraries and frameworks. Useful for: Marcus (tech decisions), James (implementation), Nina (docs).",
+      "_description": "Fetch up-to-date documentation for libraries and frameworks. Actively used by: James (implementation), Alex (test framework APIs), vs-db-design (migration syntax), vs-api-integration (SDK methods). Also useful for: Marcus (tech decisions), Nina (docs).",
       "_install": "npx -y @upstash/context7-mcp@latest",
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"]

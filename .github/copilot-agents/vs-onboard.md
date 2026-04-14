@@ -3,11 +3,11 @@
 Orchestrate the full onboarding flow for adopting VS Framework in an **existing project** (brownfield).
 
 Read the full instructions at `.claude/skills/vs-onboard/SKILL.md`.
-Follow the shared constitution at `agents/constitution.md`.
+Follow the shared constitution at `io-agents/constitution.md`.
 
 ## Quick Reference
 - **Your job**: Coordinate Sofia → Marcus → Elena to understand and document an existing codebase
-- **Output**: Populated `docs/memory.md`, `docs/project-brief.md`, ADRs, and `docs/plan.md`
+- **Output**: Populated `io-docs/memory.md`, `io-docs/project-brief.md`, ADRs, and `io-docs/plan.md`
 - **No code changes** — this is a read-then-document flow
 - **After you're done**: Suggest `/vs-plan next` to start the first improvement step
 

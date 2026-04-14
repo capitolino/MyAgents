@@ -74,31 +74,69 @@ function flagValue(args, flag) {
   return val;
 }
 
-// ─── GitHub download (always fresh — follows redirects) ──────────────────────
-function download(url, destPath, redirects = 0) {
+// ─── Validate downloaded file is a real gzip ─────────────────────────────────
+function isValidGzip(filePath) {
+  try {
+    const buf = Buffer.alloc(2);
+    const fd  = fs.openSync(filePath, 'r');
+    fs.readSync(fd, buf, 0, 2, 0);
+    fs.closeSync(fd);
+    return buf[0] === 0x1f && buf[1] === 0x8b;
+  } catch { return false; }
+}
+
+// ─── Check that a source root has the expected framework structure ────────────
+function isValidSrcRoot(srcRoot) {
+  return fs.existsSync(path.join(srcRoot, 'io-agents', 'constitution.md'))
+      || fs.existsSync(path.join(srcRoot, 'agents',    'constitution.md'));
+}
+
+// ─── Fetch via git clone (most reliable: uses git config, proxies, credentials)
+function fetchWithGit(ref, tmpDir) {
+  const repoUrl  = `https://github.com/${REPO}.git`;
+  const cloneDir = path.join(tmpDir, 'repo');
+  const refValue = ref.value;
+  try {
+    process.stdout.write(`  ${c.cyan('↓')} Cloning from GitHub...         `);
+    execSync(
+      `git clone --depth 1 --branch "${refValue}" "${repoUrl}" "${cloneDir}"`,
+      { stdio: 'pipe' }
+    );
+    return cloneDir;
+  } catch (err) {
+    throw new Error('git clone failed: ' + err.stderr?.toString().trim() || err.message);
+  }
+}
+
+// ─── Download via curl (fallback 1) ──────────────────────────────────────────
+function downloadWithCurl(url, destPath) {
+  execSync(`curl -fsSL -o "${destPath}" "${url}"`, { stdio: 'pipe' });
+}
+
+// ─── Download via Node https (fallback 2) ────────────────────────────────────
+function downloadWithNode(url, destPath, redirects = 0) {
   return new Promise((resolve, reject) => {
     if (redirects > 5) return reject(new Error('Too many redirects'));
     const parsedUrl = new URL(url);
-    const options = {
+    const proto     = parsedUrl.protocol === 'http:' ? require('http') : https;
+    proto.get({
       hostname: parsedUrl.hostname,
       path:     parsedUrl.pathname + parsedUrl.search,
       headers:  { 'User-Agent': 'vs-framework-cli' },
-    };
-    https.get(options, (res) => {
-      if (res.statusCode === 301 || res.statusCode === 302) {
+    }, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) {
         res.resume();
-        return resolve(download(res.headers.location, destPath, redirects + 1));
+        return resolve(downloadWithNode(res.headers.location, destPath, redirects + 1));
       }
       if (res.statusCode !== 200) {
         res.resume();
-        return reject(new Error(`GitHub returned HTTP ${res.statusCode}`));
+        return reject(new Error(`HTTP ${res.statusCode}`));
       }
-      let downloaded = 0;
+      let bytes = 0;
       const file = fs.createWriteStream(destPath);
       res.on('data', chunk => {
-        downloaded += chunk.length;
-        const kb = (downloaded / 1024).toFixed(0);
-        process.stdout.write(`\r  ${c.cyan('↓')} Fetching from GitHub...  ${c.dim(kb + ' KB')}`);
+        bytes += chunk.length;
+        process.stdout.write(`\r  ${c.cyan('↓')} Fetching from GitHub...  ${c.dim((bytes / 1024).toFixed(0) + ' KB')}`);
       });
       res.pipe(file);
       file.on('finish', () => { file.close(); resolve(); });
@@ -107,29 +145,54 @@ function download(url, destPath, redirects = 0) {
   });
 }
 
-// ─── Fetch from GitHub, return extracted source root ─────────────────────────
+// ─── Fetch from GitHub — tries git clone → curl → Node https ─────────────────
 async function fetchFromGitHub(ref) {
-  const { url, dirName, label } = tarballUrl(ref);
-  const tmpDir  = fs.mkdtempSync(path.join(os.tmpdir(), 'vsf-'));
-  const tarPath = path.join(tmpDir, 'framework.tar.gz');
+  const { label } = tarballUrl(ref);
+  const tmpDir    = fs.mkdtempSync(path.join(os.tmpdir(), 'vsf-'));
 
   try {
-    await download(url, tarPath);
+    // Strategy 1: git clone --depth 1
+    // Most reliable in corporate environments — uses git credentials, proxy config
+    try {
+      const srcRoot = fetchWithGit(ref, tmpDir);
+      infoDone(`Fetched ${label} from GitHub (git)    `);
+      return { srcRoot, tmpDir };
+    } catch (gitErr) {
+      // git not available or failed — try tarball approaches
+    }
+
+    // Strategy 2 & 3: tarball download (curl → Node https)
+    const { url, dirName } = tarballUrl(ref);
+    const tarPath = path.join(tmpDir, 'framework.tar.gz');
+
+    try {
+      execSync('curl --version', { stdio: 'pipe' });
+      downloadWithCurl(url, tarPath);
+    } catch {
+      await downloadWithNode(url, tarPath);
+    }
+
     infoDone(`Fetched ${label} from GitHub          `);
 
+    if (!isValidGzip(tarPath)) {
+      throw new Error(
+        'Downloaded file is not a valid archive.\n' +
+        '     This usually means a proxy or firewall is intercepting the request.\n' +
+        '     Try: ensure git is installed and in PATH — the CLI will use git clone instead.'
+      );
+    }
+
     process.stdout.write(`  ${c.cyan('↓')} Extracting...                  `);
-    execSync('tar -xzf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
+    execSync('tar -xf framework.tar.gz', { cwd: tmpDir, stdio: 'pipe' });
     infoDone('Extracted                      ');
 
-    const srcRoot = path.join(tmpDir, dirName);
-
+    let srcRoot = path.join(tmpDir, dirName);
     if (!fs.existsSync(srcRoot)) {
-      // Fallback: find the first extracted directory
       const dirs = fs.readdirSync(tmpDir, { withFileTypes: true })
         .filter(e => e.isDirectory())
         .map(e => path.join(tmpDir, e.name));
       if (!dirs.length) throw new Error('Could not locate extracted directory');
-      return { srcRoot: dirs[0], tmpDir };
+      srcRoot = dirs[0];
     }
 
     return { srcRoot, tmpDir };
@@ -153,7 +216,7 @@ function printHelp() {
 
   ${c.dim('Commands:')}
     ${c.cyan('init')} [name]    Add VS Framework to current dir, or create <name>/ first
-    ${c.cyan('update')}         Update framework files (agents, skills, templates) — preserves your docs/
+    ${c.cyan('update')}         Update framework files (io-agents, skills, io-templates) — preserves your io-docs/
 
   ${c.dim('Source flags (mutually exclusive):')}
     --branch <name>  Fetch from a specific branch     (default: main)
@@ -205,9 +268,9 @@ function printBanner(ref) {
 // ─── Copy framework files from srcRoot → dest ────────────────────────────────
 function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
-  const agentsDest = path.join(dest, 'agents');
-  fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
-  tick('agents/', `${countFiles(agentsDest)} files`);
+  const agentsDest = path.join(dest, 'io-agents');
+  fs.cpSync(path.join(srcRoot, 'io-agents'), agentsDest, { recursive: true });
+  tick('io-agents/', `${countFiles(agentsDest)} files`);
 
   if (!noClaude) {
     const claudeDest = path.join(dest, '.claude');
@@ -230,9 +293,9 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('.github/', 'skipped (--no-copilot)');
   }
 
-  const tmplDest = path.join(dest, 'templates');
-  fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
-  tick('templates/', `${countFiles(tmplDest)} files`);
+  const tmplDest = path.join(dest, 'io-templates');
+  fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
+  tick('io-templates/', `${countFiles(tmplDest)} files`);
 
   const claudeMdDest = path.join(dest, 'CLAUDE.md');
   if (!fs.existsSync(claudeMdDest) || force) {
@@ -242,11 +305,11 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     skip('CLAUDE.md', 'already exists (use --force to overwrite)');
   }
 
-  ensureDir(path.join(dest, 'docs', 'architecture-decisions'));
+  ensureDir(path.join(dest, 'io-docs', 'architecture-decisions'));
 
   const today = new Date().toISOString().split('T')[0];
 
-  const planPath = path.join(dest, 'docs', 'plan.md');
+  const planPath = path.join(dest, 'io-docs', 'plan.md');
   if (!fs.existsSync(planPath)) {
     fs.writeFileSync(planPath, [
       '# Project Plan',
@@ -260,7 +323,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     ].join('\n'), 'utf8');
   }
 
-  const memoryPath = path.join(dest, 'docs', 'memory.md');
+  const memoryPath = path.join(dest, 'io-docs', 'memory.md');
   if (!fs.existsSync(memoryPath)) {
     fs.writeFileSync(memoryPath, [
       '# Project Memory',
@@ -303,7 +366,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     ].join('\n'), 'utf8');
   }
 
-  tick('docs/', 'plan.md + memory.md + architecture-decisions/');
+  tick('io-docs/', 'plan.md + memory.md + architecture-decisions/');
 
   const gitignorePath = path.join(dest, '.gitignore');
   if (!fs.existsSync(gitignorePath)) {
@@ -395,11 +458,12 @@ async function runInit(args) {
   console.log(`  ${c.dim('Initializing in:')} ${c.bold(dest)}  ${c.dim(`(${mode})`)}`);
   console.log();
 
-  const alreadyInit = fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
+  const alreadyInit = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))
+                   || fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
   if (alreadyInit && !force) {
     console.log(`  ${c.yellow('⚠')}  VS Framework already found in this directory.`);
     console.log();
-    const answer = await prompt(`  Update framework files? ${c.dim('(agents, skills, templates — your docs are safe)')} [Y/n] `);
+    const answer = await prompt(`  Update framework files? ${c.dim('(io-agents, skills, io-templates — your io-docs are safe)')} [Y/n] `);
     if (answer.trim().toLowerCase() === 'n') {
       console.log(`\n  ${c.dim('Cancelled. Use --force to overwrite everything including CLAUDE.md.')}\n`);
       process.exit(0);
@@ -416,10 +480,16 @@ async function runInit(args) {
       ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      if (!isValidSrcRoot(PKG_ROOT)) {
+        die('Cached package is outdated (missing io-agents/). Connect to the internet and try again, or upgrade npx cache:\n     npx --yes github:' + REPO + ' init');
+      }
       console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
       srcRoot = PKG_ROOT;
     }
   } else {
+    if (!isValidSrcRoot(PKG_ROOT)) {
+      die('Cached package is outdated (missing io-agents/). Remove --offline to fetch the latest version.');
+    }
     console.log(`  ${c.dim('(--offline: using cached package files)')}\n`);
   }
 
@@ -498,15 +568,27 @@ async function runUpdate(args) {
 
   const dest = process.cwd();
 
-  // Must already be a VS Framework project
-  if (!fs.existsSync(path.join(dest, 'agents', 'constitution.md'))) {
+  // Must already be a VS Framework project (check both new and legacy paths)
+  const hasFramework = fs.existsSync(path.join(dest, 'io-agents', 'constitution.md'))
+                    || fs.existsSync(path.join(dest, 'agents', 'constitution.md'));
+  if (!hasFramework) {
     die('No VS Framework found in this directory.\n     Run init first: npx github:' + REPO + ' init');
   }
 
   printBanner(ref);
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
-  console.log(`  ${c.dim('Updates: agents/, .claude/, .github/copilot-agents/, templates/')}`);
-  console.log(`  ${c.dim('Preserved: docs/, CLAUDE.md, .gitignore, .env*')}`);
+  // Auto-detect what was originally installed
+  const hasClaudeInstalled   = fs.existsSync(path.join(dest, '.claude', 'skills'));
+  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'));
+
+  // --no-claude / --no-copilot override auto-detection (explicit skip)
+  const updateClaude  = !noClaude  && hasClaudeInstalled;
+  const updateCopilot = !noCopilot && hasCopilotInstalled;
+
+  const willUpdate = ['io-agents/', 'io-templates/', updateClaude ? '.claude/' : null, updateCopilot ? '.github/' : null]
+    .filter(Boolean).join(', ');
+  console.log(`  ${c.dim('Updates:')} ${willUpdate}`);
+  console.log(`  ${c.dim('Preserved: io-docs/, CLAUDE.md, .gitignore, .env*')}`);
   console.log();
 
   let srcRoot = PKG_ROOT;
@@ -517,31 +599,39 @@ async function runUpdate(args) {
       ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
+      if (!isValidSrcRoot(PKG_ROOT)) {
+        die('Cached package is outdated (missing io-agents/). Connect to the internet and try again, or clear the npx cache and re-run.');
+      }
       console.log(`     ${c.dim('Falling back to cached package files...')}\n`);
       srcRoot = PKG_ROOT;
     }
   } else {
+    if (!isValidSrcRoot(PKG_ROOT)) {
+      die('Cached package is outdated (missing io-agents/). Remove --offline to fetch the latest version.');
+    }
     console.log(`  ${c.dim('(--offline: using cached package files)')}\n`);
   }
 
   console.log();
   try {
-    // agents/ — always update
-    const agentsDest = path.join(dest, 'agents');
-    fs.cpSync(path.join(srcRoot, 'agents'), agentsDest, { recursive: true });
-    tick('agents/', `${countFiles(agentsDest)} files`);
+    // io-agents/ — always update
+    const agentsDest = path.join(dest, 'io-agents');
+    fs.cpSync(path.join(srcRoot, 'io-agents'), agentsDest, { recursive: true });
+    tick('io-agents/', `${countFiles(agentsDest)} files`);
 
-    // .claude/ — update unless --no-claude
-    if (!noClaude) {
+    // .claude/ — update only if installed; skip if --no-claude or never installed
+    if (updateClaude) {
       const claudeDest = path.join(dest, '.claude');
       fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, { recursive: true });
       tick('.claude/skills/', `${countFiles(claudeDest)} files`);
-    } else {
+    } else if (noClaude) {
       skip('.claude/skills/', 'skipped (--no-claude)');
+    } else {
+      skip('.claude/skills/', 'not installed — run init --no-copilot to add Claude files');
     }
 
-    // .github/copilot-agents/ — update unless --no-copilot
-    if (!noCopilot) {
+    // .github/ — update only if installed; skip if --no-copilot or never installed
+    if (updateCopilot) {
       const githubSrc  = path.join(srcRoot, '.github', 'copilot-agents');
       const githubDest = path.join(dest, '.github', 'copilot-agents');
       ensureDir(path.join(dest, '.github'));
@@ -551,18 +641,20 @@ async function runUpdate(args) {
         path.join(dest, '.github', 'copilot-instructions.md')
       );
       tick('.github/', `${countFiles(githubDest) + 1} files`);
-    } else {
+    } else if (noCopilot) {
       skip('.github/', 'skipped (--no-copilot)');
+    } else {
+      skip('.github/', 'not installed — run init --no-claude to add Copilot files');
     }
 
-    // templates/ — always update
-    const tmplDest = path.join(dest, 'templates');
-    fs.cpSync(path.join(srcRoot, 'templates'), tmplDest, { recursive: true });
-    tick('templates/', `${countFiles(tmplDest)} files`);
+    // io-templates/ — always update
+    const tmplDest = path.join(dest, 'io-templates');
+    fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
+    tick('io-templates/', `${countFiles(tmplDest)} files`);
 
     // Skipped items (user-owned)
     skip('CLAUDE.md', 'preserved (yours)');
-    skip('docs/', 'preserved (yours)');
+    skip('io-docs/', 'preserved (yours)');
     skip('.gitignore', 'preserved (yours)');
   } finally {
     if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });

@@ -9,16 +9,32 @@ allowed-tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebSearch", "W
 
 You are acting as an API integration specialist within the VS Framework.
 
-Follow the shared constitution at `agents/constitution.md`.
+Follow the shared constitution at `io-agents/constitution.md`.
 Reference patterns at `.claude/skills/vs-api-integration/references/api-patterns.md`.
 
 ## Your Job
 Generate typed client code from API schemas with proper error handling, retries, and service layer wrapping.
 
+## MCPs (use when configured)
+
+| MCP | When to use |
+|-----|-------------|
+| **context7** | Before generating client code — fetch current SDK method signatures and auth patterns |
+| **fetch** | Fetch the live OpenAPI/Swagger spec URL if a file path isn't provided |
+
+## Context7 (if available)
+
+If the **Context7 MCP** is configured, fetch current SDK/client library docs before generating code — SDK method signatures and auth patterns change frequently:
+```
+1. mcp__context7__resolve-library-id  →  get the library ID for the HTTP client or SDK in use
+2. mcp__context7__get-library-docs    →  fetch the relevant section (e.g. "authentication", "error handling", "retries")
+```
+If Context7 is not configured, use built-in knowledge.
+
 ## Behavior
 1. Accept an API schema file path or URL from `$ARGUMENTS`
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL
-3. Read `docs/architecture-decisions/` for tech stack decisions
+3. Read `io-docs/architecture-decisions/` for tech stack decisions
 4. Generate client code with:
    - **Service layer wrapper** — single point of contact for the API
    - **Typed models** — request/response types from schema
@@ -27,7 +43,7 @@ Generate typed client code from API schemas with proper error handling, retries,
    - **Pagination support** — cursor or offset based
    - **Authentication** — token/API key handling
 5. Follow project language conventions
-6. Update `docs/plan.md` with integration status
+6. Update `io-docs/plan.md` with integration status
 
 ## Output Structure
 ```

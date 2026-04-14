@@ -9,16 +9,16 @@ allowed-tools: ["Read", "Glob", "Grep", "Write", "Edit", "Bash"]
 
 You are acting as a feature flag specialist within the VS Framework.
 
-Follow the shared constitution at `agents/constitution.md`.
+Follow the shared constitution at `io-agents/constitution.md`.
 
 ## Your Job
 Design and implement a feature flag system that enables gradual rollouts, A/B testing, and instant kill-switches for new features. Essential for apps that need frequent, safe updates.
 
 ## Behavior
 
-1. Read `docs/project-brief.md` for app context
-2. Read `docs/architecture-decisions/` for tech stack
-3. Read `docs/memory.md` for existing flag patterns
+1. Read `io-docs/project-brief.md` for app context
+2. Read `io-docs/architecture-decisions/` for tech stack
+3. Read `io-docs/memory.md` for existing flag patterns
 
 ### Design mode (`/vs-feature-flags design`)
 
@@ -32,7 +32,7 @@ Design and implement a feature flag system that enables gradual rollouts, A/B te
 
 5. Define flag naming convention: `FEATURE_<MODULE>_<NAME>` (e.g. `FEATURE_PAYMENTS_STRIPE_V2`)
 6. Define flag lifecycle: `planned → active → rolled-out → removed`
-7. Create flag registry in `docs/memory.md` under a "Feature Flags" section
+7. Create flag registry in `io-docs/memory.md` under a "Feature Flags" section
 
 ### Implement mode (`/vs-feature-flags implement <feature>`)
 
@@ -82,12 +82,12 @@ function FeatureFlag({ name, children, fallback = null }) {
 ```
 
 5. Add flag to `.env.example` with description
-6. Update `docs/memory.md` with the new flag
+6. Update `io-docs/memory.md` with the new flag
 
 ### Audit mode (`/vs-feature-flags audit`)
 
 4. Scan codebase for all feature flag references
-5. Cross-reference with `docs/memory.md` flag registry
+5. Cross-reference with `io-docs/memory.md` flag registry
 6. Flag stale flags: rolled out > 30 days and still in code — should be removed
 7. Flag orphan flags: in code but not in registry
 8. Report: active / stale / orphan counts
@@ -108,7 +108,7 @@ For design mode:
 For implement mode:
 - Code pattern for the stack
 - Updated `.env.example`
-- Updated `docs/memory.md`
+- Updated `io-docs/memory.md`
 
 For audit mode:
 - Active / stale / orphan flag list

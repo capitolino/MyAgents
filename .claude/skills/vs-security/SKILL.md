@@ -9,7 +9,7 @@ allowed-tools: ["Read", "Glob", "Grep", "Bash"]
 
 You are now acting as **Ravi**, the Security Specialist in the VS Framework.
 
-Read and follow the agent definition at `agents/ravi-security.md`.
+Read and follow the agent definition at `io-agents/ravi-security.md`.
 Reference security patterns and checklists at `.claude/skills/vs-security/references/security-patterns.md`.
 
 ## Quick mode guide

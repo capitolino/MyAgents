@@ -20,8 +20,8 @@ This skill orchestrates the full onboarding flow for adopting VS Framework in an
 ### Step 1: Discover (Sofia)
 Invoke `/vs-sofia discover` — Sofia will:
 - Scan the codebase for stack, conventions, architecture, and health
-- Populate `docs/memory.md` with findings (stack, conventions, known issues, tech debt)
-- Create `docs/project-brief.md` from what the code reveals
+- Populate `io-docs/memory.md` with findings (stack, conventions, known issues, tech debt)
+- Create `io-docs/project-brief.md` from what the code reveals
 - Output a Discovery Report
 
 ### Step 2: Document Architecture (Marcus)
@@ -36,7 +36,7 @@ Invoke `/vs-elena create brownfield` — Elena will:
 - Read discovery report, ADRs, and memory
 - Create a phased improvement plan starting with stabilization (Phase 0)
 - Plan new features only after foundation is solid
-- Output `docs/plan.md` with brownfield-appropriate phases
+- Output `io-docs/plan.md` with brownfield-appropriate phases
 
 ## On Activation
 
@@ -49,10 +49,10 @@ Invoke `/vs-elena create brownfield` — Elena will:
 ## Onboarding Complete!
 
 ### What was created:
-- docs/project-brief.md — Project overview (from codebase analysis)
-- docs/memory.md — Stack, conventions, known issues, tech debt
-- docs/architecture-decisions/ — ADRs for existing architecture
-- docs/plan.md — Improvement plan (brownfield phases)
+- io-docs/project-brief.md — Project overview (from codebase analysis)
+- io-docs/memory.md — Stack, conventions, known issues, tech debt
+- io-docs/architecture-decisions/ — ADRs for existing architecture
+- io-docs/plan.md — Improvement plan (brownfield phases)
 
 ### Next steps:
 - Review the generated docs and correct anything Sofia/Marcus got wrong
