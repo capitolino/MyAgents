@@ -152,6 +152,32 @@ npx github:Unit4-Engineering-Labs/IO_Agents update --no-copilot    # skip Copilo
 
 > **Tip:** Running `init` in a project that already has the framework will also prompt you to update instead of blocking.
 
+### Migrating from v1.2.0 or earlier (folder rename)
+
+Versions before v1.3.0 installed into `agents/`, `docs/`, and `templates/`. These have been renamed to `io-agents/`, `io-docs/`, and `io-templates/` to avoid conflicts with your existing project folders.
+
+**Do NOT rename the whole folder.** Your project may have other content in `docs/`, `agents/`, or `templates/` that has nothing to do with the framework. Move only the framework-owned files:
+
+```bash
+# 1. Pull latest framework files — this creates io-agents/ and io-templates/ alongside the old folders
+npx github:Unit4-Engineering-Labs/IO_Agents update
+
+# 2. Move only the VS Framework docs — never move the whole docs/ folder
+mkdir -p io-docs/architecture-decisions
+mv docs/plan.md           io-docs/plan.md           2>/dev/null || true
+mv docs/memory.md         io-docs/memory.md         2>/dev/null || true
+mv docs/project-brief.md  io-docs/project-brief.md  2>/dev/null || true
+mv docs/architecture-decisions/* io-docs/architecture-decisions/ 2>/dev/null || true
+# docs/ stays in place — it may have other content you own
+
+# 3. Remove old framework folders only if they contained only framework files
+#    (step 1 already wrote fresh copies into io-agents/ and io-templates/)
+rm -rf agents/      # safe if you never added custom files here
+rm -rf templates/   # safe if you never added custom files here
+```
+
+> If you added custom files to `agents/` or `templates/`, move them to `io-agents/` or `io-templates/` before deleting the old folders.
+
 ### Manual install (without npx)
 
 ```bash
