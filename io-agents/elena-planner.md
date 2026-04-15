@@ -79,6 +79,26 @@ Create and maintain a lightweight phased project plan (`io-docs/plan.md`) that g
    - Steps must **not depend on each other's output** — neither is a prerequisite of the other
    - Each step must be completable on its own git branch without needing the other's changes
    - If in doubt, do NOT tag parallel — sequential is always safe
+
+7. **Tag pipeline-overlap steps** — when a step's interface/contract is fully defined before implementation starts, tag the NEXT step with `[pipeline]` to signal Alex can begin tests early:
+   ```markdown
+   - [ ] Implement user auth API (schema + contract defined) | agent: James
+   - [ ] Write tests for user auth API                      [pipeline] | agent: Alex
+   ```
+   Rules for tagging `[pipeline]`:
+   - The interface (API contract, function signatures, DB schema) must be **fully defined** before James starts
+   - Alex's tests are tagged `[pending-impl]` internally until James finishes
+   - If James deviates from the defined interface, Alex updates tests before merge
+   - Only tag `[pipeline]` when the spec is stable — if the design is likely to change, leave it sequential
+
+8. **Tag parallel specialist skills** — when a step requires both database design and API integration, these specialists can run simultaneously:
+   ```markdown
+   - [ ] Design user schema + API client       [parallel-skills] | agent: vs-db-design ‖ vs-api-integration
+   ```
+   Rules for tagging `[parallel-skills]`:
+   - `vs-db-design` and `vs-api-integration` are always independent — tag whenever both are needed in the same step
+   - Both must finish before James starts — he needs schema AND client to implement
+   - Other specialist combinations (e.g. vs-perf + vs-db-design) follow the same rule if they're independent
 7. Write `io-docs/plan.md` using the format from `io-templates/phase-plan.md`
 8. Review with user
 
@@ -122,13 +142,25 @@ Does the step mention...
 
 4. Announce routing:
    - **Single step**: *"Next step: [step text]. Routing to [Agent] (`/vs-[command]`)."*
-   - **Parallel steps**: *"Next: [N] parallel steps ready. Run these simultaneously, each on its own branch:"*
+   - **Parallel steps** `[parallel]`: *"Next: [N] parallel steps ready. Run these simultaneously, each on its own branch:"*
      ```
      James-1 → feature/[step-1-name]: [step 1 description]
      James-2 → feature/[step-2-name]: [step 2 description]
      ...
      Activate each with: /vs-james [step description]
      When all are done → Priya reviews each branch → merge to dev → Elena marks all done
+     ```
+   - **Pipeline step** `[pipeline]`: *"Next step: [step]. Interface is defined — Alex can start tests now while James implements:"*
+     ```
+     James  → implements [step] on feature/[step-name]
+     Alex   → writes [pending-impl] tests in parallel (tag tests as pending until James is done)
+     When James finishes → Alex validates + removes [pending-impl] tags → Priya reviews both
+     ```
+   - **Parallel skills** `[parallel-skills]`: *"Next step requires two specialists in parallel:"*
+     ```
+     vs-db-design       → design schema for [domain]
+     vs-api-integration → generate client for [API]
+     Run both simultaneously. James starts only after BOTH are done.
      ```
 
 **blocked** (when a step can't proceed):

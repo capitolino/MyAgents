@@ -196,19 +196,27 @@ The implementation loop for each plan step follows this order:
 
 ```
 1. James implements the step
-2. Alex writes tests (can start during James's work if scope is clear)
+   └─ Pipeline overlap: if the NEXT step's interface/spec is clear,
+      Alex can begin writing tests for step N+1 while James implements it.
+      Alex tags those tests [pending-impl] until James finishes.
+2. Alex finalises tests for this step (or completes [pending-impl] tests)
 3. Priya reviews code + tests together
    └─ CRITICAL/WARNING found? → James fixes → back to step 3
-4. IF step has any frontend output → Luna reviews UX/accessibility  ← MANDATORY, not optional
-   └─ CRITICAL/WARNING found? → James fixes → back to step 4
-5. IF step touches auth/PII/money → Ravi audits security  ← MANDATORY, not optional
-   └─ CRITICAL/WARNING found? → James fixes → back to step 5
-6. Elena marks step done in io-docs/plan.md
+4. IF step has frontend output AND auth/PII/money → Luna + Ravi run IN PARALLEL ← MANDATORY
+   IF step has frontend output only             → Luna reviews
+   IF step has auth/PII/money only             → Ravi audits
+   └─ CRITICAL/WARNING from either → James fixes → re-review with the flagging agent only
+5. Elena marks step done in io-docs/plan.md
 ```
 
-Priya reviews **after** Alex writes tests — she reviews code AND tests together. This catches both implementation issues and test quality gaps in a single pass.
+**Pipeline overlap rule (step 1↔2)**: Alex may start writing tests for step N+1 while James is still implementing it, provided:
+- The interface (function signatures, API contract, DB schema) for step N+1 is already defined
+- Tests are tagged `[pending-impl]` and NOT merged until James completes the implementation
+- If James's implementation diverges from the expected interface, Alex updates the tests before merge
 
-Steps 4 and 5 are **mandatory gates**, not suggestions. A step with frontend output cannot reach DoD without Luna's sign-off. A step touching auth/PII/money cannot reach DoD without Ravi's sign-off.
+**Parallel audit rule (step 4)**: Luna and Ravi are independent reviewers — they never need each other's output. When both gates apply, spawn them simultaneously. Collect both reports before James fixes anything, so fixes address all findings in one pass.
+
+Steps 4 is a **mandatory gate**, not a suggestion. A step with frontend output cannot reach DoD without Luna's sign-off. A step touching auth/PII/money cannot reach DoD without Ravi's sign-off.
 
 ## Definition of Done
 

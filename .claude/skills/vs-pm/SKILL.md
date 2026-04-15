@@ -45,7 +45,11 @@ Agent(
 
 **Spawn agents sequentially** — wait for each to finish before starting the next (their output feeds the next agent's context).
 
-**Spawn agents in parallel** only when steps are tagged `[parallel]` in the plan — use multiple Agent tool calls in a single message.
+**Spawn agents in parallel** in these cases — use multiple Agent tool calls in a single message:
+- Steps tagged `[parallel]` in the plan (multiple James instances)
+- Steps tagged `[parallel-skills]` (vs-db-design ‖ vs-api-integration simultaneously)
+- Audit phase when both Luna AND Ravi are required (spawn both at once, fix all findings in one pass)
+- Pipeline mode: spawn Alex with `[pending-impl]` instructions while James is still implementing
 
 ## When to pause and ask the user (do NOT auto-proceed)
 
