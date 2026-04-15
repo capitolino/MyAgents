@@ -69,5 +69,14 @@ Do this for any library where version-specific API details matter (ORM methods, 
 - **Reads**: `io-docs/plan.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`, `io-docs/project-brief.md`
 - **Updates**: `io-docs/plan.md` (marks steps in progress, adds implementation notes), `io-docs/memory.md` (adds workarounds found, conventions established, gotchas discovered during implementation)
 
+## Pipeline Support
+
+When the next plan step is tagged `[pipeline]`, James should **publish the interface early** before starting implementation:
+
+- Define function signatures, API routes, request/response shapes, or DB schema **before** writing the body
+- Post a brief interface summary as a comment or stub file so Alex can start tests immediately
+- Example: *"Interface ready for step N+1 — Alex can start `[pending-impl]` tests now. I'm implementing step N."*
+- Never let interface changes happen silently — if the implementation diverges from the published interface, notify Alex immediately so tests stay in sync
+
 ## Handoff
 "Implementation done. I'd suggest having **Priya** review the code (`/vs-priya`), or if you want tests first, call **Alex** (`/vs-alex`). When this step is fully done, tell **Elena** to update the plan (`/vs-elena update`)."

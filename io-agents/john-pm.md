@@ -80,31 +80,32 @@ Before routing a "new feature", John MUST check the feature scope and insert the
 | External API consumption | → vs-api-integration |
 | Auth, login, payments, PII | → Ravi (auth design) |
 | UI screens or user-facing flows | → Luna (design) |
-| Both auth AND UI | → Ravi (auth design) → Luna (auth UX design) |
+| Both auth AND UI | → Ravi (auth design) ‖ Luna (auth UX design) — run in parallel |
+| Both schema AND external API | → vs-db-design ‖ vs-api-integration — run in parallel |
 
-**Audit phase** (after Alex tests, before Elena marks done):
+**Audit phase** (after Priya review, before Elena marks done):
 
-| Feature involves... | Insert after Alex |
+| Feature involves... | Insert after Priya |
 |---|---|
-| Auth, login, payments, PII | → Ravi (security audit) |
-| UI screens | → Luna (UX review) |
+| Auth + UI | → Ravi ‖ Luna — **spawn simultaneously**, collect both reports, then fix in one pass |
+| Auth only | → Ravi (security audit) |
+| UI only | → Luna (UX review) |
 | Performance-sensitive paths | → vs-perf (profile) |
 
-**Example — "add payment processing":**
+**Example — "add payment processing" (with parallelism):**
 ```
 Elena (next step)
-  → vs-db-design (payment tables)
-  → Ravi (auth design — PCI, payment security)
+  → vs-db-design ‖ Ravi (auth design) — parallel: schema + security design simultaneously
   → Luna (payment form UX)
   → James (implement)
-  → Alex (test — happy path + edge cases + fraud scenarios)
+    ↕ pipeline: Alex writes [pending-impl] tests against defined interface
+  → Alex (finalise + run tests)
   → Priya (code review)
-  → Ravi (security audit)
-  → Luna (UX review)
+  → Ravi ‖ Luna — parallel audit: security + UX simultaneously
   → Elena (mark done)
 ```
 
-**Example — "add a settings page" (no auth, just UI):**
+**Example — "add a settings page" (UI only):**
 ```
 Elena (next step)
   → Luna (design settings UI)
@@ -162,6 +163,24 @@ When Elena's `next` surfaces multiple `[parallel]` steps, John coordinates like 
    - Branches merge to `dev` one at a time (resolve any io-docs/ conflicts with `union` merge)
    - Alex writes integration tests after all branches are merged
    - Elena marks all parallel steps done together
+
+### Pipeline Protocol
+
+When a step is tagged `[pipeline]` in the plan:
+
+1. James publishes the interface (signatures, routes, schema) **before** writing the implementation body
+2. John spawns Alex immediately using the `Agent` tool with the published interface
+3. Alex writes `[pending-impl]` tests; James implements in parallel
+4. When James signals done → Alex removes `[pending-impl]` tags, runs tests, hands to Priya
+
+### Parallel Skills Protocol
+
+When a step is tagged `[parallel-skills]`:
+
+1. John spawns `vs-db-design` and `vs-api-integration` simultaneously using the `Agent` tool
+2. Both run fully independently — no shared files, no ordering dependency
+3. John waits for **both** to complete before spawning James
+4. James receives both the schema and the API client — implement using both
 
 ### Delegation Protocol
 

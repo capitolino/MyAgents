@@ -112,17 +112,26 @@ Use `@vs-plan next` or `@vs-elena next` to find the next step when working direc
 
 ```
 1. James implements
-2. Alex writes tests (≥80% coverage on critical paths, 100% on critical-path logic)
-3. Priya reviews both implementation and tests
-   └─ CRITICAL or WARNING finding? → James fixes → back to step 3
-4. IF frontend feature → Luna reviews (UX, responsive, WCAG 2.1 AA)
-   └─ CRITICAL UX finding? → James fixes → Luna re-reviews
-5. IF auth / money / PII → Ravi audits
-   └─ CRITICAL security finding? → James fixes → Ravi re-audits
-6. Elena marks step done in io-docs/plan.md
+   └─ Pipeline: if next step interface is defined, Alex writes [pending-impl] tests in parallel
+2. Alex finalises + runs tests (≥80% coverage; 100% on auth/payment/mutation paths)
+3. Priya reviews code + tests together
+   └─ CRITICAL or WARNING? → James fixes → back to step 3
+4. IF frontend AND auth/PII/money → @vs-luna + @vs-ravi IN PARALLEL (mandatory)
+   IF frontend only              → @vs-luna
+   IF auth/PII/money only        → @vs-ravi
+   └─ Collect both reports, fix all findings in one pass, re-review with flagging agent only
+5. Elena marks step done in io-docs/plan.md
 ```
 
-Steps 4 and 5 are **mandatory gates** — never skip them for the relevant feature types.
+**Step 4 is a mandatory gate** — never skip Luna or Ravi for the relevant feature types. When both apply, run them simultaneously to save a full review cycle.
+
+### Parallel patterns (Elena tags these in the plan)
+
+| Tag | Meaning |
+|-----|---------|
+| `[parallel]` | Multiple independent James steps — run on separate branches simultaneously |
+| `[pipeline]` | Interface defined — Alex writes tests while James implements |
+| `[parallel-skills]` | vs-db-design ‖ vs-api-integration — run simultaneously, James waits for both |
 
 ## Definition of Done
 
