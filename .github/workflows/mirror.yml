@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - main
 
 jobs:
   mirror:
@@ -14,6 +15,21 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Rewrite repo references for mirror
+        run: |
+          # Replace source repo references with mirror repo references in the files
+          # that users actually read or that the CLI uses at runtime
+          sed -i 's|Unit4-Engineering-Labs/IO_Agents|capitolino/MyAgents|g' \
+            README.md \
+            bin/vs-framework.js
+
+          # Stage and commit the rewritten files on a detached HEAD
+          # so the mirror gets the right content without polluting the source repo
+          git config user.email "mirror-bot@github-actions"
+          git config user.name "Mirror Bot"
+          git add README.md bin/vs-framework.js
+          git diff --cached --quiet || git commit -m "chore(mirror): rewrite repo references for capitolino/MyAgents"
 
       - name: Push branch to mirror repo
         run: |
