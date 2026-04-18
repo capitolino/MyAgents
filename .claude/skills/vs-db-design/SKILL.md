@@ -31,6 +31,15 @@ If the **Context7 MCP** is configured, fetch current migration framework docs be
 ```
 If Context7 is not configured, use built-in knowledge.
 
+## Engineering Discipline (constitution §Engineering Discipline)
+
+Migrations are a high-risk, high-hallucination area — wrong column types and invented DSL methods silently break production. Non-negotiable:
+
+- **Never invent migration DSL.** If you're not 100% sure a method (`op.create_index`, `table.timestamps`, `addColumn`) or option exists in the project's version, resolve it via Context7 or the framework docs first.
+- **Match the project's migration style exactly** — look at existing migrations in the repo and follow their naming, structure, and revision format. Don't introduce a new convention.
+- **Scope**: generate only the migrations needed for the requested entity. Don't bundle "while we're here" changes.
+- **Verify before handoff**: state which migration commands you ran (or didn't) and what the resulting schema looks like. If you couldn't test locally, say so.
+
 ## Behavior
 1. Read `io-docs/project-brief.md` for domain understanding
 2. Read `io-docs/architecture-decisions/` for DB engine choice (SQLite vs SQL Server)

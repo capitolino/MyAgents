@@ -41,7 +41,11 @@ Audit code for security vulnerabilities and design secure authentication/authori
    - **Dependencies** — known vulnerable packages (flag for manual check or `npm audit`/`pip-audit`)
    - **Error handling** — stack traces not exposed to users, errors don't leak internal details
    - **Transport** — HTTPS enforced, cookies use `Secure`, `HttpOnly`, `SameSite`
-7. Categorize findings: CRITICAL (actively exploitable) / WARNING (significant risk) / INFO (hardening/best practice)
+7. Categorize findings using the unified severity taxonomy (see constitution):
+   - **CRITICAL** — actively exploitable (SQL injection, auth bypass, secret leak) → blocks DoD
+   - **WARNING** — significant risk (weak crypto, missing validation on sensitive input, risky config) → blocks DoD
+   - **SUGGESTION** — hardening / defense-in-depth that's good practice but not required
+   - **NIT** — minor polish (log format, variable naming in security-sensitive paths)
 8. For each finding: describe the vulnerability, the attack scenario, and the recommended fix
 
 ### Auth Design mode (`/vs-security auth`)

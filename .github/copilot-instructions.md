@@ -2,6 +2,8 @@
 
 This project uses the VS Framework. Follow these conventions when generating code.
 
+> **Keep the framework up to date** — run `npx github:capitolino/MyAgents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
+
 ## Agents
 
 This project has named agents you can activate with `@` in Copilot Chat. Each has a corresponding file in `.github/copilot-agents/`.
@@ -31,6 +33,19 @@ Before acting, check these files for context:
 - `io-docs/architecture-decisions/` — Binding tech decisions
 
 After completing work, update `io-docs/plan.md` and append relevant learnings to `io-docs/memory.md`.
+
+## Engineering Discipline (quality, tokens, anti-hallucination)
+
+Apply to every code-producing or code-reviewing interaction. These override convenience and cleverness. Full text: `io-agents/constitution.md` → *Engineering Discipline*.
+
+1. **Think Before Coding** — state assumptions; if ambiguous, ask. If confused, stop. Never guess past a point of confusion.
+2. **Simplicity First** — minimum code that solves the stated problem. No speculative abstractions, no "just in case" parameters. YAGNI is a hard rule.
+3. **Surgical Changes** — touch only the files/lines needed. Match surrounding style. Don't refactor unrelated code, don't reformat untouched files.
+4. **Goal-Driven Execution** — restate success criteria before starting, verify against them before claiming done. If you couldn't verify, say so.
+5. **No Fabricated APIs** — never invent method names, config keys, env vars, or library behaviour. Look it up (context7 MCP, source, docs) or ask. Uncertainty is information — flag it.
+6. **Match Output to Request Scope** — one-line question → one-line answer. Focused fix → focused diff. No preambles, no recaps, no closing summaries unless asked. File paths + line numbers over prose.
+
+**Priya reviews against these rules:** overengineering / scope creep / unverified claims = WARNING; fabricated APIs = CRITICAL.
 
 ## Code Standards
 
@@ -76,6 +91,9 @@ No persona — invoked by role when that step comes up:
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `@vs-onboard` | Brownfield onboarding: discover codebase, document architecture, plan improvements |
+| `@vs-deps` | Dependency freshness audit and upgrade planning (security CVEs → Ravi) |
+| `@vs-ticketize` | Turn raw input (email, chat, meeting notes) into structured plan-entry drafts |
+| `@vs-commit` | Generate commit messages and PR descriptions from a git diff |
 
 ## Workflow
 

@@ -36,6 +36,19 @@ All agents follow the shared constitution at `io-agents/constitution.md`. Key ru
 - `io-docs/memory.md` — Living knowledge base (updated by all agents after every session)
 - `io-docs/architecture-decisions/` — ADR-lite records (created by Marcus)
 
+## Engineering Discipline
+
+Six rules every agent follows when writing, reviewing, or debugging code. Full text in `io-agents/constitution.md`:
+
+1. **Think Before Coding** — state assumptions; ask when ambiguous; never guess past confusion
+2. **Simplicity First** — minimum code that solves the stated problem; YAGNI is a hard rule
+3. **Surgical Changes** — touch only what's needed; match surrounding style; no unrelated refactors
+4. **Goal-Driven Execution** — define "done" before starting; verify before claiming done
+5. **No Fabricated APIs** — never invent methods, config keys, or env vars; look them up or ask
+6. **Match Output to Request Scope** — one-line question → one-line answer; no preambles or recaps
+
+Priya enforces these at review: overengineering / scope creep / unverified claims = WARNING; fabricated APIs = CRITICAL.
+
 ## Code Standards
 
 - Follow existing project conventions
@@ -58,6 +71,9 @@ No persona — invoked by role when that step comes up:
 | `/vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `/vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `/vs-onboard` | Brownfield onboarding — discover existing codebase, document architecture, plan improvements |
+| `/vs-deps` | Dependency freshness audit and upgrade planning (security CVEs → Ravi) |
+| `/vs-ticketize` | Turn raw input (email, chat, meeting notes) into structured plan-entry drafts |
+| `/vs-commit` | Generate commit messages and PR descriptions from a git diff |
 
 ## Workflow
 

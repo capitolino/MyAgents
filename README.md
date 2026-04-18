@@ -29,6 +29,9 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-deploy` — Deployment config, CI/CD, health checks, monitoring, runbook
 - `/vs-mcp-setup` — Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities
 - `/vs-onboard` — Brownfield onboarding: discover codebase, document architecture, plan improvements
+- `/vs-deps` — Dependency freshness audit and upgrade planning (security CVEs → Ravi)
+- `/vs-ticketize` — Turn raw input (email, chat, meeting notes) into structured plan-entry drafts
+- `/vs-commit` — Generate commit messages and PR descriptions from a git diff
 
 > **Diego is a read-only agent** — he never touches code. He diagnoses, proposes solutions, and routes to James to fix.
 
@@ -115,7 +118,7 @@ npx github:capitolino/MyAgents init my-project --tag v1.0.0 --no-copilot
 your-project/
 ├── CLAUDE.md                     # Claude Code constitution (auto-loaded)
 ├── io-agents/                    # Shared agent definitions (8 agents)
-├── .claude/skills/               # Claude Code slash commands (19 skills)
+├── .claude/skills/               # Claude Code slash commands (22 skills)
 ├── .github/
 │   ├── copilot-instructions.md   # Copilot constitution
 │   └── copilot-agents/           # Copilot agent files (10 agents)
