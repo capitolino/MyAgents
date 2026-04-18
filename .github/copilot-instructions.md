@@ -89,6 +89,9 @@ No persona — invoked by role when that step comes up:
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `@vs-onboard` | Brownfield onboarding: discover codebase, document architecture, plan improvements |
+| `@vs-deps` | Dependency freshness audit and upgrade planning (security CVEs → Ravi) |
+| `@vs-ticketize` | Turn raw input (email, chat, meeting notes) into structured plan-entry drafts |
+| `@vs-commit` | Generate commit messages and PR descriptions from a git diff |
 
 ## Workflow
 

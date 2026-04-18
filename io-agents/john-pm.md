@@ -65,6 +65,9 @@ Analyze the user's request and determine the appropriate flow:
 | **UX review** | Luna (review) → James |
 | **Deploy / CI/CD** | vs-deploy |
 | **Feature flags** | vs-feature-flags (design/implement/audit) |
+| **Dependency audit / upgrade** | vs-deps → (if CVEs) Ravi → James |
+| **Raw intake (email, chat, meeting)** | vs-ticketize → Elena (insert drafts) |
+| **Commit / PR message help** | vs-commit (single-shot, no downstream) |
 | **Documentation** | Nina |
 | **"What's next?"** | Elena (status/next) |
 
