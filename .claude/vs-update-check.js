@@ -9,7 +9,7 @@ const fs    = require('fs');
 const https = require('https');
 const path  = require('path');
 
-const REPO       = 'Unit4-Engineering-Labs/IO_Agents';
+const REPO       = 'capitolino/MyAgents';
 const DIR        = __dirname;                                        // .claude/
 const MARKER     = path.join(DIR, '.vs-last-check');
 const SHA_FILE   = path.join(DIR, '.vs-installed-sha');
