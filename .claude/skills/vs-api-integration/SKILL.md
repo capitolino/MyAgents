@@ -31,6 +31,16 @@ If the **Context7 MCP** is configured, fetch current SDK/client library docs bef
 ```
 If Context7 is not configured, use built-in knowledge.
 
+## Engineering Discipline (constitution §Engineering Discipline)
+
+Client generation is a hallucination hotspot — invented method names, wrong auth header formats, and imaginary SDK options look plausible but break at runtime. Non-negotiable:
+
+- **Ground every endpoint in the schema.** Never invent a path, parameter, or response shape that isn't in the OpenAPI/Swagger/GraphQL doc you were given. If the schema is incomplete, flag it — don't fill gaps by guessing.
+- **Verify SDK methods exist.** If you call `client.users.list()`, check it's real (Context7, library source, or the SDK's type definitions). Don't trust memory for versioned SDKs.
+- **Scope**: generate only the endpoints the project currently needs. Don't pre-generate the entire API surface "for completeness".
+- **Match the project's conventions**: existing service layers, error classes, logging style. Don't introduce a new HTTP client or error pattern unless none exists.
+- **Report clearly**: in the handoff, list the exact endpoints generated and any that were *not* generated (with reason). Don't hide gaps.
+
 ## Behavior
 1. Accept an API schema file path or URL from `$ARGUMENTS`
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL

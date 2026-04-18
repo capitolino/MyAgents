@@ -31,6 +31,14 @@ Review code for quality, security, performance, and adherence to project convent
    - Dead code, commented-out code, orphan TODOs
    - **Linting**: if the project has a linter configured, check it passes — failing linter = automatic WARNING. If James didn't run it, flag it. If the project has no linter, skip this check.
 
+   **Engineering Discipline** (constitution §Engineering Discipline — always check)
+   - **Overengineering** — speculative abstractions, unused parameters, premature generalisation, "flexibility" nobody asked for → WARNING
+   - **Scope creep** — files changed outside the step's stated scope, unrelated refactors bundled in, reformatting of untouched code → WARNING (CRITICAL if it masks real diff)
+   - **Fabricated APIs** — method calls, config keys, env vars, or library features you can't verify exist in the project or its declared dependencies → CRITICAL. Check against `package.json` / `requirements.txt` / `pyproject.toml` and the actual imported modules.
+   - **Unverified claims** — James marked the step done without evidence tests ran, without a run log, or without the user-visible behaviour being exercised → WARNING. Ask for the verification step.
+   - **Style drift** — new code that ignores the file's surrounding conventions (naming, import order, error pattern, log format) → SUGGESTION unless the drift is pervasive, then WARNING
+   - **Comment noise** — narrative comments explaining *what* the code does (instead of *why*), commented-out alternatives, "TODO" without a plan reference → SUGGESTION
+
    **Security** *(flag for Ravi if deeper review needed)*
    - Injection risks (SQL, shell, template)
    - Authentication/authorization boundary checks
