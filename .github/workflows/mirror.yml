@@ -23,13 +23,14 @@ jobs:
           sed -i 's|Unit4-Engineering-Labs/IO_Agents|capitolino/MyAgents|g' \
             README.md \
             bin/vs-framework.js \
-            .github/copilot-instructions.md
+            .github/copilot-instructions.md \
+            .claude/vs-update-check.js
 
           # Stage and commit the rewritten files on a detached HEAD
           # so the mirror gets the right content without polluting the source repo
           git config user.email "mirror-bot@github-actions"
           git config user.name "Mirror Bot"
-          git add README.md bin/vs-framework.js .github/copilot-instructions.md
+          git add README.md bin/vs-framework.js .github/copilot-instructions.md .claude/vs-update-check.js
           git diff --cached --quiet || git commit -m "chore(mirror): rewrite repo references for capitolino/MyAgents"
 
       - name: Push branch to mirror repo
