@@ -102,7 +102,9 @@ function fetchWithGit(ref, tmpDir) {
       `git clone --depth 1 --branch "${refValue}" "${repoUrl}" "${cloneDir}"`,
       { stdio: 'pipe' }
     );
-    return cloneDir;
+    let sha = null;
+    try { sha = execSync('git rev-parse HEAD', { cwd: cloneDir, stdio: 'pipe' }).toString().trim(); } catch {}
+    return { srcRoot: cloneDir, sha };
   } catch (err) {
     throw new Error('git clone failed: ' + err.stderr?.toString().trim() || err.message);
   }
@@ -154,9 +156,9 @@ async function fetchFromGitHub(ref) {
     // Strategy 1: git clone --depth 1
     // Most reliable in corporate environments — uses git credentials, proxy config
     try {
-      const srcRoot = fetchWithGit(ref, tmpDir);
+      const { srcRoot, sha } = fetchWithGit(ref, tmpDir);
       infoDone(`Fetched ${label} from GitHub (git)    `);
-      return { srcRoot, tmpDir };
+      return { srcRoot, tmpDir, sha };
     } catch (gitErr) {
       // git not available or failed — try tarball approaches
     }
@@ -265,7 +267,60 @@ function printBanner(ref) {
   console.log();
 }
 
+// ─── Merge VS Framework hooks into the project's .claude/settings.json ──────
+// Adds our hooks without touching the user's existing settings or other hooks.
+function mergeVsfSettings(srcFile, destFile) {
+  if (!fs.existsSync(srcFile)) return;
+  const src = JSON.parse(fs.readFileSync(srcFile, 'utf8'));
+  if (!fs.existsSync(destFile)) {
+    fs.copyFileSync(srcFile, destFile);
+    return;
+  }
+  try {
+    const dest = JSON.parse(fs.readFileSync(destFile, 'utf8'));
+    if (src.hooks) {
+      dest.hooks = dest.hooks || {};
+      for (const [event, handlers] of Object.entries(src.hooks)) {
+        dest.hooks[event] = dest.hooks[event] || [];
+        for (const handler of handlers) {
+          const cmd = handler.hooks?.[0]?.command;
+          const already = dest.hooks[event].some(h => h.hooks?.some(hh => hh.command === cmd));
+          if (cmd && !already) dest.hooks[event].push(handler);
+        }
+      }
+    }
+    fs.writeFileSync(destFile, JSON.stringify(dest, null, 2) + '\n', 'utf8');
+  } catch { /* malformed dest settings.json — skip rather than corrupt */ }
+}
+
+// ─── Post-install: update-checker script + settings hook + SHA marker ────────
+function postInstall(srcRoot, dest, sha) {
+  const claudeDest = path.join(dest, '.claude');
+  if (!fs.existsSync(claudeDest)) return; // --no-claude: skip entirely
+
+  // Always overwrite the update-check script (it's our code)
+  const checkSrc = path.join(srcRoot, '.claude', 'vs-update-check.js');
+  if (fs.existsSync(checkSrc)) {
+    fs.copyFileSync(checkSrc, path.join(claudeDest, 'vs-update-check.js'));
+  }
+
+  // Merge our hook into settings.json (preserves user's existing hooks)
+  mergeVsfSettings(
+    path.join(srcRoot, '.claude', 'settings.json'),
+    path.join(claudeDest, 'settings.json')
+  );
+
+  // Record the installed SHA so the update checker can compare against latest
+  if (sha) {
+    fs.writeFileSync(path.join(claudeDest, '.vs-installed-sha'), sha, 'utf8');
+  }
+}
+
 // ─── Copy framework files from srcRoot → dest ────────────────────────────────
+// settings.json and vs-update-check.js are excluded from the bulk copy and
+// handled by postInstall() to allow safe merging.
+const CLAUDE_MANAGED = new Set(['settings.json', 'vs-update-check.js']);
+
 function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
   const agentsDest = path.join(dest, 'io-agents');
@@ -274,7 +329,10 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
   if (!noClaude) {
     const claudeDest = path.join(dest, '.claude');
-    fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, { recursive: true });
+    fs.cpSync(path.join(srcRoot, '.claude'), claudeDest, {
+      recursive: true,
+      filter: (src) => !CLAUDE_MANAGED.has(path.basename(src)),
+    });
     tick('.claude/skills/', `${countFiles(claudeDest)} files`);
   } else {
     skip('.claude/skills/', 'skipped (--no-claude)');
@@ -415,6 +473,10 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
       '.pytest_cache/',
       'coverage/',
       '',
+      '# VS Framework local state (machine-specific, do not commit)',
+      '.claude/.vs-last-check',
+      '.claude/.vs-installed-sha',
+      '',
     ].join('\n'), 'utf8');
     tick('.gitignore', 'created');
   } else {
@@ -474,10 +536,11 @@ async function runInit(args) {
 
   let srcRoot = PKG_ROOT;
   let tmpDir  = null;
+  let sha     = null;
 
   if (!offline) {
     try {
-      ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
+      ({ srcRoot, tmpDir, sha } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
       if (!isValidSrcRoot(PKG_ROOT)) {
@@ -496,6 +559,7 @@ async function runInit(args) {
   console.log();
   try {
     copyFramework(srcRoot, dest, { force, noCopilot, noClaude });
+    postInstall(srcRoot, dest, sha);
   } finally {
     if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
   }
@@ -593,10 +657,11 @@ async function runUpdate(args) {
 
   let srcRoot = PKG_ROOT;
   let tmpDir  = null;
+  let sha     = null;
 
   if (!offline) {
     try {
-      ({ srcRoot, tmpDir } = await fetchFromGitHub(ref));
+      ({ srcRoot, tmpDir, sha } = await fetchFromGitHub(ref));
     } catch (err) {
       console.log(`\n  ${c.yellow('⚠')}  Could not reach GitHub (${err.message})`);
       if (!isValidSrcRoot(PKG_ROOT)) {
@@ -656,6 +721,9 @@ async function runUpdate(args) {
     skip('CLAUDE.md', 'preserved (yours)');
     skip('io-docs/', 'preserved (yours)');
     skip('.gitignore', 'preserved (yours)');
+
+    // Update-checker script, settings hook, and SHA marker
+    postInstall(srcRoot, dest, sha);
   } finally {
     if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
   }

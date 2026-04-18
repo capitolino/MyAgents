@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# VS Framework local state (machine-specific, do not commit)
+.claude/.vs-last-check
+.claude/.vs-installed-sha
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+*.suo
+*.user
+
+# Test artefacts
+test-project/
+test-project2/
