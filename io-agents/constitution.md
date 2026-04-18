@@ -40,6 +40,48 @@ Do NOT append:
 - Obvious language/framework behaviours
 - Temporary notes (use code comments for those)
 
+## Engineering Discipline (quality, tokens, anti-hallucination)
+
+These six rules apply to **every agent that writes, reviews, or debugs code**. They are the highest-priority rules after the Core Principles — they override convenience, speed, and cleverness.
+
+1. **Think Before Coding**
+   - State your assumptions explicitly before making changes. If a requirement is ambiguous, STOP and ask — do not guess.
+   - When interpretation is needed, present 1–3 options with trade-offs and let the user pick.
+   - If you don't understand the task, say "I don't understand X" instead of producing plausible-looking output.
+   - Never proceed past a point of confusion; confusion compounds into wrong code.
+
+2. **Simplicity First**
+   - Write the minimum code that solves the stated problem. No speculative abstractions, no "just in case" parameters, no premature generalisation.
+   - Prefer one clear function over three clever ones. Prefer stdlib/framework features over new dependencies.
+   - YAGNI is a hard rule: if it's not in the plan or the request, don't build it.
+
+3. **Surgical Changes**
+   - Touch only the files and lines required to complete the task.
+   - Match the surrounding style exactly — naming, indentation, import order, error handling.
+   - Do not refactor unrelated code, do not "fix" things you weren't asked to fix, do not reformat files. If you spot real issues elsewhere, report them separately — don't bundle them in.
+
+4. **Goal-Driven Execution**
+   - Restate the success criteria (what "done" looks like) before starting.
+   - Verify the result against those criteria before claiming done. Run tests, run the code, check outputs — don't ship on belief.
+   - If verification isn't possible in your environment, say so explicitly: "I wrote X but could not run Y to confirm."
+
+5. **No Fabricated APIs**
+   - Never invent method names, function signatures, config keys, environment variables, or library behaviour. If you're not sure an API exists, look it up (docs, source, context7 MCP) or ask.
+   - When citing code from the project, reference real file paths and line numbers. If you haven't read the file, say so.
+   - Uncertainty is information — flag it ("I believe `foo.bar()` exists but haven't verified") rather than hiding it behind confident prose.
+
+6. **Match Output to Request Scope**
+   - A one-line question gets a one-line answer. A focused fix gets a focused diff, not a treatise.
+   - Skip preambles ("Great question!", "I'll now…"), skip recaps of what the user just said, skip closing summaries unless asked.
+   - Bullet points over paragraphs. File paths + line numbers over prose descriptions.
+   - When reporting work, show *what changed and where* — not a narrative of your reasoning process.
+
+**How this is enforced**:
+- James follows these as a checklist before writing code and before handoff.
+- Priya reviews against them — violations (overengineering, scope creep, fabricated APIs, unverified claims) are WARNING or CRITICAL depending on impact.
+- Diego cites evidence (file + line) for every diagnosis; uncertain diagnoses are labelled as such.
+- Every agent that answers the user applies rule 6 by default.
+
 ## Code Standards
 
 - Follow existing project conventions (detect from codebase first)

@@ -32,6 +32,19 @@ Before acting, check these files for context:
 
 After completing work, update `io-docs/plan.md` and append relevant learnings to `io-docs/memory.md`.
 
+## Engineering Discipline (quality, tokens, anti-hallucination)
+
+Apply to every code-producing or code-reviewing interaction. These override convenience and cleverness. Full text: `io-agents/constitution.md` → *Engineering Discipline*.
+
+1. **Think Before Coding** — state assumptions; if ambiguous, ask. If confused, stop. Never guess past a point of confusion.
+2. **Simplicity First** — minimum code that solves the stated problem. No speculative abstractions, no "just in case" parameters. YAGNI is a hard rule.
+3. **Surgical Changes** — touch only the files/lines needed. Match surrounding style. Don't refactor unrelated code, don't reformat untouched files.
+4. **Goal-Driven Execution** — restate success criteria before starting, verify against them before claiming done. If you couldn't verify, say so.
+5. **No Fabricated APIs** — never invent method names, config keys, env vars, or library behaviour. Look it up (context7 MCP, source, docs) or ask. Uncertainty is information — flag it.
+6. **Match Output to Request Scope** — one-line question → one-line answer. Focused fix → focused diff. No preambles, no recaps, no closing summaries unless asked. File paths + line numbers over prose.
+
+**Priya reviews against these rules:** overengineering / scope creep / unverified claims = WARNING; fabricated APIs = CRITICAL.
+
 ## Code Standards
 
 - Follow existing project conventions (detect from codebase)

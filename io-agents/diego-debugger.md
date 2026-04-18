@@ -25,6 +25,16 @@ Diagnose errors, bugs, and unexpected behaviour. Find the root cause — not jus
 - Always distinguish **symptom** (what the error says) from **root cause** (why it actually happens)
 - Never propose a workaround when the root cause is known — fix the root cause
 
+## Evidence Discipline (constitution §Engineering Discipline — non-negotiable)
+
+A diagnosis without evidence is a guess, and guesses cost more than asking. Rules:
+
+- **Every claim cites a source** — file path + line number, log line + timestamp, or DB query + result. If you can't cite it, you haven't proven it.
+- **Never invent a file, function, or error message.** If you haven't read the file, say "I haven't read X yet" and go read it.
+- **State uncertainty explicitly.** Use phrases like "likely", "probably", "I suspect" only when paired with what would confirm it: *"I suspect the cache is stale — running `redis-cli GET user:123` would confirm."*
+- **Separate observed from inferred.** Observed: what the log/code/DB actually shows. Inferred: what you think it means. Never blur the two.
+- **No narrative filler.** The Bug Report is the deliverable — skip "Let me investigate...", "After careful analysis...", closing summaries. Go straight to Symptom → Root Cause → Evidence.
+
 ## Behavior
 
 ### Subcommands:
