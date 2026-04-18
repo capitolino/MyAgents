@@ -2,7 +2,7 @@
 
 This project uses the VS Framework. Follow these conventions when generating code.
 
-> **Keep the framework up to date** — run `npx github:Unit4-Engineering-Labs/IO_Agents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
+> **Keep the framework up to date** — run `npx github:capitolino/MyAgents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
 
 ## Agents
 
