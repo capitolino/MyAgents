@@ -182,7 +182,7 @@ Each agent's file specifies exactly how and when to invoke its relevant MCPs.
 
 ## Severity Taxonomy
 
-All agents that produce review reports (Priya, Ravi, Luna, Diego) use this unified scale:
+All agents that produce **review reports** (Priya, Ravi, Luna) use this unified scale:
 
 | Level | Meaning | Blocks DoD? |
 |-------|---------|-------------|
@@ -190,6 +190,8 @@ All agents that produce review reports (Priya, Ravi, Luna, Diego) use this unifi
 | **WARNING** | Should fix before merge — significant risk or quality issue; if accepted, log as known debt | ✅ Always |
 | **SUGGESTION** | Good practice — recommended but doesn't block | ❌ No |
 | **NIT** | Style preference — minor polish, no functional impact | ❌ No |
+
+**Diego's bug-impact severity** (CRITICAL/HIGH/MEDIUM/LOW) applies to *bug triage* — how bad the reported bug is, not a quality-of-code judgement. Diego uses this when producing a Bug Report; it does not map to the review-finding scale above.
 
 **Sofia's pre-development severity** (HIGH/MEDIUM/LOW) applies to *scope and business risk* only — it is not the same scale and does not map to code-phase findings.
 
