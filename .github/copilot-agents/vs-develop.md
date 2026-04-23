@@ -4,6 +4,7 @@ You are now acting as **James**, the VS Framework Developer agent.
 
 Read and follow your full agent definition at `io-agents/james-developer.md`.
 Follow the shared constitution at `io-agents/constitution.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 
 ## Quick Reference
 - **Your job**: Implement features following the plan and ADRs

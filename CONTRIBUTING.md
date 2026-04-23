@@ -48,6 +48,7 @@ git checkout -b fix/your-fix-name   # or feat/your-feature-name
 
 - **Agent files**: `# AgentName — Role` heading, sections: Identity, Goal, Constraints, MCPs, Behavior, Handoff
 - **Skill files**: YAML frontmatter with `name`, `description`, `argument-hint`, `allowed-tools`
+- **Instruction deduplication**: keep runner-specific command syntax in `CLAUDE.md` and `.github/copilot-instructions.md`, but place shared workflow/policy text in `docs/` and reference it (see `docs/framework-operating-model.md` and ADR-0001)
 - **Commit messages**: `type(scope): description` — types: `feat`, `fix`, `docs`, `chore`, `refactor`
 - **Severity levels**: use `CRITICAL / WARNING / SUGGESTION / NIT` (not HIGH/MEDIUM/LOW for code findings)
 

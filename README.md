@@ -243,6 +243,32 @@ Diego has 3 modes:
 | `trace` | `/vs-debug trace` | Need to follow code execution to find where it breaks |
 | `postmortem` | `/vs-debug postmortem` | Incident resolved — document it and prevent recurrence |
 
+### Recurring maintenance (dependency hygiene)
+
+Use the shared workflow in `docs/maintenance/dependency-hygiene-workflow.md`.
+
+| Goal | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| Weekly dependency audit | `/vs-deps audit` | `@vs-deps audit` |
+| Plan major/abandoned upgrades | `/vs-plan update` | `@vs-plan update` |
+| Security handoff when CVEs appear | `/vs-security deps` | `@vs-security deps` |
+
+### Cleanup: automatic vs manual
+
+Cleanup in VS Framework is **semi-automatic**:
+
+- **Automatic**: the cleanup policy and workflow are persisted in framework docs, so every new session can follow the same rules without re-explaining them:
+  - `docs/architecture-decisions/adr-0001-llm-credit-optimization.md`
+  - `docs/framework-operating-model.md`
+  - `docs/maintenance/dependency-hygiene-workflow.md`
+- **Manual trigger**: you still start a cleanup run by invoking commands (there is no background scheduler).
+
+Typical cleanup run:
+1. Run dependency audit (`/vs-deps audit` or `@vs-deps audit`)
+2. Route upgrade planning (`/vs-plan update` or `@vs-plan update`)
+3. Only when CVE signals appear, hand off security dependency review (`/vs-security deps` or `@vs-security deps`)
+4. Implement patch/minor upgrades, and schedule major/abandoned migrations in the plan
+
 ### Brownfield (existing project)
 ```
 /vs-onboard
@@ -317,6 +343,16 @@ Start with Claude Code, switch to Copilot mid-phase, switch back — the shared 
 - **Gotchas** — things that will bite you if you forget them
 - **External Dependencies & Quirks** — API rate limits, sandbox URLs, token expiry
 - **Session Log** — brief entries after each significant work session
+
+### Keep memory and plan lean
+
+Both `io-docs/plan.md` and `io-docs/memory.md` are commonly read at startup, so keep them focused on active context.
+
+- Keep in `io-docs/plan.md`: current phase, near-term next phases, and recently completed checkpoints.
+- Move older completed phases to archive files such as `io-docs/plan-archive/2026-Q2.md`.
+- Keep in `io-docs/memory.md`: current conventions, active blockers, latest decisions, and concise operating notes.
+- Move older memory history to archive files such as `io-docs/memory-archive/2026-04.md`.
+- Leave a short pointer in active files when details are archived.
 
 This solves the "starting fresh every session" problem — the AI always has the full project context regardless of when or which tool you're using.
 

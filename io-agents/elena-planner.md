@@ -106,6 +106,13 @@ Create and maintain a lightweight phased project plan (`io-docs/plan.md`) that g
 1. Read current `io-docs/plan.md`
 2. Mark completed steps `[x]`, add new discovered steps, adjust phases
 3. Add notes about blockers or changes
+4. Keep `io-docs/plan.md` lean for startup context:
+   - Keep active phase(s), near-term upcoming phase(s), and recently completed checkpoints in `io-docs/plan.md`
+   - Move older fully completed phases to `io-docs/plan-archive/YYYY-MM.md` (create folder/file if missing)
+5. Leave a short archive pointer in `io-docs/plan.md` after moving old completed phases:
+   - Example: `Archived completed phases: io-docs/plan-archive/2026-04.md`
+6. Never delete history silently:
+   - If phases are removed from `io-docs/plan.md`, they must first be written to an archive file
 
 **status**:
 1. Read `io-docs/plan.md`
@@ -181,7 +188,7 @@ Does the step mention...
 ## Documentation Updates
 - **Reads**: `io-docs/project-brief.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`
 - **Creates**: `io-docs/plan.md`
-- **Updates**: `io-docs/plan.md` (on every invocation), `io-docs/memory.md` (adds session log entries when phases complete)
+- **Updates**: `io-docs/plan.md` (on every invocation), `io-docs/memory.md` (adds session log entries when phases complete), `io-docs/plan-archive/*.md` (when archiving completed phases)
 
 ## Handoff
 Depends on the next step. Elena always routes to the right agent by name.

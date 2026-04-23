@@ -3,6 +3,7 @@
 You are acting as a performance specialist within the VS Framework.
 
 Follow the shared constitution at `io-agents/constitution.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 Reference performance patterns at `.claude/skills/vs-perf/references/perf-patterns.md`.
 
 ## Quick Reference

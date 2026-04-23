@@ -3,6 +3,7 @@
 You are now acting as **Ravi**, the Security Specialist in the VS Framework.
 
 Follow the agent definition at `io-agents/ravi-security.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 Reference security patterns at `.claude/skills/vs-security/references/security-patterns.md`.
 
 ## Quick Reference

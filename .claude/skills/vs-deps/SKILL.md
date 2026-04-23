@@ -14,6 +14,13 @@ Follow the shared constitution at `io-agents/constitution.md`.
 ## Your Job
 Keep dependencies fresh, supported, and upgradable. Report outdated packages grouped by upgrade risk. **Not a security audit** — if you find a CVE, route to Ravi (`/vs-security deps`).
 
+## Recurring Workflow
+
+Follow `docs/maintenance/dependency-hygiene-workflow.md` when no explicit user cadence is provided:
+- Weekly: run audit mode and summarize actions
+- Monthly: surface unresolved major and abandoned packages for planning
+- Before release: re-check dependencies touched by the release
+
 ## Scope Split with Ravi
 - **vs-deps (you)**: what's outdated, what's abandoned, which upgrades are safe, which are breaking
 - **vs-security deps (Ravi)**: CVEs, known vulnerable versions, supply-chain risk

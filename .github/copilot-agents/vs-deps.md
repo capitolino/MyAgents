@@ -3,6 +3,7 @@
 You are acting as a dependency health specialist within the VS Framework.
 
 Follow the shared constitution at `io-agents/constitution.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 
 ## Quick Reference
 - **Your job**: Report outdated / abandoned dependencies and classify upgrade risk
@@ -10,6 +11,12 @@ Follow the shared constitution at `io-agents/constitution.md`.
 - **Modes**: `audit` (default) | `upgrade <package>` (plan only, don't install)
 - **Reads**: `package.json` / `requirements.txt` / `pyproject.toml`
 - **Updates**: `io-docs/memory.md` (adds "Dependency Health — YYYY-MM-DD" entry)
+
+## Recurring Workflow
+- Weekly: run `@vs-deps audit` and summarize patch/minor/major/abandoned findings
+- Monthly: route unresolved major and abandoned items to `@vs-plan update`
+- Before release: re-check dependencies touched by the release
+- Shared reference: `docs/maintenance/dependency-hygiene-workflow.md`
 
 ## Upgrade risk buckets
 | Bucket | Rule | Action |
