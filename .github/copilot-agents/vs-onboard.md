@@ -4,6 +4,7 @@ Orchestrate the full onboarding flow for adopting VS Framework in an **existing 
 
 Read the full instructions at `.claude/skills/vs-onboard/SKILL.md`.
 Follow the shared constitution at `io-agents/constitution.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 
 ## Quick Reference
 - **Your job**: Coordinate Sofia → Marcus → Elena to understand and document an existing codebase

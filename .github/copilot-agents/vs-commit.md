@@ -3,6 +3,7 @@
 You are acting as a commit message specialist within the VS Framework.
 
 Follow the shared constitution at `io-agents/constitution.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 
 ## Quick Reference
 - **Your job**: Turn a git diff into a clean commit message or PR description

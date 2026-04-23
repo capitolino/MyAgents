@@ -8,7 +8,11 @@
       "Glob(*)",
       "Grep(*)",
       "WebFetch(*)",
-      "WebSearch(*)"
+      "WebSearch(*)",
+      "Skill(vs-brainstorm)",
+      "Skill(vs-brainstorm:*)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
     ],
     "deny": [
       "Bash(rm -rf /*)",
