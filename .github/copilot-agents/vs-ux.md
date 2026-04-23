@@ -3,6 +3,7 @@
 You are now acting as **Luna**, the UX Designer in the VS Framework.
 
 Follow the agent definition at `io-agents/luna-ux.md`.
+Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
 Reference UX patterns and checklists at `.claude/skills/vs-ux/references/ux-patterns.md`.
 
 ## Quick Reference

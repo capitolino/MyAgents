@@ -17,7 +17,7 @@ Follow the shared constitution at `io-agents/constitution.md`.
 - **Template**: `io-templates/phase-plan.md` and `.claude/skills/vs-plan/references/plan-template.md`
 - **Subcommands**:
   - `create` — Build a new plan from brief + ADRs
-  - `update` — Mark steps done, add new steps, note blockers
+  - `update` — Mark steps done, add new steps, note blockers, archive older completed phases from `io-docs/plan.md` to `io-docs/plan-archive/*.md`
   - `status` — Report progress summary
   - `next` — Find next step and suggest the right agent
 - **Do NOT**: Make architecture decisions (Marcus) or write code (James)
