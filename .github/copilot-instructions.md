@@ -2,14 +2,6 @@
 
 This project uses the VS Framework. Follow these conventions when generating code.
 
-## Instruction Sources
-
-- Copilot-specific command usage stays in this file.
-- Shared operating model lives in `docs/framework-operating-model.md`.
-- Shared engineering rules live in `io-agents/constitution.md`.
-- Approved optimization policy lives in `docs/architecture-decisions/adr-0001-llm-credit-optimization.md`.
-- Recurring dependency workflow lives in `docs/maintenance/dependency-hygiene-workflow.md`.
-
 > **Keep the framework up to date** — run `npx github:capitolino/MyAgents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
 
 ## Agents
