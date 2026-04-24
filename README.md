@@ -32,6 +32,7 @@ A lightweight development framework with named AI agents. Works with both **Clau
 - `/vs-deps` — Dependency freshness audit and upgrade planning (security CVEs → Ravi)
 - `/vs-ticketize` — Turn raw input (email, chat, meeting notes) into structured plan-entry drafts
 - `/vs-commit` — Generate commit messages and PR descriptions from a git diff
+- `/vs-memory-cleanup` — Prune and archive `io-docs/memory.md` when it exceeds 220 lines
 
 > **Diego is a read-only agent** — he never touches code. He diagnoses, proposes solutions, and routes to James to fix.
 
@@ -350,9 +351,11 @@ Both `io-docs/plan.md` and `io-docs/memory.md` are commonly read at startup, so 
 
 - Keep in `io-docs/plan.md`: current phase, near-term next phases, and recently completed checkpoints.
 - Move older completed phases to archive files such as `io-docs/plan-archive/2026-Q2.md`.
-- Keep in `io-docs/memory.md`: current conventions, active blockers, latest decisions, and concise operating notes.
+- Keep in `io-docs/memory.md`: current conventions, active blockers, latest decisions, and concise operating notes. **Target: under 220 lines.**
 - Move older memory history to archive files such as `io-docs/memory-archive/2026-04.md`.
 - Leave a short pointer in active files when details are archived.
+
+Run `/vs-memory-cleanup` (Claude Code) or `@vs-memory-cleanup` (Copilot) to prune and archive automatically. Add it to your recurring maintenance cycle alongside `/vs-deps`.
 
 This solves the "starting fresh every session" problem — the AI always has the full project context regardless of when or which tool you're using.
 

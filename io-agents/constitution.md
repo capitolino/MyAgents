@@ -40,6 +40,17 @@ Do NOT append:
 - Obvious language/framework behaviours
 - Temporary notes (use code comments for those)
 
+## Memory Size Policy
+
+`io-docs/memory.md` must stay **under 220 lines**. When it grows beyond that:
+
+1. Move older Session Log entries (anything outside the current active phase) to `io-docs/memory-archive/YYYY-MM.md`
+2. Leave a one-line pointer: `[Archived YYYY-MM] Older session logs → io-docs/memory-archive/YYYY-MM.md`
+3. Merge duplicate or superseded notes — keep the most recent version
+4. Never delete entries — archive them
+
+Run `/vs-memory-cleanup` (Claude Code) or `@vs-memory-cleanup` (Copilot) to do this automatically.
+
 ## Engineering Discipline (quality, tokens, anti-hallucination)
 
 These six rules apply to **every agent that writes, reviews, or debugs code**. They are the highest-priority rules after the Core Principles — they override convenience, speed, and cleverness.
