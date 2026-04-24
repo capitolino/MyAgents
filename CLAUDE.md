@@ -52,6 +52,7 @@ No persona — invoked by role when that step comes up:
 | `/vs-deps` | Dependency freshness audit and upgrade planning (run recurring workflow in `docs/maintenance/dependency-hygiene-workflow.md`) |
 | `/vs-ticketize` | Turn raw input (email, chat, meeting notes) into structured plan-entry drafts |
 | `/vs-commit` | Generate commit messages and PR descriptions from a git diff |
+| `/vs-memory-cleanup` | Prune and archive `io-docs/memory.md` when it exceeds 220 lines |
 
 ## Recurring Maintenance Workflow
 
@@ -61,6 +62,10 @@ Claude quick run:
 1. `/vs-deps audit`
 2. `/vs-plan update`
 3. `/vs-security deps` only when CVE signals are found
+
+### Memory hygiene
+
+Run `/vs-memory-cleanup` whenever `io-docs/memory.md` feels large. It archives old session logs to `io-docs/memory-archive/` and keeps the active file under 220 lines.
 
 ## Command-Specific Routing
 
