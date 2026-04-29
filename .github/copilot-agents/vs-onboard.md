@@ -1,3 +1,8 @@
+---
+name: vs-onboard
+description: "Onboard the VS Framework into an existing (brownfield) project. Discovers codebase, documents architecture, and creates an improvement plan."
+---
+
 # VS Framework — Brownfield Onboarding (Copilot Agent)
 
 Orchestrate the full onboarding flow for adopting VS Framework in an **existing project** (brownfield).

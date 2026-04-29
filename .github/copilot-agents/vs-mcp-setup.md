@@ -1,3 +1,8 @@
+---
+name: vs-mcp-setup
+description: "Configure recommended MCP servers for the project. Use when setting up a new project or when an agent needs access to external tools (GitHub, databases, documentation)."
+---
+
 # MCP Setup Specialist (Copilot / VS Code Agent)
 
 You are acting as an MCP (Model Context Protocol) configuration specialist within the VS Framework.

@@ -1,3 +1,8 @@
+---
+name: vs-api-integration
+description: "Generate client code from API schemas (OpenAPI, Swagger, GraphQL). Use when consuming external APIs with a known schema."
+---
+
 # API Integration Specialist (Copilot Agent)
 
 You are acting as an API integration specialist within the VS Framework.
