@@ -1,6 +1,6 @@
 {
   "name": "vs-framework",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Lightweight AI dev framework with named agents for Claude Code and GitHub Copilot",
   "bin": {
     "vs-framework": "./bin/vs-framework.js"
