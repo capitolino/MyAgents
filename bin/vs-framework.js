@@ -340,8 +340,8 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
   if (!noCopilot) {
     ensureDir(path.join(dest, '.github'));
-    const githubDest = path.join(dest, '.github', 'copilot-agents');
-    fs.cpSync(path.join(srcRoot, '.github', 'copilot-agents'), githubDest, { recursive: true });
+    const githubDest = path.join(dest, '.github', 'agents');
+    fs.cpSync(path.join(srcRoot, '.github', 'agents'), githubDest, { recursive: true });
     fs.copyFileSync(
       path.join(srcRoot, '.github', 'copilot-instructions.md'),
       path.join(dest, '.github', 'copilot-instructions.md')
@@ -643,7 +643,7 @@ async function runUpdate(args) {
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
   // Auto-detect what was originally installed
   const hasClaudeInstalled   = fs.existsSync(path.join(dest, '.claude', 'skills'));
-  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'));
+  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'agents'));
 
   // --no-claude / --no-copilot override auto-detection (explicit skip)
   const updateClaude  = !noClaude  && hasClaudeInstalled;
@@ -697,8 +697,8 @@ async function runUpdate(args) {
 
     // .github/ — update only if installed; skip if --no-copilot or never installed
     if (updateCopilot) {
-      const githubSrc  = path.join(srcRoot, '.github', 'copilot-agents');
-      const githubDest = path.join(dest, '.github', 'copilot-agents');
+      const githubSrc  = path.join(srcRoot, '.github', 'agents');
+      const githubDest = path.join(dest, '.github', 'agents');
       ensureDir(path.join(dest, '.github'));
       fs.cpSync(githubSrc, githubDest, { recursive: true });
       fs.copyFileSync(

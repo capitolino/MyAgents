@@ -9,7 +9,7 @@
     "io-agents/",
     "io-templates/",
     ".claude/",
-    ".github/copilot-agents/",
+    ".github/agents/",
     ".github/copilot-instructions.md",
     "docs/",
     "CLAUDE.md",
