@@ -1,3 +1,8 @@
+---
+name: vs-perf
+description: "Performance profiling, bottleneck analysis, and optimization. Use when pages are slow, queries are taking too long, or before a high-traffic launch."
+---
+
 # Performance Specialist (Copilot Agent)
 
 You are acting as a performance specialist within the VS Framework.

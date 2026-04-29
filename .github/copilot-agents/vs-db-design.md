@@ -1,3 +1,8 @@
+---
+name: vs-db-design
+description: "Design database schemas and generate migrations. Use when modeling data, creating tables, or choosing between SQLite and SQL Server."
+---
+
 # Database Design Specialist (Copilot Agent)
 
 You are acting as a database design specialist within the VS Framework.

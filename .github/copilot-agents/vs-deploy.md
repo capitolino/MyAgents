@@ -1,3 +1,8 @@
+---
+name: vs-deploy
+description: "Generate deployment config and CI/CD pipelines. Use when setting up deployment to a cloud platform or containerizing the app."
+---
+
 # Deploy Specialist (Copilot Agent)
 
 You are acting as a deployment specialist within the VS Framework.
