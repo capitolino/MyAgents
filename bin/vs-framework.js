@@ -93,11 +93,11 @@ function isValidSrcRoot(srcRoot) {
 
 // ─── Detect which Copilot agents directory name is used ────────────────────────
 function getCopilotAgentsDir(srcRoot) {
-  const agentsPath = path.join(srcRoot, '.github', 'agents');
   const copilotAgentsPath = path.join(srcRoot, '.github', 'copilot-agents');
-  if (fs.existsSync(agentsPath)) return 'agents';
+  const agentsPath        = path.join(srcRoot, '.github', 'agents');
   if (fs.existsSync(copilotAgentsPath)) return 'copilot-agents';
-  return 'agents'; // default to 'agents' if neither exists (will fail with clear error)
+  if (fs.existsSync(agentsPath))        return 'agents';
+  return 'copilot-agents'; // default — matches canonical repo structure
 }
 
 // ─── Fetch via git clone (most reliable: uses git config, proxies, credentials)
@@ -351,7 +351,7 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
     ensureDir(path.join(dest, '.github'));
     const agentsDirName = getCopilotAgentsDir(srcRoot);
     const githubSrc = path.join(srcRoot, '.github', agentsDirName);
-    const githubDest = path.join(dest, '.github', 'agents');
+    const githubDest = path.join(dest, '.github', 'copilot-agents');
     if (fs.existsSync(githubSrc)) {
       fs.cpSync(githubSrc, githubDest, { recursive: true });
       fs.copyFileSync(
@@ -658,7 +658,8 @@ async function runUpdate(args) {
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
   // Auto-detect what was originally installed
   const hasClaudeInstalled   = fs.existsSync(path.join(dest, '.claude', 'skills'));
-  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'agents'));
+  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'))
+                            || fs.existsSync(path.join(dest, '.github', 'agents'));
 
   // --no-claude / --no-copilot override auto-detection (explicit skip)
   const updateClaude  = !noClaude  && hasClaudeInstalled;
@@ -714,7 +715,7 @@ async function runUpdate(args) {
     if (updateCopilot) {
       const agentsDirName = getCopilotAgentsDir(srcRoot);
       const githubSrc  = path.join(srcRoot, '.github', agentsDirName);
-      const githubDest = path.join(dest, '.github', 'agents');
+      const githubDest = path.join(dest, '.github', 'copilot-agents');
       ensureDir(path.join(dest, '.github'));
       if (fs.existsSync(githubSrc)) {
         fs.cpSync(githubSrc, githubDest, { recursive: true });
