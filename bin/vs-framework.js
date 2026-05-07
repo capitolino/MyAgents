@@ -674,7 +674,7 @@ async function runUpdate(args) {
   const willUpdate = ['io-agents/', 'io-templates/', 'docs/', updateClaude ? '.claude/' : null, updateCopilot ? '.github/' : null]
     .filter(Boolean).join(', ');
   console.log(`  ${c.dim('Updates:')} ${willUpdate}`);
-  console.log(`  ${c.dim('Preserved: io-docs/, CLAUDE.md, .gitignore, .env*')}`);
+  console.log(`  ${c.dim('Preserved: io-docs/, .gitignore, .env*')}`);
   console.log();
 
   let srcRoot = PKG_ROOT;
@@ -751,8 +751,11 @@ async function runUpdate(args) {
       tick('docs/', `${countFiles(docsDest)} files`);
     }
 
+    // CLAUDE.md — always update (framework entry point for agents)
+    fs.copyFileSync(path.join(srcRoot, 'CLAUDE.md'), path.join(dest, 'CLAUDE.md'));
+    tick('CLAUDE.md', 'updated (re-apply your customizations via git)');
+
     // Skipped items (user-owned)
-    skip('CLAUDE.md', 'preserved (yours)');
     skip('io-docs/', 'preserved (yours)');
     skip('.gitignore', 'preserved (yours)');
 
