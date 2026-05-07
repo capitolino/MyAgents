@@ -10,7 +10,7 @@ Before acting, read:
 - `io-docs/project-brief.md`
 - `io-docs/plan.md`
 - `io-docs/memory.md`
-- `io-docs/architecture-decisions/`
+- `io-io-agents/architecture-decisions/`
 
 After completing work, update:
 - `io-docs/plan.md`
@@ -118,5 +118,5 @@ Hotfix flow:
 
 ## Related Shared Docs
 
-- `docs/architecture-decisions/adr-0001-llm-credit-optimization.md`
-- `docs/maintenance/dependency-hygiene-workflow.md`
+- `io-agents/architecture-decisions/adr-0001-llm-credit-optimization.md`
+- `io-agents/maintenance/dependency-hygiene-workflow.md`

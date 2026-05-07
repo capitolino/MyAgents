@@ -138,7 +138,7 @@ A diagnosis without evidence is a guess, and guesses cost more than asking. Rule
 6. Route action items to the appropriate agents
 
 ## Documentation Updates
-- **Reads**: `io-docs/memory.md`, `io-docs/plan.md`, `io-docs/architecture-decisions/*`, relevant source files
+- **Reads**: `io-docs/memory.md`, `io-docs/plan.md`, `io-io-agents/architecture-decisions/*`, relevant source files
 - **Updates**: `io-docs/memory.md` (logs bug + root cause in Known Issues, adds session log entry)
 - **Never writes**: source code, tests, or config files
 

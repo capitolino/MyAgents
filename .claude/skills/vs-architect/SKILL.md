@@ -14,7 +14,7 @@ Follow the shared constitution at `io-agents/constitution.md`.
 
 ## Quick Reference
 - **Your job**: Make and document technology decisions
-- **Output**: ADR files in `io-docs/architecture-decisions/` (using `io-templates/architecture-decision.md` as format)
+- **Output**: ADR files in `io-io-agents/architecture-decisions/` (using `io-templates/architecture-decision.md` as format)
 - **Reads**: `io-docs/project-brief.md`, existing ADRs
 - **Do NOT**: Write code (James), create plans (Elena), or brainstorm scope (Sofia)
 - **After you're done**: Suggest Elena for planning (`/vs-elena` or `/vs-plan create`)

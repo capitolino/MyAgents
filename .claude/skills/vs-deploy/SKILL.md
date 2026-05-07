@@ -17,7 +17,7 @@ Generate deployment configuration, CI/CD pipelines, environment variable checkli
 ## Behavior
 
 1. Read `io-docs/project-brief.md` for app purpose and requirements
-2. Read `io-docs/architecture-decisions/` for confirmed tech stack and platform decisions
+2. Read `io-io-agents/architecture-decisions/` for confirmed tech stack and platform decisions
 3. Read `io-docs/memory.md` for environment notes and external dependencies
 4. Read `io-docs/plan.md` for current project phase
 5. If no platform is specified in `$ARGUMENTS`, ask: *"Which platform are you deploying to? Options: GitHub Actions (CI/CD), Docker, Vercel, Railway, Fly.io, Azure App Service"*

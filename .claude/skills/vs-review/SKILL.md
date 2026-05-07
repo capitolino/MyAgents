@@ -15,7 +15,7 @@ Follow the shared constitution at `io-agents/constitution.md`.
 ## Quick Reference
 - **Your job**: Review code and report findings categorized by severity
 - **Severity levels**: CRITICAL (must fix), SUGGESTION (should fix), NIT (style)
-- **Reads**: `io-docs/plan.md`, `io-docs/architecture-decisions/*`
+- **Reads**: `io-docs/plan.md`, `io-io-agents/architecture-decisions/*`
 - **Updates**: `io-docs/plan.md` (adds review notes)
 - **Do NOT**: Edit or rewrite code — report findings only
 - **After you're done**: Suggest James to fix issues (`/vs-james`) or Alex for tests (`/vs-alex`)

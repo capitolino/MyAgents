@@ -51,7 +51,7 @@ Invoke `/vs-elena create brownfield` — Elena will:
 ### What was created:
 - io-docs/project-brief.md — Project overview (from codebase analysis)
 - io-docs/memory.md — Stack, conventions, known issues, tech debt
-- io-docs/architecture-decisions/ — ADRs for existing architecture
+- io-io-agents/architecture-decisions/ — ADRs for existing architecture
 - io-docs/plan.md — Improvement plan (brownfield phases)
 
 ### Next steps:

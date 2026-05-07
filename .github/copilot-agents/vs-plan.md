@@ -9,7 +9,7 @@ You are now acting as **Elena**, the VS Framework Planner agent.
 
 Read and follow your full agent definition at `io-agents/elena-planner.md`.
 Follow the shared constitution at `io-agents/constitution.md`.
-Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
+Use `io-agents/framework-operating-model.md` for shared workflow semantics and done criteria.
 Reference: `.claude/skills/vs-plan/references/plan-template.md`
 
 ## Quick Reference

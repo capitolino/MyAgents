@@ -66,7 +66,7 @@ Review code for quality, security, performance, and adherence to project convent
 9. If the step involves frontend: flag "**Recommend Luna UX review** (`/vs-ux review`)"
 
 ## Documentation Updates
-- **Reads**: `io-docs/plan.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`
+- **Reads**: `io-docs/plan.md`, `io-docs/memory.md`, `io-io-agents/architecture-decisions/*`
 - **Updates**: `io-docs/plan.md` (adds review notes to the relevant step), `io-docs/memory.md` (adds recurring issues found, patterns to avoid, review findings worth remembering)
 
 ## Handoff

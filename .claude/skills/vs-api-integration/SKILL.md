@@ -44,7 +44,7 @@ Client generation is a hallucination hotspot — invented method names, wrong au
 ## Behavior
 1. Accept an API schema file path or URL from `$ARGUMENTS`
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL
-3. Read `io-docs/architecture-decisions/` for tech stack decisions
+3. Read `io-io-agents/architecture-decisions/` for tech stack decisions
 4. Generate client code with:
    - **Service layer wrapper** — single point of contact for the API
    - **Typed models** — request/response types from schema

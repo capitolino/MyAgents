@@ -167,11 +167,11 @@ Versions before v1.3.0 installed into `agents/`, `docs/`, and `templates/`. Thes
 npx github:Unit4-Engineering-Labs/IO_Agents update
 
 # 2. Move only the VS Framework docs — never move the whole docs/ folder
-mkdir -p io-docs/architecture-decisions
+mkdir -p io-io-agents/architecture-decisions
 mv docs/plan.md           io-docs/plan.md           2>/dev/null || true
 mv docs/memory.md         io-docs/memory.md         2>/dev/null || true
 mv docs/project-brief.md  io-docs/project-brief.md  2>/dev/null || true
-mv docs/architecture-decisions/* io-docs/architecture-decisions/ 2>/dev/null || true
+mv io-agents/architecture-decisions/* io-io-agents/architecture-decisions/ 2>/dev/null || true
 # docs/ stays in place — it may have other content you own
 
 # 3. Remove old framework folders only if they contained only framework files
@@ -246,7 +246,7 @@ Diego has 3 modes:
 
 ### Recurring maintenance (dependency hygiene)
 
-Use the shared workflow in `docs/maintenance/dependency-hygiene-workflow.md`.
+Use the shared workflow in `io-agents/maintenance/dependency-hygiene-workflow.md`.
 
 | Goal | Claude Code | GitHub Copilot |
 |------|-------------|----------------|
@@ -259,9 +259,9 @@ Use the shared workflow in `docs/maintenance/dependency-hygiene-workflow.md`.
 Cleanup in VS Framework is **semi-automatic**:
 
 - **Automatic**: the cleanup policy and workflow are persisted in framework docs, so every new session can follow the same rules without re-explaining them:
-  - `docs/architecture-decisions/adr-0001-llm-credit-optimization.md`
-  - `docs/framework-operating-model.md`
-  - `docs/maintenance/dependency-hygiene-workflow.md`
+  - `io-agents/architecture-decisions/adr-0001-llm-credit-optimization.md`
+  - `io-agents/framework-operating-model.md`
+  - `io-agents/maintenance/dependency-hygiene-workflow.md`
 - **Manual trigger**: you still start a cleanup run by invoking commands (there is no background scheduler).
 
 Typical cleanup run:
@@ -329,7 +329,7 @@ The `io-docs/` directory is the interchange layer — both Claude Code and Copil
 | `io-docs/project-brief.md` | What we're building | Sofia |
 | `io-docs/plan.md` | Phased checklist | All agents |
 | `io-docs/memory.md` | Living knowledge base | All agents |
-| `io-docs/architecture-decisions/` | Binding tech decisions | Marcus |
+| `io-io-agents/architecture-decisions/` | Binding tech decisions | Marcus |
 
 Start with Claude Code, switch to Copilot mid-phase, switch back — the shared `io-docs/` state means nothing is lost.
 

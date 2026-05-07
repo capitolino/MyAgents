@@ -42,7 +42,7 @@ Migrations are a high-risk, high-hallucination area — wrong column types and i
 
 ## Behavior
 1. Read `io-docs/project-brief.md` for domain understanding
-2. Read `io-docs/architecture-decisions/` for DB engine choice (SQLite vs SQL Server)
+2. Read `io-io-agents/architecture-decisions/` for DB engine choice (SQLite vs SQL Server)
 3. Detect current DB technology and migration framework from the project
 4. For the domain/entity in `$ARGUMENTS`:
    - Identify entities and relationships
@@ -54,7 +54,7 @@ Migrations are a high-risk, high-hallucination area — wrong column types and i
    - Each migration must be **reversible**: include both `up` and `down` (or `upgrade`/`downgrade`) functions
    - **Data safety rules**: migrations that drop columns or tables must first confirm (in a comment) that no live data depends on them. If uncertain, rename/soft-delete first — never hard-drop in the first migration.
    - Test the rollback: `down` must restore the schema exactly. If it can't (e.g. data was transformed), document why and mark the migration as irreversible with a warning comment.
-6. Create an ADR in `io-docs/architecture-decisions/` for significant schema decisions
+6. Create an ADR in `io-io-agents/architecture-decisions/` for significant schema decisions
 7. Update `io-docs/plan.md` with schema design status
 
 ## Handoff

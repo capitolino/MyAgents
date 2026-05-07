@@ -38,7 +38,7 @@ Create and maintain documentation that helps users and developers understand, us
 - Internal architecture rationale (that's ADRs, owned by Marcus)
 
 ## Documentation Updates
-- **Reads**: `io-docs/project-brief.md`, `io-docs/plan.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`, source code
+- **Reads**: `io-docs/project-brief.md`, `io-docs/plan.md`, `io-docs/memory.md`, `io-io-agents/architecture-decisions/*`, source code
 - **Creates**: README.md, guides, API docs as needed
 - **Updates**: `io-docs/plan.md` (marks documentation steps complete), `io-docs/memory.md` (adds session log entry when documentation is complete)
 

@@ -5,10 +5,10 @@ This project uses the VS Framework. Follow these conventions when generating cod
 ## Instruction Sources
 
 - Copilot-specific command usage stays in this file.
-- Shared operating model lives in `docs/framework-operating-model.md`.
+- Shared operating model lives in `io-agents/framework-operating-model.md`.
 - Shared engineering rules live in `io-agents/constitution.md`.
-- Approved optimization policy lives in `docs/architecture-decisions/adr-0001-llm-credit-optimization.md`.
-- Recurring dependency workflow lives in `docs/maintenance/dependency-hygiene-workflow.md`.
+- Approved optimization policy lives in `io-agents/architecture-decisions/adr-0001-llm-credit-optimization.md`.
+- Recurring dependency workflow lives in `io-agents/maintenance/dependency-hygiene-workflow.md`.
 
 > **Keep the framework up to date** — run `npx github:Unit4-Engineering-Labs/IO_Agents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
 
@@ -34,7 +34,7 @@ This project has named agents you can activate with `@` in Copilot Chat. Each ha
 
 ## Shared Operating Model
 
-Use `docs/framework-operating-model.md` for:
+Use `io-agents/framework-operating-model.md` for:
 - project state read/write rules
 - engineering discipline and code standards
 - workflow, development loop, and definition of done
@@ -55,13 +55,13 @@ No persona — invoked by role when that step comes up:
 | `@vs-deploy` | Deployment config, CI/CD, health checks, monitoring, and `io-docs/deploy.md` runbook |
 | `@vs-mcp-setup` | Configure MCP servers (GitHub, SQLite, docs, web) to extend agent capabilities |
 | `@vs-onboard` | Brownfield onboarding: discover codebase, document architecture, plan improvements |
-| `@vs-deps` | Dependency freshness audit and upgrade planning (run recurring workflow in `docs/maintenance/dependency-hygiene-workflow.md`) |
+| `@vs-deps` | Dependency freshness audit and upgrade planning (run recurring workflow in `io-agents/maintenance/dependency-hygiene-workflow.md`) |
 | `@vs-ticketize` | Turn raw input (email, chat, meeting notes) into structured plan-entry drafts |
 | `@vs-commit` | Generate commit messages and PR descriptions from a git diff |
 
 ## Recurring Maintenance Workflow
 
-Use the shared dependency hygiene workflow at `docs/maintenance/dependency-hygiene-workflow.md`.
+Use the shared dependency hygiene workflow at `io-agents/maintenance/dependency-hygiene-workflow.md`.
 
 Copilot quick run:
 1. `@vs-deps audit`
@@ -75,4 +75,4 @@ Copilot quick run:
 - Orchestrated: `@vs-john "<goal>"`
 - Next action: `@vs-plan next`
 
-All workflow semantics (parallel, pipeline, review gates, done criteria) are defined in `docs/framework-operating-model.md`.
+All workflow semantics (parallel, pipeline, review gates, done criteria) are defined in `io-agents/framework-operating-model.md`.

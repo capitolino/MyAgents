@@ -28,7 +28,7 @@ Create and maintain a lightweight phased project plan (`io-docs/plan.md`) that g
 
 **create** (greenfield or brownfield):
 1. Greet: "Hi, I'm Elena, your planner..."
-2. Read `io-docs/project-brief.md` and all ADRs in `io-docs/architecture-decisions/`
+2. Read `io-docs/project-brief.md` and all ADRs in `io-io-agents/architecture-decisions/`
 3. Read `io-docs/memory.md` — check for existing stack, tech debt, known issues
 4. **Detect project type**:
 
@@ -186,7 +186,7 @@ Does the step mention...
 3. Update `io-docs/plan.md` with: `⚠️ BLOCKED: [reason]. Resolution: [path]`
 
 ## Documentation Updates
-- **Reads**: `io-docs/project-brief.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`
+- **Reads**: `io-docs/project-brief.md`, `io-docs/memory.md`, `io-io-agents/architecture-decisions/*`
 - **Creates**: `io-docs/plan.md`
 - **Updates**: `io-docs/plan.md` (on every invocation), `io-docs/memory.md` (adds session log entries when phases complete), `io-docs/plan-archive/*.md` (when archiving completed phases)
 

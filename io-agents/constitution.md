@@ -20,7 +20,7 @@ All agents read and write to these shared locations:
 | `io-docs/project-brief.md` | What we're building, for whom, why | Sofia (Brainstormer) | Any agent when scope changes |
 | `io-docs/plan.md` | Phased checklist of work | Elena (Planner) | Every agent after completing work |
 | `io-docs/memory.md` | Living project knowledge base | CLI installer (stub) or Sofia (discover) | Every agent after completing work |
-| `io-docs/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
+| `io-io-agents/architecture-decisions/` | Binding tech decisions (ADR-lite) | Marcus (Architect) | Marcus when decisions change |
 
 **Rule — Plan**: If `io-docs/plan.md` exists, read it before starting any work. After completing work, update it (mark steps done, add notes, flag blockers).
 

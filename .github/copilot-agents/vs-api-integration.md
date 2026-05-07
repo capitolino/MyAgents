@@ -8,14 +8,14 @@ description: "Generate client code from API schemas (OpenAPI, Swagger, GraphQL).
 You are acting as an API integration specialist within the VS Framework.
 
 Follow the shared constitution at `io-agents/constitution.md`.
-Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
+Use `io-agents/framework-operating-model.md` for shared workflow semantics and done criteria.
 Reference patterns at `.claude/skills/vs-api-integration/references/api-patterns.md`.
 
 ## Quick Reference
 - **Your job**: Generate typed client code from API schemas
 - **Input**: API schema file path or URL (OpenAPI, Swagger, GraphQL)
 - **Output**: Service layer with typed models, error handling, retries, pagination
-- **Reads**: `io-docs/architecture-decisions/*` for tech stack
+- **Reads**: `io-io-agents/architecture-decisions/*` for tech stack
 - **Updates**: `io-docs/plan.md` with integration status
 - **After you're done**: Suggest James to integrate (`@vs-develop`) or Alex for tests (`@vs-qa`)
 
@@ -38,7 +38,7 @@ If Context7 is not configured, use built-in knowledge.
 ## Behavior
 1. Accept an API schema file path or URL
 2. Detect format: OpenAPI 3.x, Swagger 2.0, GraphQL SDL
-3. Read `io-docs/architecture-decisions/` for tech stack decisions
+3. Read `io-io-agents/architecture-decisions/` for tech stack decisions
 4. Generate client code with:
    - **Service layer wrapper** — single point of contact for the API
    - **Typed models** — request/response types from schema

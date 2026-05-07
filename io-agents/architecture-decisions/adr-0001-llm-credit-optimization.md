@@ -30,5 +30,5 @@ The framework must support both Claude Code and GitHub Copilot. Some duplication
 
 ## Implementation Notes
 
-- Shared recurring workflow lives in `docs/maintenance/dependency-hygiene-workflow.md`.
+- Shared recurring workflow lives in `io-agents/maintenance/dependency-hygiene-workflow.md`.
 - Runner-specific files keep only tool-specific command syntax and links to shared references.

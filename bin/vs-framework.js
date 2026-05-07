@@ -370,12 +370,6 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
   fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
   tick('io-templates/', `${countFiles(tmplDest)} files`);
 
-  const docsDest = path.join(dest, 'docs');
-  if (fs.existsSync(path.join(srcRoot, 'docs'))) {
-    fs.cpSync(path.join(srcRoot, 'docs'), docsDest, { recursive: true });
-    tick('docs/', `${countFiles(docsDest)} files`);
-  }
-
   const claudeMdDest = path.join(dest, 'CLAUDE.md');
   if (!fs.existsSync(claudeMdDest) || force) {
     fs.copyFileSync(path.join(srcRoot, 'CLAUDE.md'), claudeMdDest);
@@ -671,7 +665,7 @@ async function runUpdate(args) {
   const updateClaude  = !noClaude  && hasClaudeInstalled;
   const updateCopilot = !noCopilot && hasCopilotInstalled;
 
-  const willUpdate = ['io-agents/', 'io-templates/', 'docs/', updateClaude ? '.claude/' : null, updateCopilot ? '.github/' : null]
+  const willUpdate = ['io-agents/', 'io-templates/', 'CLAUDE.md', updateClaude ? '.claude/' : null, updateCopilot ? '.github/' : null]
     .filter(Boolean).join(', ');
   console.log(`  ${c.dim('Updates:')} ${willUpdate}`);
   console.log(`  ${c.dim('Preserved: io-docs/, .gitignore, .env*')}`);
@@ -743,13 +737,6 @@ async function runUpdate(args) {
     const tmplDest = path.join(dest, 'io-templates');
     fs.cpSync(path.join(srcRoot, 'io-templates'), tmplDest, { recursive: true });
     tick('io-templates/', `${countFiles(tmplDest)} files`);
-
-    // docs/ — always update (framework reference docs: operating model, ADRs, maintenance)
-    const docsDest = path.join(dest, 'docs');
-    if (fs.existsSync(path.join(srcRoot, 'docs'))) {
-      fs.cpSync(path.join(srcRoot, 'docs'), docsDest, { recursive: true });
-      tick('docs/', `${countFiles(docsDest)} files`);
-    }
 
     // CLAUDE.md — always update (framework entry point for agents)
     fs.copyFileSync(path.join(srcRoot, 'CLAUDE.md'), path.join(dest, 'CLAUDE.md'));

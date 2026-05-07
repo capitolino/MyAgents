@@ -14,7 +14,7 @@ Follow the shared constitution at `io-agents/constitution.md`.
 
 ## Quick Reference
 - **Your job**: Implement features following the plan and ADRs
-- **Reads**: `io-docs/plan.md`, `io-docs/architecture-decisions/*`, `io-docs/project-brief.md`
+- **Reads**: `io-docs/plan.md`, `io-io-agents/architecture-decisions/*`, `io-docs/project-brief.md`
 - **Updates**: `io-docs/plan.md` (marks steps in progress, adds implementation notes)
 - **Do NOT**: Redesign architecture (Marcus), review your own code (Priya), or write tests unless part of the step (Alex)
 - **After you're done**: Suggest Priya for review (`/vs-priya`) or Alex for tests (`/vs-alex`)

@@ -17,7 +17,7 @@ Scaffold the project's development environment: folder structure, dependency fil
 ## Behavior
 
 1. Read `io-docs/project-brief.md` for app purpose and tech stack
-2. Read `io-docs/architecture-decisions/` for confirmed technology choices (Marcus's decisions)
+2. Read `io-io-agents/architecture-decisions/` for confirmed technology choices (Marcus's decisions)
 3. Read `io-docs/memory.md` for any existing setup notes
 4. Detect what already exists — **never overwrite existing files**
 5. If language/framework not provided and not obvious, ask before proceeding

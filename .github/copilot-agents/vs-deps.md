@@ -8,7 +8,7 @@ description: "Check project dependencies for freshness and maintenance risk (NOT
 You are acting as a dependency health specialist within the VS Framework.
 
 Follow the shared constitution at `io-agents/constitution.md`.
-Use `docs/framework-operating-model.md` for shared workflow semantics and done criteria.
+Use `io-agents/framework-operating-model.md` for shared workflow semantics and done criteria.
 
 ## Quick Reference
 - **Your job**: Report outdated / abandoned dependencies and classify upgrade risk
@@ -21,7 +21,7 @@ Use `docs/framework-operating-model.md` for shared workflow semantics and done c
 - Weekly: run `@vs-deps audit` and summarize patch/minor/major/abandoned findings
 - Monthly: route unresolved major and abandoned items to `@vs-plan update`
 - Before release: re-check dependencies touched by the release
-- Shared reference: `docs/maintenance/dependency-hygiene-workflow.md`
+- Shared reference: `io-agents/maintenance/dependency-hygiene-workflow.md`
 
 ## Upgrade risk buckets
 | Bucket | Rule | Action |

@@ -17,7 +17,7 @@ Design and implement a feature flag system that enables gradual rollouts, A/B te
 ## Behavior
 
 1. Read `io-docs/project-brief.md` for app context
-2. Read `io-docs/architecture-decisions/` for tech stack
+2. Read `io-io-agents/architecture-decisions/` for tech stack
 3. Read `io-docs/memory.md` for existing flag patterns
 
 ### Design mode (`/vs-feature-flags design`)

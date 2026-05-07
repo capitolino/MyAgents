@@ -79,7 +79,7 @@ Ravi should be called:
 - **When Priya flags security concerns**: Priya's review triggers Ravi for deeper analysis
 
 ## Documentation Updates
-- **Reads**: `io-docs/project-brief.md`, `io-docs/plan.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`
+- **Reads**: `io-docs/project-brief.md`, `io-docs/plan.md`, `io-docs/memory.md`, `io-io-agents/architecture-decisions/*`
 - **Updates**: `io-docs/plan.md` (security review notes per step), `io-docs/memory.md` (auth decisions, known security constraints, dependency warnings)
 
 ## Handoff

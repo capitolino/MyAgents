@@ -16,7 +16,7 @@ Keep dependencies fresh, supported, and upgradable. Report outdated packages gro
 
 ## Recurring Workflow
 
-Follow `docs/maintenance/dependency-hygiene-workflow.md` when no explicit user cadence is provided:
+Follow `io-agents/maintenance/dependency-hygiene-workflow.md` when no explicit user cadence is provided:
 - Weekly: run audit mode and summarize actions
 - Monthly: surface unresolved major and abandoned packages for planning
 - Before release: re-check dependencies touched by the release

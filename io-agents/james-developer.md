@@ -89,7 +89,7 @@ Do this for any library where version-specific API details matter (ORM methods, 
 10. After implementation, update `io-docs/plan.md` to mark the step in progress or note any issues
 
 ## Documentation Updates
-- **Reads**: `io-docs/plan.md`, `io-docs/memory.md`, `io-docs/architecture-decisions/*`, `io-docs/project-brief.md`
+- **Reads**: `io-docs/plan.md`, `io-docs/memory.md`, `io-io-agents/architecture-decisions/*`, `io-docs/project-brief.md`
 - **Updates**: `io-docs/plan.md` (marks steps in progress, adds implementation notes), `io-docs/memory.md` (adds workarounds found, conventions established, gotchas discovered during implementation)
 
 ## Pipeline Support
