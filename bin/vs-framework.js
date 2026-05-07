@@ -91,6 +91,15 @@ function isValidSrcRoot(srcRoot) {
       || fs.existsSync(path.join(srcRoot, 'agents',    'constitution.md'));
 }
 
+// ─── Detect which Copilot agents directory name is used ────────────────────────
+function getCopilotAgentsDir(srcRoot) {
+  const copilotAgentsPath = path.join(srcRoot, '.github', 'copilot-agents');
+  const agentsPath        = path.join(srcRoot, '.github', 'agents');
+  if (fs.existsSync(copilotAgentsPath)) return 'copilot-agents';
+  if (fs.existsSync(agentsPath))        return 'agents';
+  return 'copilot-agents'; // default — matches canonical repo structure
+}
+
 // ─── Fetch via git clone (most reliable: uses git config, proxies, credentials)
 function fetchWithGit(ref, tmpDir) {
   const repoUrl  = `https://github.com/${REPO}.git`;
@@ -340,13 +349,19 @@ function copyFramework(srcRoot, dest, { force, noCopilot, noClaude }) {
 
   if (!noCopilot) {
     ensureDir(path.join(dest, '.github'));
+    const agentsDirName = getCopilotAgentsDir(srcRoot);
+    const githubSrc = path.join(srcRoot, '.github', agentsDirName);
     const githubDest = path.join(dest, '.github', 'copilot-agents');
-    fs.cpSync(path.join(srcRoot, '.github', 'copilot-agents'), githubDest, { recursive: true });
-    fs.copyFileSync(
-      path.join(srcRoot, '.github', 'copilot-instructions.md'),
-      path.join(dest, '.github', 'copilot-instructions.md')
-    );
-    tick('.github/', `${countFiles(githubDest) + 1} files`);
+    if (fs.existsSync(githubSrc)) {
+      fs.cpSync(githubSrc, githubDest, { recursive: true });
+      fs.copyFileSync(
+        path.join(srcRoot, '.github', 'copilot-instructions.md'),
+        path.join(dest, '.github', 'copilot-instructions.md')
+      );
+      tick('.github/', `${countFiles(githubDest) + 1} files`);
+    } else {
+      skip('.github/', `source not found (checked ${agentsDirName})`);
+    }
   } else {
     skip('.github/', 'skipped (--no-copilot)');
   }
@@ -643,7 +658,8 @@ async function runUpdate(args) {
   console.log(`  ${c.dim('Updating in:')} ${c.bold(dest)}`);
   // Auto-detect what was originally installed
   const hasClaudeInstalled   = fs.existsSync(path.join(dest, '.claude', 'skills'));
-  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'));
+  const hasCopilotInstalled  = fs.existsSync(path.join(dest, '.github', 'copilot-agents'))
+                            || fs.existsSync(path.join(dest, '.github', 'agents'));
 
   // --no-claude / --no-copilot override auto-detection (explicit skip)
   const updateClaude  = !noClaude  && hasClaudeInstalled;
@@ -697,15 +713,20 @@ async function runUpdate(args) {
 
     // .github/ — update only if installed; skip if --no-copilot or never installed
     if (updateCopilot) {
-      const githubSrc  = path.join(srcRoot, '.github', 'copilot-agents');
+      const agentsDirName = getCopilotAgentsDir(srcRoot);
+      const githubSrc  = path.join(srcRoot, '.github', agentsDirName);
       const githubDest = path.join(dest, '.github', 'copilot-agents');
       ensureDir(path.join(dest, '.github'));
-      fs.cpSync(githubSrc, githubDest, { recursive: true });
-      fs.copyFileSync(
-        path.join(srcRoot, '.github', 'copilot-instructions.md'),
-        path.join(dest, '.github', 'copilot-instructions.md')
-      );
-      tick('.github/', `${countFiles(githubDest) + 1} files`);
+      if (fs.existsSync(githubSrc)) {
+        fs.cpSync(githubSrc, githubDest, { recursive: true });
+        fs.copyFileSync(
+          path.join(srcRoot, '.github', 'copilot-instructions.md'),
+          path.join(dest, '.github', 'copilot-instructions.md')
+        );
+        tick('.github/', `${countFiles(githubDest) + 1} files`);
+      } else {
+        skip('.github/', `source not found (checked ${agentsDirName})`);
+      }
     } else if (noCopilot) {
       skip('.github/', 'skipped (--no-copilot)');
     } else {
