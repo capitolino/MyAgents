@@ -10,7 +10,7 @@ This project uses the VS Framework. Follow these conventions when generating cod
 - Approved optimization policy lives in `io-agents/architecture-decisions/adr-0001-llm-credit-optimization.md`.
 - Recurring dependency workflow lives in `io-agents/maintenance/dependency-hygiene-workflow.md`.
 
-> **Keep the framework up to date** — run `npx github:Unit4-Engineering-Labs/IO_Agents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
+> **Keep the framework up to date** — run `npx github:capitolino/MyAgents update` periodically. *(Claude Code users get an automatic daily notice; Copilot users update manually.)*
 
 ## Agents
 
