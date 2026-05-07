@@ -29,6 +29,7 @@ This project uses the VS Framework — a lightweight development methodology wit
 ## Shared Operating Model
 
 Use `docs/framework-operating-model.md` for:
+- **communication standards** — agent personalities aligned with work domain
 - project state read/write rules
 - engineering discipline and code standards
 - workflow, development loop, and definition of done
